@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>kafka基本概念、原理 - 大菜猫</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="今天公司内部琼琼分享了kafka，也是我一直想听的，本文主要资料来源于该同学的分享，稍作整理，重点的个人理解，留作记录，否则怕过几天就忘记了。。 一、简介   概念 定义 理解    kafka 分布式，基于发布/订阅的消息系统 集群，时间驱动   使用语言 scala scala可能确实不错   特点 快速, 可扩展, 可持久化,  高吞吐量, 近实时, 支持消息分区, 批量读写消息    设计">
+<meta name="keywords" content="kafka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kafka基本概念、原理">
+<meta property="og:url" content="https://www.techwei.cn/2018/02/09/kafka/kafka/index.html">
+<meta property="og:site_name" content="大菜猫">
+<meta property="og:description" content="今天公司内部琼琼分享了kafka，也是我一直想听的，本文主要资料来源于该同学的分享，稍作整理，重点的个人理解，留作记录，否则怕过几天就忘记了。。 一、简介   概念 定义 理解    kafka 分布式，基于发布/订阅的消息系统 集群，时间驱动   使用语言 scala scala可能确实不错   特点 快速, 可扩展, 可持久化,  高吞吐量, 近实时, 支持消息分区, 批量读写消息    设计">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
+<meta property="og:updated_time" content="2020-03-02T10:11:02.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kafka基本概念、原理">
+<meta name="twitter:description" content="今天公司内部琼琼分享了kafka，也是我一直想听的，本文主要资料来源于该同学的分享，稍作整理，重点的个人理解，留作记录，否则怕过几天就忘记了。。 一、简介   概念 定义 理解    kafka 分布式，基于发布/订阅的消息系统 集群，时间驱动   使用语言 scala scala可能确实不错   特点 快速, 可扩展, 可持久化,  高吞吐量, 近实时, 支持消息分区, 批量读写消息    设计">
+<meta name="twitter:image" content="https://www.techwei.cn/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="kafka基本概念、原理" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">首页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">分类</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/interview">知识储备</a>
+                
+                <a class="navbar-item" href="/arithmetic">算法</a>
+                
+                <a class="navbar-item" href="/business">创业</a>
+                
+                <a class="navbar-item" href="/travel">旅行</a>
+                
+                <a class="navbar-item" href="/about">关于我</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-02-09T09:23:22.000Z">2018-02-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/kafka/">kafka</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    32 分钟 读完 (大约 4786 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                kafka基本概念、原理
+            
+        </h1>
+        <div class="content">
+            <p>今天公司内部琼琼分享了kafka，也是我一直想听的，本文主要资料来源于该同学的分享，稍作整理，重点的个人理解，留作记录，否则怕过几天就忘记了。。</p>
+<h3><span id="yi-jian-jie">一、简介</span><a href="#yi-jian-jie" class="header-anchor">#</a></h3><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>定义</th>
+<th>理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>kafka</td>
+<td>分布式，基于发布/订阅的消息系统</td>
+<td>集群，时间驱动</td>
+</tr>
+<tr>
+<td>使用语言</td>
+<td>scala</td>
+<td>scala可能确实不错</td>
+</tr>
+<tr>
+<td>特点</td>
+<td>快速, 可扩展, 可持久化,  高吞吐量, 近实时, 支持消息分区, 批量读写消息</td>
+<td></td>
+</tr>
+<tr>
+<td>设计目标</td>
+<td>高吞吐率</td>
+<td>利用磁盘顺序读写的特性；topic可以划分为多个partition，提高并发性；支持数据批量发送和拉取</td>
+</tr>
+<tr>
+<td></td>
+<td>访问与持久化常数时间复杂度</td>
+<td>未得证</td>
+</tr>
+<tr>
+<td></td>
+<td>同步和异步复制两种HA</td>
+<td>HA: 高可用性</td>
+</tr>
+<tr>
+<td></td>
+<td>分布式消费 ,保证每个Partition消息顺序传输</td>
+<td>一个group里不会有多个consumer消费一个partition，所以可以保证一个partition消息顺序性</td>
+</tr>
+<tr>
+<td></td>
+<td>支持在线水平扩展</td>
+<td></td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+
+<h3><span id="er-ji-chu-gai-nian">二、基础概念</span><a href="#er-ji-chu-gai-nian" class="header-anchor">#</a></h3><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>消息</td>
+<td>数据单元， 一串字节构成，其中主要由key和value，  通过key将消息路由到指定分区，value是消息的有效负载</td>
+</tr>
+<tr>
+<td>topic</td>
+<td>一个主题，可以看作是一系列消息的集合</td>
+</tr>
+<tr>
+<td>partition</td>
+<td><strong>topic可以划分多个分区，每个分区自己是有序的，但整个topic无法保证有序性</strong></td>
+</tr>
+<tr>
+<td>broker</td>
+<td>Kafka集群中的一个节点, 一台机器</td>
+</tr>
+<tr>
+<td>副本</td>
+<td>每个partition可以有多个副本， 分为Leader副本和Follower副本，所有的读写请求都由Leader副本进行，Follower副本仅仅从Leader副本把数据同步到本地</td>
+</tr>
+<tr>
+<td>HW</td>
+<td>（HightWatermark）标记一个特殊的offset，当消费者处理消息时只能拉到HW之前的消息</td>
+</tr>
+<tr>
+<td>ISR集合</td>
+<td>表示目前可用，且消息量与Leader副本相差不多的副本集合。满足（1）该副本所在的节点与zk保持连接；（2）副本最后一条消息的offset与Leader副本的offset之间的差值不能超过指定的阈值。</td>
+</tr>
+<tr>
+<td>生产者</td>
+<td>生产消息，并将消息按照一定规则推送到topic所在的分区</td>
+</tr>
+<tr>
+<td>消费者</td>
+<td>从topic中拉取消息，并对消息进行消费</td>
+</tr>
+<tr>
+<td>Consumer Group</td>
+<td><strong>1个 Consumer Group 有 n个 consumer ,  1个 consumer 有 1个 Consumer Group, 如果 n partition and n+1 consumer ,then 1 consumer don’t work</strong></td>
+</tr>
+</tbody></table>
+<h3><span id="san-demo">三、demo</span><a href="#san-demo" class="header-anchor">#</a></h3><p>1、producer</p>
+<p>一个异步发送消息的例子</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myProducer</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String [] args)</span> </span>&#123;</span><br><span class="line">        Properties props = <span class="hljs-keyword">new</span> Properties();</span><br><span class="line">        props.put(<span class="hljs-string">"bootstrap.servers"</span>, <span class="hljs-string">"127.0.0.1:9092"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"client.id"</span>, <span class="hljs-string">"myProducer"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"key.serializer"</span>, <span class="hljs-string">"org.apache.kafka.common.serialization.IntegerSerializer"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"value.serializer"</span>, <span class="hljs-string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">        KafkaProducer producer = <span class="hljs-keyword">new</span> KafkaProducer&lt;&gt;(props);</span><br><span class="line">        String topic = <span class="hljs-string">"myTest"</span>;</span><br><span class="line">        <span class="hljs-keyword">boolean</span> isAsync = <span class="hljs-keyword">true</span>;<span class="hljs-comment">//异步发送</span></span><br><span class="line">        <span class="hljs-keyword">int</span> messageNo = <span class="hljs-number">1</span>;</span><br><span class="line">        <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;</span><br><span class="line">            String messageStr = <span class="hljs-string">"Message_"</span> + messageNo;</span><br><span class="line">            <span class="hljs-keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line">            <span class="hljs-keyword">if</span> (isAsync) &#123;</span><br><span class="line">                ProducerRecord&lt;Integer, String&gt; record = <span class="hljs-keyword">new</span> ProducerRecord(topic, messageNo, messageStr);</span><br><span class="line">                producer.send(record, <span class="hljs-keyword">new</span> myProducerCallBack(startTime, messageNo, messageStr));</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            messageNo ++;</span><br><span class="line">            <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="hljs-number">1000</span>);</span><br><span class="line">            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myProducerCallBack</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Callback</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> startTime;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> key;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">myProducerCallBack</span><span class="hljs-params">(<span class="hljs-keyword">long</span> startTime, <span class="hljs-keyword">int</span> key, String message)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.startTime = startTime;</span><br><span class="line">        <span class="hljs-keyword">this</span>.key = key;</span><br><span class="line">        <span class="hljs-keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-meta">@Override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCompletion</span><span class="hljs-params">(RecordMetadata recordMetadata, Exception e)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">long</span> time = System.currentTimeMillis() - startTime;</span><br><span class="line">        <span class="hljs-keyword">if</span> (Objects.nonNull(recordMetadata)) &#123;</span><br><span class="line">            System.out.println(<span class="hljs-string">"message key="</span> + key + <span class="hljs-string">", message="</span> + message + <span class="hljs-string">", send to partition="</span> + recordMetadata</span><br><span class="line">                    .partition() + <span class="hljs-string">", offset="</span> + recordMetadata.offset() + <span class="hljs-string">", cost time="</span> + time);</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里异步发送和同步发送的区别？</p>
+<p>如果是同步的话，发送速度慢，且异步不会有顺序性问题，我觉得都用异步就好了。</p>
+<p>2、consumer</p>
+<p>一个同步接收消息的例子</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myConsumer</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Properties props = <span class="hljs-keyword">new</span> Properties();</span><br><span class="line">        props.put(<span class="hljs-string">"bootstrap.servers"</span>, <span class="hljs-string">"127.0.0.1:9092"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"group.id"</span>, <span class="hljs-string">"test"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"enable.auto.commit"</span>, <span class="hljs-string">"true"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"auto.commit.interval.ms"</span>, <span class="hljs-string">"1000"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"session.timeout.ms"</span>, <span class="hljs-string">"30000"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"key.deserializer"</span>, <span class="hljs-string">"org.apache.kafka.common.serialization.IntegerDeserializer"</span>);</span><br><span class="line">        props.put(<span class="hljs-string">"value.deserializer"</span>, <span class="hljs-string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</span><br><span class="line">        KafkaConsumer&lt;String, String&gt; consumer = <span class="hljs-keyword">new</span> KafkaConsumer&lt;&gt;(props);</span><br><span class="line">        consumer.subscribe(Arrays.asList(<span class="hljs-string">"myTest"</span>));</span><br><span class="line">        <span class="hljs-keyword">while</span> (<span class="hljs-keyword">true</span>) &#123;</span><br><span class="line">            ConsumerRecords&lt;String, String&gt; records = consumer.poll(<span class="hljs-number">100</span>);</span><br><span class="line">            <span class="hljs-keyword">for</span> (ConsumerRecord&lt;String, String&gt; record : records) &#123;</span><br><span class="line">                System.out.println(<span class="hljs-string">"myConsumer record = "</span> + record);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是异步呢？</p>
+<p>如果多个partition的话，肯定要异步多线程起多个consumer去拉和处理。</p>
+<h3><span id="si-yuan-li-jie-xi">四、原理解析</span><a href="#si-yuan-li-jie-xi" class="header-anchor">#</a></h3><p>我以 生产者 -&gt; 服务器 -&gt; 消费者 的顺序写</p>
+<h4><span id="1-sheng-chan-zhe-yuan-li">1、生产者原理</span><a href="#1-sheng-chan-zhe-yuan-li" class="header-anchor">#</a></h4><p>我们主要就是要知道他的 设计架构 和 如何保证的发送到同一分区消息的顺序性,</p>
+<h5><span id="1-she-ji-jia-gou">(1)设计架构</span><a href="#1-she-ji-jia-gou" class="header-anchor">#</a></h5><p>生产者工作主要涉及两个线程协同工作，主线程将数据封装为ProducerRecord并通过send()方法将消息放入RecordAccumulator中暂存，sender线程负责将消息构成请求，并最终执行网络I/O线程，将RecordAccumulator暂存的消息发送出去。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcly1foaf3lvnujj31kw1b0tm5.jpg" alt="producer"></p>
+<p>partition 选择： 当调用send()方法发消息但没有在ProducerRecord中指定partition字段时，KafkaProducer就会调用Partitioner.partition()方法进行选择。默认的实现类DefaultPartitioner会按照key的哈希值取模分区的个数来确定分区；如果没有指定key，会将消息均匀分配到topic对应的分区中，具体的根据内部一个counter取模。</p>
+<p><strong>图上的长条都是队列，而且是Deque，可头插的队列.</strong></p>
+<p><strong>RecordAccumulator</strong>作为主线程和Sender线程之间的缓冲必须是线程安全的，其主要字段是一个以TopicPartition为key，ArrayDeque<recordbatch>为value的ConcurrentMap，用于存放暂存的消息。Send()方法会调用RecordAccumulator.append()方法将消息放入batchs中。暂存在batchs中的RecordBatch在被Sender线程发送到服务器之前会调用RecordAccumulator.ready()方法获取符合发送消息条件的节点结合，具体条件为：</recordbatch></p>
+<p>（1）Deque中有多个RecordBatch或者第一个RecordBatch是否满了；</p>
+<p>（2）是否超时，RecordBatch缓存时间超过了设置的时间；</p>
+<p>（3）BufferPool的空间耗尽了；</p>
+<p>（4）Sender线程准备关闭；</p>
+<p><strong>InFlightRequests</strong>是NetWorkClient中的一个字段，只要作用是缓存已经发送出去单没有收到响应的ClientRequest，底层通过Map&lt;String, Deque&lt;NetworkClient.InFlightRequest&gt;&gt;来实现，已经成功处理的请求会从该字段中删除。下面就简单讲解一下Kafka如何利用RecordAccumulatorm， InFlightRequests等实现发送到同一分区消息的顺序性。</p>
+<p>（1）调用RecordAccumulator.ready()方法获取可以发送到指定分区的RecordBatch时，只会获取Deque中的第一个RecordBatch;</p>
+<p>（2）经过（1）中得到的RecordBatch通过NetWorkClient发向Kafka服务器指定Node之前会检查Metadata是否需要更新，连接是否成功，以及调用InFlightRequests.canSendMore()方法判断是否发送改请求。InFlightRequests.canSendMore() 只有在队列为空，或者队列的头部的请求已经完成完成的条件下才返回true。</p>
+<p>（3）在NetWorkClient成功收到Kafka集群中的响应后。如果是成功响应，会遍历ClientRequest中的RecordBatch，执行RecordBatch.done()方法，并释放RecordBatch底层的ByteBuffer空间。RecordBatch.done()会执行Recordbatch中每条消息对应的callback函数。如果是异常响应，则尝试将RecordBatch放入RecordAccumulator中重新发送。如果重试次数已经达到上限，或者不允许重试，则直接调用RecordBatch.done()进行异常完成callback处理。</p>
+<h5><span id="2-tong-yi-fen-qu-xiao-xi-de-shun-xu-xing-chong-dian">(2)同一分区消息的顺序性（重点）</span><a href="#2-tong-yi-fen-qu-xiao-xi-de-shun-xu-xing-chong-dian" class="header-anchor">#</a></h5><ol>
+<li>同步发送</li>
+</ol>
+<p>同步发送的话， 中间的缓存里一定是只有一个的，下次send是在确定发送到kafka服务器成功之后才会进行，相当于整个topic是同步的，所以partition也肯定是同步的。</p>
+<ol start="2">
+<li>异步发送</li>
+</ol>
+<p>中间缓存里的队列是partition队列，这个队列里只有上一个recordBatch结束了，才会走下一个，保证顺序性，</p>
+<p>如果失败，会插回partition队列的头部，详情尽在图中</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcly1foaf3l9dy8j31gq14sk1v.jpg" alt="partition"></p>
+<h4><span id="2-kafka-ji-qun-yuan-li">2、kafka集群原理</span><a href="#2-kafka-ji-qun-yuan-li" class="header-anchor">#</a></h4><p>kafka并不是分片的，是主从架构</p>
+<h5><span id="1-leader-fu-ben-xuan-ju">(1)leader副本选举</span><a href="#1-leader-fu-ben-xuan-ju" class="header-anchor">#</a></h5><p>如果某个分区的leader挂了，那么Follewer副本将会进行选举产生一个新的leader来进行读写操作。kafka中leader的选举是从该topic的ISR列表中进行挑选。通常，先使用ISR里的第一个副本，如果不行依次类推。如果ISR集合中的Follower全部宕机，会选择第一个恢复的副本（不一定是ISR）作为leader。通过ISR，kafka需要的冗余度较低，可以容忍的失败数较高。</p>
+<h5><span id="2-gao-xing-neng-ce-lue">(2)高性能策略</span><a href="#2-gao-xing-neng-ce-lue" class="header-anchor">#</a></h5><p>（1）顺序读写磁盘</p>
+<p>​       Kafka的设计充分利用了磁盘顺序读写的性能，Partition相当于一个数据，Broker顺序Partition进行读写。同时，Consumer在进行消费时也顺序的读取这些数据。Kafka官方给出了顺序读写磁盘和随机读取磁盘的性能测试数据（Raid-5，7200rpm）：Sequence I/O: 600MB/s， Random I/O: 100KB/s。并且据资料显示，顺序读写磁盘很多时候比随机访问内存快的多。当对Partition没必要的数据进行删除时，Kafka也是通过整个文件的方式进行删除。具体的，Kafka将Partition分为多个Segment，每个Segment对应一个物理文件，删除是删除整个Segment文件。</p>
+<p>​      Kafka也对Page Cache进行了充分的利用，写磁盘时只是将数据写入Page Cache，并不保证数据一定完全写入磁盘。当读操作发生时，先从PageCache中查找，如果发生缺页才进行磁盘调度，最终返回需要的数据。</p>
+<p>（2）数据文件的索引</p>
+<p>​      如上所述，Kafka将Partition分为多个Segment，每个Segment以该文件中最小的offset命令。这样在查找指定offset的Message的时候，用二分查找就可以定位到该Message在哪个Segment中。同时，为了进一步提高查找的效率，Kafka为每个分段后的数据文件建立了索引文件，文件名与数据文件的名字是一样的，只是文件扩展名为.index。索引文件索引的方式采用了稀疏存储的方式，每隔一定字节的数据建立一条索引。这样避免了索引文件占用过多的空间，从而可以将索引文件保留在内存中。</p>
+<h4><span id="3-xiao-fei-zhe-yuan-li">3、消费者原理</span><a href="#3-xiao-fei-zhe-yuan-li" class="header-anchor">#</a></h4><h5><span id="1-ke-hu-duan">(1)客户端</span><a href="#1-ke-hu-duan" class="header-anchor">#</a></h5><p>Consumer接口的是实现类是KafkaConsumer类，其工作流程大致如下图所示。可以看出KafkaConsumer通过SubscriptionState来管理订阅的topic集合及Partition的消费状态，通过ConsumerCoordinator与Kafka服务端的GroupCoordinator完成<strong>Rebalance</strong>操作及<strong>offset</strong>提交操作，Fetcher负责从Kafka中拉取数据并进行解析。上述操作的所有操作都是通过ConsumerNetworkClient进行缓存并发送的，在该类中还维护了定时任务队列用来完成心跳发送及AutoCommitTask任务。</p>
+<p>这部分我理解的还不是很好，都是客户端的一些操作。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcly1foaf3jgpu4j31kw0tyalo.jpg" alt="consumer"></p>
+<h5><span id="2-offset-partition-pian-yi-guan-li-chong-yao">(2)offset - partition偏移管理 (重要)</span><a href="#2-offset-partition-pian-yi-guan-li-chong-yao" class="header-anchor">#</a></h5><p>新版的consumer为了缓解zk集群的压力，将consumer的offset信息保存在上述GroupCoordinator维护的内部主题中。该主题中保存了每个Consumer Group某一时刻提交的offset信息，其数据格式大致入下图所示，key为groupid,topic,partition组成，value为offset信息。并且通过配置compact策略，使得每个key对应的offset总是最新的。同时，kafka通过Math.abs(groupId.hashCode()) % numPartitions确定某个Consumer Group的partition offset信息存储的分区.</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcly1foaf3kgqrfj31kw0wrq85.jpg" alt="consumer_off"></p>
+<p>也就是consumer如果是更新的话，就会更新对应partition中对应key的value即offset数据，下次consumer再读的时候，返回consumer该offset</p>
+<p>如果是consumer第一次获取数据的话，就需要服务端对这个新consumer的到来做一次rebalance了(重分配)，需要把partition再尽量均分给不同的consumer</p>
+<h5><span id="3-rebalance-chong-yao">(3)rebalance (重要)</span><a href="#3-rebalance-chong-yao" class="header-anchor">#</a></h5><p>在同一个Consumer Group中同一个topic的不同分区会被不同的消费者消费，并且当新的消费者加入或者离开时，会对消费的分区进行重分配，这个工作是由Rebalance操作完成。在开始对Rebalance操作进行介绍前，先说明</p>
+<p>Rebalance操作发生的时机：</p>
+<ul>
+<li>有新的消费者加入Consumer Group;</li>
+<li>Consumer Group中的消费者宕机下线；</li>
+<li>有消费者主动退出Consumer Group；</li>
+<li>Consumer Group订阅的任一topic出现分区变化；</li>
+<li>消费者调用unsubscribe取消对某一个topic的订阅；</li>
+</ul>
+<p>​    </p>
+<p> Rebalance操作主要包括三个阶段：</p>
+<p>（1）消费者查找管理当前Consumer Group的GroupCoordinator</p>
+<p>​        该阶段会向Kafka集群中负载最小的Broker发送GroupCoordinatorRequest，并处理响应找到其所对应的GroupCoordinator的网络位置。</p>
+<p>（2）Join Group阶段</p>
+<p>​        在该阶段Consumer会向GroupCoordinator发送JoinGroupRequest，并处理各自的JoinGroupResponse。JoinGroupResponse的处理逻辑如下：</p>
+<ul>
+<li>解析JoinGroupResponse，获取GroupCoordinator分配的memberId,generation等信息，更新到本地；</li>
+<li>消费者根据leadId检测自己是不是Leader。如果是leader则进入onJoinLeader()，否者进入onJoinFollower()方法；</li>
+<li>leader根据group_protocol字段指定的Partition分配策略，查找响应的PartitionAssignor对象；</li>
+<li>leader会得到全部消费者订阅的topic，并将其添加到其SubscriptionState.groupSubscription集合中。Follower则只关心自己订阅的topic;</li>
+<li>更新metadata;</li>
+<li>leader调用PartiionAssignor.assign()方法进行分区分配；</li>
+</ul>
+<p>（3）Sync Group阶段</p>
+<p>​        在该阶段leader会将其分配的结果封装为SyncGroupRequest发送给GroupCoordinator进行处理，并处理SyncGroupResponse。</p>
+<p>具体实现大概就是GroupCoordinator之间一顿操作，将partition分配，具体的分配策略如下：</p>
+<p>在Rebalance操作的Join Group阶段leader会调用PartiionAssignor.assign()进行分区分配。开发者可以通过继承PartiionAssignor接口自己实现分区分配策略，Kaka提供了两个默认实现RangeAssignor和RoundRobinAssignor。</p>
+<p>(1) RangeAssignor</p>
+<p>​       对于一个topic，n = 分区数/消费者数量，m=分区数%消费者数量，前m个消费者每个分配n+1个分区，后面的 （消费者数量-m）个消费者每个分配n个分区。比如有两个消费者c1,c2，有topic t1,t2，分别有三个分区。那么，按这种方式的分配结果是c1t1p1,c1t1p2,c2t1p3,c1t2p1,c1t2p2,c2t2p3。显然，这种方式在一定程度上是不公平的。</p>
+<p>(2) RoundRobinAssignor</p>
+<p>​       该分配器会把这个group订阅的所有TopicPartition排序，排序是先按topic排序，同一个topic的分区按partition id排序。然后，依次分配给消费者。上述例子利用RoundRobinAssignor的分配结果是：c1t1p1,c2t1p2,c1t1p3,c1t2p1,c2t2p2,c1t2p3</p>
+<h3><span id="wu-xiao-xi-dui-lie-dui-bi">五、消息队列对比</span><a href="#wu-xiao-xi-dui-lie-dui-bi" class="header-anchor">#</a></h3><table>
+<thead>
+<tr>
+<th></th>
+<th>Kafka</th>
+<th>RabbitMQ</th>
+<th>ZeroMQ</th>
+<th>ActiveMQ</th>
+<th>RocketMQ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>吞吐量</td>
+<td>高（17.3W/s）</td>
+<td>低 (2.6W/s)</td>
+<td>高（“史上最快”） (29W/s)</td>
+<td>低（比RabbitMQ低）</td>
+<td>高（11.6w/s）</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>保证</td>
+<td>保证</td>
+<td>不保证</td>
+<td>不保证</td>
+<td>保证</td>
+</tr>
+<tr>
+<td>持久化</td>
+<td>支持(大量)</td>
+<td>支持（少量）</td>
+<td>不支持</td>
+<td>支持（少量）</td>
+<td>支持（大量）</td>
+</tr>
+<tr>
+<td>消息回溯</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>只要开发语言</td>
+<td>Scala/Java</td>
+<td>Erlang</td>
+<td>C</td>
+<td>Java</td>
+<td>Java</td>
+</tr>
+<tr>
+<td>性能稳定性</td>
+<td>较差</td>
+<td>好</td>
+<td>很好</td>
+<td>好</td>
+<td>一般</td>
+</tr>
+</tbody></table>
+<h3><span id="liu-pei-zhi-xin-xi">六、配置信息</span><a href="#liu-pei-zhi-xin-xi" class="header-anchor">#</a></h3><h4><span id="1-producer">1、producer</span><a href="#1-producer" class="header-anchor">#</a></h4><table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>默认值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>batch.num.messages</code></td>
+<td>200</td>
+<td><code>一个batch发送消息的数量</code></td>
+</tr>
+<tr>
+<td>batch.num.messages</td>
+<td>200</td>
+<td>采用异步模式时，一个batch缓存的消息数量。达到这个数量值时producer才会发送消息。</td>
+</tr>
+<tr>
+<td>batch.size</td>
+<td>16384</td>
+<td>批量提交的batch字节大小</td>
+</tr>
+<tr>
+<td>buffer.memory</td>
+<td>33554432</td>
+<td>BufferPool缓存大小</td>
+</tr>
+<tr>
+<td><a href="http://client.id/" target="_blank" rel="noopener">client.id</a></td>
+<td>生成一个id</td>
+<td>标识生产者的一个字符串</td>
+</tr>
+<tr>
+<td>compression.type</td>
+<td>none</td>
+<td>Producer用于压缩数据的压缩类型,默认是无压缩。正确的选项值是none、gzip、snappy。</td>
+</tr>
+<tr>
+<td>interceptor.classes</td>
+<td></td>
+<td>消息拦截类的list</td>
+</tr>
+<tr>
+<td>linger.ms</td>
+<td>0</td>
+<td>数据缓存的最大延迟时间</td>
+</tr>
+<tr>
+<td>message.send.max.retries</td>
+<td>3</td>
+<td>消息发送失败后重试次数</td>
+</tr>
+<tr>
+<td>metadata.broker.list</td>
+<td></td>
+<td>生产者获取元数据地址</td>
+</tr>
+<tr>
+<td>partitioner.class</td>
+<td>DefaultPartitioner</td>
+<td>分区分配策略，默认是kafka.producer.DefaultPartitioner，取模</td>
+</tr>
+<tr>
+<td>queue.buffering.max.messages</td>
+<td>10000</td>
+<td>异步模式下缓冲的消息的最大数量</td>
+</tr>
+<tr>
+<td>queue.buffering.max.ms</td>
+<td>5000</td>
+<td>异步模式下缓冲数据的最大时间</td>
+</tr>
+<tr>
+<td><a href="http://queue.enqueue.timeout.ms/" target="_blank" rel="noopener">queue.enqueue.timeout.ms</a></td>
+<td>-1</td>
+<td>异步模式下，消息进入队列的等待时间。若是设置为0，则消息不等待，如果进入不了队列，则直接被抛弃</td>
+</tr>
+<tr>
+<td>request.required.acks</td>
+<td>0</td>
+<td>消息确认模式，0：不保证消息到达确认；1：发送消息，等待leader收到确认；-1：发送消息，等待leader收到确认，并进行复制操作后才返回。</td>
+</tr>
+<tr>
+<td>request.timeout.ms</td>
+<td>10000</td>
+<td>发送消息最长等待时间</td>
+</tr>
+<tr>
+<td>send.buffer.bytes</td>
+<td>100*1024</td>
+<td>socket的缓存大小</td>
+</tr>
+<tr>
+<td>topic.metadata.refresh.interval.ms</td>
+<td>600*1000</td>
+<td>生产者定时更新topic元信息的时间间隔</td>
+</tr>
+</tbody></table>
+<h4><span id="2-consumer">2、consumer</span><a href="#2-consumer" class="header-anchor">#</a></h4><table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>默认值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>batch.num.messages</code></td>
+<td>200</td>
+<td><code>一个batch发送消息的数量</code></td>
+</tr>
+<tr>
+<td>batch.num.messages</td>
+<td>200</td>
+<td>采用异步模式时，一个batch缓存的消息数量。达到这个数量值时producer才会发送消息。</td>
+</tr>
+<tr>
+<td>batch.size</td>
+<td>16384</td>
+<td>批量提交的batch字节大小</td>
+</tr>
+<tr>
+<td>buffer.memory</td>
+<td>33554432</td>
+<td>BufferPool缓存大小</td>
+</tr>
+<tr>
+<td><a href="http://client.id/" target="_blank" rel="noopener">client.id</a></td>
+<td>生成一个id</td>
+<td>标识生产者的一个字符串</td>
+</tr>
+<tr>
+<td>compression.type</td>
+<td>none</td>
+<td>Producer用于压缩数据的压缩类型,默认是无压缩。正确的选项值是none、gzip、snappy。</td>
+</tr>
+<tr>
+<td>interceptor.classes</td>
+<td></td>
+<td>消息拦截类的list</td>
+</tr>
+<tr>
+<td>linger.ms</td>
+<td>0</td>
+<td>数据缓存的最大延迟时间</td>
+</tr>
+<tr>
+<td>message.send.max.retries</td>
+<td>3</td>
+<td>消息发送失败后重试次数</td>
+</tr>
+<tr>
+<td>metadata.broker.list</td>
+<td></td>
+<td>生产者获取元数据地址</td>
+</tr>
+<tr>
+<td>partitioner.class</td>
+<td>DefaultPartitioner</td>
+<td>分区分配策略，默认是kafka.producer.DefaultPartitioner，取模</td>
+</tr>
+<tr>
+<td>queue.buffering.max.messages</td>
+<td>10000</td>
+<td>异步模式下缓冲的消息的最大数量</td>
+</tr>
+<tr>
+<td>queue.buffering.max.ms</td>
+<td>5000</td>
+<td>异步模式下缓冲数据的最大时间</td>
+</tr>
+<tr>
+<td><a href="http://queue.enqueue.timeout.ms/" target="_blank" rel="noopener">queue.enqueue.timeout.ms</a></td>
+<td>-1</td>
+<td>异步模式下，消息进入队列的等待时间。若是设置为0，则消息不等待，如果进入不了队列，则直接被抛弃</td>
+</tr>
+<tr>
+<td>request.required.acks</td>
+<td>0</td>
+<td>消息确认模式，0：不保证消息到达确认；1：发送消息，等待leader收到确认；-1：发送消息，等待leader收到确认，并进行复制操作后才返回。</td>
+</tr>
+<tr>
+<td>request.timeout.ms</td>
+<td>10000</td>
+<td>发送消息最长等待时间</td>
+</tr>
+<tr>
+<td>send.buffer.bytes</td>
+<td>100*1024</td>
+<td>socket的缓存大小</td>
+</tr>
+<tr>
+<td>topic.metadata.refresh.interval.ms</td>
+<td>600*1000</td>
+<td>生产者定时更新topic元信息的时间间隔</td>
+</tr>
+</tbody></table>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/kafka/">kafka</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/wechat.png" alt="微信"></div>
+</a>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/03/29/hadoop/presto/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">presto简介、与hive比较</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/02/06/springboot/pageHelper/">
+                <span class="level-item">pageHelper-springboot</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="/images/avatar.png" alt="大菜猫">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        大菜猫
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        做点有用的
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>beijing</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        57
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        25
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        33
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ruushwei" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/ruushwei">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Dribbble" href="https://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/design/">
+            <span class="level-start">
+                <span class="level-item">design</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/git/">
+            <span class="level-start">
+                <span class="level-item">git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/hadoop/">
+            <span class="level-start">
+                <span class="level-item">hadoop</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/java/">
+            <span class="level-start">
+                <span class="level-item">java</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">12</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/jvm/">
+            <span class="level-start">
+                <span class="level-item">jvm</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/kafka/">
+            <span class="level-start">
+                <span class="level-item">kafka</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/maven/">
+            <span class="level-start">
+                <span class="level-item">maven</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/mysql/">
+            <span class="level-start">
+                <span class="level-item">mysql</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/netty/">
+            <span class="level-start">
+                <span class="level-item">netty</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/network/">
+            <span class="level-start">
+                <span class="level-item">network</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/redis/">
+            <span class="level-start">
+                <span class="level-item">redis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/rss/">
+            <span class="level-start">
+                <span class="level-item">rss</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/spring/">
+            <span class="level-start">
+                <span class="level-item">spring</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/springboot/">
+            <span class="level-start">
+                <span class="level-item">springboot</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/storm/">
+            <span class="level-start">
+                <span class="level-item">storm</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/vim/">
+            <span class="level-start">
+                <span class="level-item">vim</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/zookeeper/">
+            <span class="level-start">
+                <span class="level-item">zookeeper</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/并发/">
+            <span class="level-start">
+                <span class="level-item">并发</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/旅游/">
+            <span class="level-start">
+                <span class="level-item">旅游</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/机器学习/">
+            <span class="level-start">
+                <span class="level-item">机器学习</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/英语/">
+            <span class="level-start">
+                <span class="level-item">英语</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/设计模式/">
+            <span class="level-start">
+                <span class="level-item">设计模式</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/读书笔记/">
+            <span class="level-start">
+                <span class="level-item">读书笔记</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/面经/">
+            <span class="level-start">
+                <span class="level-item">面经</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
+                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
+                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
+                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
+                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
+                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">14</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2012/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2012</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/List/">
+                        <span class="tag">List</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/concurrenthashmap/">
+                        <span class="tag">concurrenthashmap</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/design/">
+                        <span class="tag">design</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/framework/">
+                        <span class="tag">framework</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hadoop/">
+                        <span class="tag">hadoop</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hashmap/">
+                        <span class="tag">hashmap</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/innodb/">
+                        <span class="tag">innodb</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/java/">
+                        <span class="tag">java</span>
+                        <span class="tag is-grey">15</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jvm/">
+                        <span class="tag">jvm</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/kafka/">
+                        <span class="tag">kafka</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/maven/">
+                        <span class="tag">maven</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mybatis/">
+                        <span class="tag">mybatis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mysql/">
+                        <span class="tag">mysql</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/netty/">
+                        <span class="tag">netty</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/network/">
+                        <span class="tag">network</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redis/">
+                        <span class="tag">redis</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/rss/">
+                        <span class="tag">rss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/spring/">
+                        <span class="tag">spring</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/springboot/">
+                        <span class="tag">springboot</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/storm/">
+                        <span class="tag">storm</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/tair/">
+                        <span class="tag">tair</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vim/">
+                        <span class="tag">vim</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/zookeeper/">
+                        <span class="tag">zookeeper</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/并发/">
+                        <span class="tag">并发</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/旅游/">
+                        <span class="tag">旅游</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/机器学习/">
+                        <span class="tag">机器学习</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/生活/">
+                        <span class="tag">生活</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/索引/">
+                        <span class="tag">索引</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/英语/">
+                        <span class="tag">英语</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/设计模式/">
+                        <span class="tag">设计模式</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/读书笔记/">
+                        <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/面经/">
+                        <span class="tag">面经</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
+                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
+                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
+                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
+                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
+                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">14</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2012/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2012</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/List/">
+                        <span class="tag">List</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/concurrenthashmap/">
+                        <span class="tag">concurrenthashmap</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/design/">
+                        <span class="tag">design</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/framework/">
+                        <span class="tag">framework</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hadoop/">
+                        <span class="tag">hadoop</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hashmap/">
+                        <span class="tag">hashmap</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/innodb/">
+                        <span class="tag">innodb</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/java/">
+                        <span class="tag">java</span>
+                        <span class="tag is-grey">15</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jvm/">
+                        <span class="tag">jvm</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/kafka/">
+                        <span class="tag">kafka</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/maven/">
+                        <span class="tag">maven</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mybatis/">
+                        <span class="tag">mybatis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mysql/">
+                        <span class="tag">mysql</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/netty/">
+                        <span class="tag">netty</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/network/">
+                        <span class="tag">network</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redis/">
+                        <span class="tag">redis</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/rss/">
+                        <span class="tag">rss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/spring/">
+                        <span class="tag">spring</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/springboot/">
+                        <span class="tag">springboot</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/storm/">
+                        <span class="tag">storm</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/tair/">
+                        <span class="tag">tair</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vim/">
+                        <span class="tag">vim</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/zookeeper/">
+                        <span class="tag">zookeeper</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/并发/">
+                        <span class="tag">并发</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/旅游/">
+                        <span class="tag">旅游</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/机器学习/">
+                        <span class="tag">机器学习</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/生活/">
+                        <span class="tag">生活</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/索引/">
+                        <span class="tag">索引</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/英语/">
+                        <span class="tag">英语</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/设计模式/">
+                        <span class="tag">设计模式</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/读书笔记/">
+                        <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/面经/">
+                        <span class="tag">面经</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="kafka基本概念、原理" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 大菜猫&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

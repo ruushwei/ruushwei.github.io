@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>大菜猫</title>
+  
+  <subtitle>做点有用的</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://www.techwei.cn/"/>
+  <updated>2020-03-02T10:11:02.768Z</updated>
+  <id>https://www.techwei.cn/</id>
+  
+  <author>
+    <name>大菜猫</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>innodb事务隔离级别</title>
+    <link href="https://www.techwei.cn/2020/07/09/mysql/%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB2/"/>
+    <id>https://www.techwei.cn/2020/07/09/mysql/事务隔离级别2/</id>
+    <published>2020-07-09T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.768Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#yi-ding-yi&quot;&gt;一、定义&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>快手面经</title>
+    <link href="https://www.techwei.cn/2020/02/02/interview/kuaishou/"/>
+    <id>https://www.techwei.cn/2020/02/02/interview/kuaishou/</id>
+    <published>2020-02-02T12:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.764Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;时间：2020.01 经验 2.5&lt;/p&gt;
+&lt;p&gt;一面： &lt;/p&gt;
+&lt;p&gt;自我介绍 &lt;/p&gt;
+&lt;p&gt;springaop的理解、动态代理
+        
+      
+    
+    </summary>
+    
+      <category term="git" scheme="https://www.techwei.cn/categories/git/"/>
+    
+    
+      <category term="git" scheme="https://www.techwei.cn/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>幂等设计</title>
+    <link href="https://www.techwei.cn/2019/12/03/design/idemptent/"/>
+    <id>https://www.techwei.cn/2019/12/03/design/idemptent/</id>
+    <published>2019-12-03T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.761Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;请求幂等性总结：&lt;/p&gt;
+&lt;p&gt;1.是否需要幂等。比如查询，insert含唯一索引的表，update set数据，delete by id
+        
+      
+    
+    </summary>
+    
+      <category term="design" scheme="https://www.techwei.cn/categories/design/"/>
+    
+    
+      <category term="design" scheme="https://www.techwei.cn/tags/design/"/>
+    
+      <category term="framework" scheme="https://www.techwei.cn/tags/framework/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>缓存穿透、击穿、雪崩</title>
+    <link href="https://www.techwei.cn/2019/11/18/redis/%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%AD%89/"/>
+    <id>https://www.techwei.cn/2019/11/18/redis/缓存雪崩等/</id>
+    <published>2019-11-18T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.771Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3&gt;&lt;span id=&quot;huan-cun-chuan-tou&quot;&gt;&lt;strong&gt;缓存穿透&lt;/strong&gt;&lt;/span&gt;&lt;a href=&quot;#huan-cun-chuan-tou&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;定义:
+        
+      
+    
+    </summary>
+    
+      <category term="redis" scheme="https://www.techwei.cn/categories/redis/"/>
+    
+    
+      <category term="redis" scheme="https://www.techwei.cn/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2019国庆上海苏州四日游记</title>
+    <link href="https://www.techwei.cn/2019/10/20/travel/shsz/"/>
+    <id>https://www.techwei.cn/2019/10/20/travel/shsz/</id>
+    <published>2019-10-19T22:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.772Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#9-yue-30-ri-wai-tan-hen-jiu-yi-qian-yang-rou-chuan&quot;&gt;9月30日 外滩  很久以前羊肉串&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="旅游" scheme="https://www.techwei.cn/categories/%E6%97%85%E6%B8%B8/"/>
+    
+    
+      <category term="旅游" scheme="https://www.techwei.cn/tags/%E6%97%85%E6%B8%B8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2019国庆上海苏州四日游行程计划</title>
+    <link href="https://www.techwei.cn/2019/09/20/travel/shszplan/"/>
+    <id>https://www.techwei.cn/2019/09/20/travel/shszplan/</id>
+    <published>2019-09-19T22:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.773Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#2019-guo-qing-shang-hai-su-zhou-si-tian-lu-xing&quot;&gt;2019 国庆上海苏州四天旅行&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="旅游" scheme="https://www.techwei.cn/categories/%E6%97%85%E6%B8%B8/"/>
+    
+    
+      <category term="旅游" scheme="https://www.techwei.cn/tags/%E6%97%85%E6%B8%B8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>springioc初始化</title>
+    <link href="https://www.techwei.cn/2019/09/10/spring/springioc%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
+    <id>https://www.techwei.cn/2019/09/10/spring/springioc初始化/</id>
+    <published>2019-09-10T12:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.771Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;IOC 容器的初始化过程分为三步骤：Resource 定位、BeanDefinition 的载入和解析，BeanDefinition 注册&lt;/p&gt;
+&lt;p&gt;1.Resource 定位。我们一般用外部资源来描述 Bean 对象，所以在初始化 IOC
+        
+      
+    
+    </summary>
+    
+      <category term="spring" scheme="https://www.techwei.cn/categories/spring/"/>
+    
+    
+      <category term="spring" scheme="https://www.techwei.cn/tags/spring/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>记录租房第三个住处-天通苑东三区</title>
+    <link href="https://www.techwei.cn/2019/09/03/life/%E5%A4%A9%E9%80%9A%E8%8B%91%E4%B8%9C%E4%B8%89%E5%8C%BA/"/>
+    <id>https://www.techwei.cn/2019/09/03/life/天通苑东三区/</id>
+    <published>2019-09-03T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.766Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;上上周末8月24号搬到了新的租房，搬到了天通苑北一区，换了一居，也住了十几天了，感觉很不错，但之前的租房也很好，它有一个大大的天台，还可以上房顶，把照片记录下来。&lt;/p&gt;
+&lt;p&gt;上周末回去稍微收拾了下屋子，卖了东西，图中为美丽聪慧的对象&lt;/p&gt;
+&lt;p&gt;&lt;img
+        
+      
+    
+    </summary>
+    
+      <category term="生活" scheme="https://www.techwei.cn/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="生活" scheme="https://www.techwei.cn/tags/%E7%94%9F%E6%B4%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>rss订阅</title>
+    <link href="https://www.techwei.cn/2019/08/31/rss/rss/"/>
+    <id>https://www.techwei.cn/2019/08/31/rss/rss/</id>
+    <published>2019-08-30T22:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.771Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;使用 feedly 订阅 rss，实现多设备同步  &lt;/p&gt;
+&lt;p&gt;教程：&lt;a href=&quot;https://techmoon.xyz/feedly/&quot; target=&quot;_blank&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="rss" scheme="https://www.techwei.cn/categories/rss/"/>
+    
+    
+      <category term="rss" scheme="https://www.techwei.cn/tags/rss/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>读《自控力》</title>
+    <link href="https://www.techwei.cn/2019/07/14/read/controll/"/>
+    <id>https://www.techwei.cn/2019/07/14/read/controll/</id>
+    <published>2019-07-14T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.770Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2&gt;&lt;span id=&quot;qian-yan&quot;&gt;前言&lt;/span&gt;&lt;a href=&quot;#qian-yan&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;看了本周”李自然说”讨论学习方法，里面有一句话非常喜欢，人和人的差距大于人和猪的差距。
+        
+      
+    
+    </summary>
+    
+      <category term="读书笔记" scheme="https://www.techwei.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="读书笔记" scheme="https://www.techwei.cn/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>redis单线程还这么快</title>
+    <link href="https://www.techwei.cn/2019/07/09/redis/%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E5%BF%AB/"/>
+    <id>https://www.techwei.cn/2019/07/09/redis/单线程还快/</id>
+    <published>2019-07-09T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.771Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span
+        
+      
+    
+    </summary>
+    
+      <category term="redis" scheme="https://www.techwei.cn/categories/redis/"/>
+    
+    
+      <category term="redis" scheme="https://www.techwei.cn/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tair &amp; redis 的选择</title>
+    <link href="https://www.techwei.cn/2019/07/09/redis/%E4%B8%8Etair%E9%80%89%E6%8B%A9/"/>
+    <id>https://www.techwei.cn/2019/07/09/redis/与tair选择/</id>
+    <published>2019-07-09T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.770Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;tair-amp-redis-de-xuan-ze&quot;&gt;tair &amp;amp; redis 的选择&lt;/span&gt;&lt;a href=&quot;#tair-amp-redis-de-xuan-ze&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="redis" scheme="https://www.techwei.cn/categories/redis/"/>
+    
+    
+      <category term="redis" scheme="https://www.techwei.cn/tags/redis/"/>
+    
+      <category term="tair" scheme="https://www.techwei.cn/tags/tair/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>netty模型</title>
+    <link href="https://www.techwei.cn/2019/07/09/netty/model/"/>
+    <id>https://www.techwei.cn/2019/07/09/netty/model/</id>
+    <published>2019-07-09T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.769Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;ding-yi&quot;&gt;定义&lt;/span&gt;&lt;a href=&quot;#ding-yi&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;netty是一个高性能、异步事情驱动的网络通信框架&lt;br&gt;NIO IO多路复用
+        
+      
+    
+    </summary>
+    
+      <category term="netty" scheme="https://www.techwei.cn/categories/netty/"/>
+    
+    
+      <category term="netty" scheme="https://www.techwei.cn/tags/netty/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>innodb事务隔离级别、MVCC</title>
+    <link href="https://www.techwei.cn/2019/07/09/mysql/%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/"/>
+    <id>https://www.techwei.cn/2019/07/09/mysql/隔离级别/</id>
+    <published>2019-07-09T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.768Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;ge-chi-ji-bie&quot;&gt;隔离级别&lt;/span&gt;&lt;a href=&quot;#ge-chi-ji-bie&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;&lt;img
+        
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>策略模式</title>
+    <link href="https://www.techwei.cn/2019/07/09/designpatterns/strategy/"/>
+    <id>https://www.techwei.cn/2019/07/09/designpatterns/strategy/</id>
+    <published>2019-07-09T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.761Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="设计模式" scheme="https://www.techwei.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="https://www.techwei.cn/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>BIO NIO AIO 阻塞 非阻塞</title>
+    <link href="https://www.techwei.cn/2019/07/04/netty/BIO_NIO_AIO/"/>
+    <id>https://www.techwei.cn/2019/07/04/netty/BIO_NIO_AIO/</id>
+    <published>2019-07-04T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.769Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;bio-tong-bu-zu-sai-io-mian-xiang-liu-de&quot;&gt;BIO:同步阻塞IO（面向流的）&lt;/span&gt;&lt;a href=&quot;#bio-tong-bu-zu-sai-io-mian-xiang-liu-de&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="netty" scheme="https://www.techwei.cn/categories/netty/"/>
+    
+    
+      <category term="netty" scheme="https://www.techwei.cn/tags/netty/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>红黑树、AVL树、B树代价分析与比较</title>
+    <link href="https://www.techwei.cn/2019/06/13/dataStructure/tree/"/>
+    <id>https://www.techwei.cn/2019/06/13/dataStructure/tree/</id>
+    <published>2019-06-13T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.761Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;yi-ge-chong-shu-jian-jie&quot;&gt;一、各种树简介&lt;/span&gt;&lt;a href=&quot;#yi-ge-chong-shu-jian-jie&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h4&gt;&lt;h5&gt;&lt;span
+        
+      
+    
+    </summary>
+    
+      <category term="java" scheme="https://www.techwei.cn/categories/java/"/>
+    
+    
+      <category term="java" scheme="https://www.techwei.cn/tags/java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>volatile可见性、内存屏障</title>
+    <link href="https://www.techwei.cn/2019/06/02/concurrentProgramming/volatile/"/>
+    <id>https://www.techwei.cn/2019/06/02/concurrentProgramming/volatile/</id>
+    <published>2019-06-02T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.760Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h4&gt;&lt;p&gt;volatile关键字具有许多特性，其中最重要的特性就是保证了用volatile修饰的变量对所有线程的可见性。利用内存屏障使得读写、读读、写写 都不能同时发生, 且不能指令重排。&lt;/p&gt;
+&lt;h4 id=&quot;可见性&quot;&gt;&lt;a href=&quot;#可见性&quot; class=&quot;headerlink&quot; title=&quot;可见性&quot;&gt;&lt;/a&gt;可见性&lt;/h4&gt;&lt;p&gt;当一个线程修改了变量的值，新的值会立刻同步到主内存当中。而其他线程读取这个变量的时候，也会从主内存中拉取最新的变量值。&lt;/p&gt;
+&lt;p&gt;得益于java语言的先行发生原则（happens-before）&lt;br&gt;对于一个volatile变量的写操作先行发生于后面对这个变量的读操作。&lt;/p&gt;
+&lt;h4 id=&quot;内存屏障&quot;&gt;&lt;a href=&quot;#内存屏障&quot; class=&quot;headerlink&quot; title=&quot;内存屏障&quot;&gt;&lt;/a&gt;内存屏障&lt;/h4&gt;&lt;p&gt;内存屏障（Memory Barrier）是一种CPU指令。&lt;strong&gt;禁止重排序，控制执行顺序，刷新缓存与获取最新主存数据。&lt;/strong&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="并发" scheme="https://www.techwei.cn/categories/%E5%B9%B6%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="https://www.techwei.cn/tags/java/"/>
+    
+      <category term="并发" scheme="https://www.techwei.cn/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AQS原理解析</title>
+    <link href="https://www.techwei.cn/2019/06/02/concurrentProgramming/aqs/"/>
+    <id>https://www.techwei.cn/2019/06/02/concurrentProgramming/aqs/</id>
+    <published>2019-06-02T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.760Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;tan-tan-ni-dui-aqs-de-li-jie&quot;&gt;谈谈你对AQS的理解&lt;/span&gt;&lt;a href=&quot;#tan-tan-ni-dui-aqs-de-li-jie&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="并发" scheme="https://www.techwei.cn/categories/%E5%B9%B6%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="https://www.techwei.cn/tags/java/"/>
+    
+      <category term="并发" scheme="https://www.techwei.cn/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hashtable and concurrenthashmap1.7、1.8</title>
+    <link href="https://www.techwei.cn/2019/05/31/concurrenthashmap/concurrenthashmap/"/>
+    <id>https://www.techwei.cn/2019/05/31/concurrenthashmap/concurrenthashmap/</id>
+    <published>2019-05-31T02:54:24.000Z</published>
+    <updated>2020-03-02T10:11:02.761Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;hashtable&amp;amp;concurrenthashmap1.7&amp;amp;1.8 总结&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="java" scheme="https://www.techwei.cn/categories/java/"/>
+    
+    
+      <category term="java" scheme="https://www.techwei.cn/tags/java/"/>
+    
+      <category term="concurrenthashmap" scheme="https://www.techwei.cn/tags/concurrenthashmap/"/>
+    
+  </entry>
+  
+</feed>
