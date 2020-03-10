@@ -15,7 +15,7 @@
 <meta property="og:description" content="- 谈谈对springIoc的了解 - 谈谈对springAop的了解 - 动态代理和静态代理的区别 - Java反射的原理 - 常见Java集合类 - ArrayList 和 LinkedList的区别 - Java并发容器有哪些 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2020-03-10T00:30:31.724Z">
+<meta property="og:updated_time" content="2020-03-10T15:59:26.476Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识储备">
 <meta name="twitter:description" content="- 谈谈对springIoc的了解 - 谈谈对springAop的了解 - 动态代理和静态代理的区别 - Java反射的原理 - 常见Java集合类 - ArrayList 和 LinkedList的区别 - Java并发容器有哪些 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程">
@@ -110,6 +110,8 @@
                 <a class="navbar-item" href="/tags">标签</a>
                 
                 <a class="navbar-item is-active" href="/interview">知识储备</a>
+                
+                <a class="navbar-item" href="/interview-wen">知识储备-雯</a>
                 
                 <a class="navbar-item" href="/arithmetic">算法</a>
                 
@@ -210,7 +212,11 @@
 <li><a href="#threadlocal-yuan-li">- ThreadLocal原理</a></li>
 <li><a href="#aqs-tong-bu-qi-yuan-li-tryacquire-de-guo-cheng">- AQS同步器原理？tryAcquire的过程？</a></li>
 <li><a href="#countdownlatch-semaphore-cyclicbarrier-han-yi-ji-shi-xian-yuan-li">- CountDownLatch、Semaphore、CyclicBarrier含义及实现原理</a></li>
-<li><a href="#java-nei-cun-qu-yu">- Java内存区域</a></li>
+<li><a href="#java-nei-cun-qu-yu">- Java内存区域</a><ul>
+<li><a href="#xian-cheng-si-you-de">线程私有的</a></li>
+<li><a href="#xian-cheng-gong-you-de">线程公有的</a></li>
+</ul>
+</li>
 <li><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</a></li>
 <li><a href="#gc-dui-xiang-cun-huo-pan-ding-suan-fa">- gc对象存活判定算法</a></li>
 <li><a href="#gc-la-ji-shou-ji-qi-ji-qi-you-que-dian">- gc垃圾收集器及其优缺点</a></li>
@@ -519,17 +525,15 @@
 <p>CyclicBarrier和CountDownLatch的异同</p>
 <p>1.CyclicBarrier和CountDownLatch都可以通过一个条件去控制多个线程，然后在条件满足时做一些操作。CyclicBarrier在条件满足时可以让所有线程都继续运行，而CountDownLatch只能让一开始就在等待的线程去运行。</p>
 <p>2.CyclicBarrier可以复用，开启屏障之后count会回归到初始值，可以进行下一次屏障拦截线程。而CountDownLatch只能使用一次，倒计时完毕后count的值不会变化。</p>
-<h3><span id="java-nei-cun-qu-yu">- Java内存区域</span><a href="#java-nei-cun-qu-yu" class="header-anchor">#</a></h3><p>程序计数器<br>存放当前线程所执行的字节码的行号指示器。如果线程执行的是一个Java程序，计数器记录正在执行的虚拟机字节码指令地址；正在执行的是native方法，则计数器的值为空</p>
+<h3><span id="java-nei-cun-qu-yu">- Java内存区域</span><a href="#java-nei-cun-qu-yu" class="header-anchor">#</a></h3><h4><span id="xian-cheng-si-you-de">线程私有的</span><a href="#xian-cheng-si-you-de" class="header-anchor">#</a></h4><p>程序计数器<br>存放当前线程所执行的字节码的行号指示器。如果线程执行的是一个Java程序，计数器记录正在执行的虚拟机字节码指令地址；正在执行的是native方法，则计数器的值为空</p>
 <p>Java虚拟机栈</p>
 <p>描述Java方法执行的内存模型，每个方法执行的同时都会创建一个栈帧来存储局部变量表（编译期可知的各种基本数据类型，对象引用【reference类型】，内存空间的分配是在编译期完成的，方法运行期间不会改变局部变量表的大小）、操作数栈、动态链接、方法出口等。</p>
 <p>本地方法栈</p>
 <p>为虚拟机使用到的native方法服务</p>
-<p>Java堆（GC堆）</p>
+<h4><span id="xian-cheng-gong-you-de">线程公有的</span><a href="#xian-cheng-gong-you-de" class="header-anchor">#</a></h4><p>Java堆（GC堆）</p>
 <p>存放对象实例，所有的对象实例和数组都在堆上分配。程序运行时分支可能不一样，只有运行期间才能知道创建哪些对象，这部分内存的分配和回收是动态的</p>
-<p>方法区</p>
-<p>存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码，Java8之后移除整个永久代，以一个名为元空间（metaspace）的本地内存区域代替</p>
-<p>运行时常量池</p>
-<p>方法区的一部分，运行时常量池相对于class文件（类的版本、字段、方法、接口、常量池~存放编译期生成的各种字面量和符号引用）中的常量池具有动态性，运行期间将新的常量放入池中（String.intern()），Java7将运行时常量池从方法区移至堆内存中</p>
+<p>metaspace</p>
+<p>存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码</p>
 <p>直接内存</p>
 <p>不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存。NIO使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作，避免了Java堆和Native堆来回复制数据。直接内存的回收是在虚拟机进行full gc的时候顺带进行的，并不会自己触发垃圾回收</p>
 <h3><span id="tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</span><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi" class="header-anchor">#</a></h3><ol>

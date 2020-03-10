@@ -8,7 +8,7 @@
 
 
     <meta name="description" content="总结volatile关键字具有许多特性，其中最重要的特性就是保证了用volatile修饰的变量对所有线程的可见性。利用内存屏障使得读写、读读、写写 都不能同时发生, 且不能指令重排。 可见性当一个线程修改了变量的值，新的值会立刻同步到主内存当中。而其他线程读取这个变量的时候，也会从主内存中拉取最新的变量值。 得益于java语言的先行发生原则（happens-before）对于一个volatile变">
-<meta name="keywords" content="java,并发">
+<meta name="keywords" content="并发,java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="volatile可见性、内存屏障">
 <meta property="og:url" content="https://www.techwei.cn/2019/06/02/concurrentProgramming/volatile/index.html">
@@ -111,6 +111,8 @@
                 <a class="navbar-item" href="/tags">标签</a>
                 
                 <a class="navbar-item" href="/interview">知识储备</a>
+                
+                <a class="navbar-item" href="/interview-wen">知识储备-雯</a>
                 
                 <a class="navbar-item" href="/arithmetic">算法</a>
                 
@@ -255,16 +257,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/06/13/dataStructure/tree/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/06/02/concurrentProgramming/aqs/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">红黑树、AVL树、B树代价分析与比较</span>
+                <span class="level-item">AQS原理解析</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/02/concurrentProgramming/aqs/">
-                <span class="level-item">AQS原理解析</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/05/31/concurrenthashmap/concurrenthashmap/">
+                <span class="level-item">hashtable and concurrenthashmap1.7、1.8</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>

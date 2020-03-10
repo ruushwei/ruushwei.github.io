@@ -2,22 +2,23 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>分类: 旅游 - 大菜猫</title>
+<title>知识储备-雯 - 大菜猫</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="做点有用的">
+    <meta name="description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
 <meta property="og:type" content="website">
-<meta property="og:title" content="大菜猫">
-<meta property="og:url" content="https://www.techwei.cn/categories/旅游/index.html">
+<meta property="og:title" content="知识储备-雯">
+<meta property="og:url" content="https://www.techwei.cn/interview-wen/index.html">
 <meta property="og:site_name" content="大菜猫">
-<meta property="og:description" content="做点有用的">
+<meta property="og:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
+<meta property="og:updated_time" content="2020-03-10T16:13:27.120Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="大菜猫">
-<meta name="twitter:description" content="做点有用的">
+<meta name="twitter:title" content="知识储备-雯">
+<meta name="twitter:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
 <meta name="twitter:image" content="https://www.techwei.cn/images/og_image.png">
 
 
@@ -92,7 +93,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="大菜猫" height="28">
+                <img src="/images/logo.svg" alt="知识储备-雯" height="28">
             
             </a>
         </div>
@@ -110,7 +111,7 @@
                 
                 <a class="navbar-item" href="/interview">知识储备</a>
                 
-                <a class="navbar-item" href="/interview-wen">知识储备-雯</a>
+                <a class="navbar-item is-active" href="/interview-wen">知识储备-雯</a>
                 
                 <a class="navbar-item" href="/arithmetic">算法</a>
                 
@@ -148,43 +149,12 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    <div class="card-content">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="/categories">分类</a></li>
-            
-            <li class="is-active"><a href="#" aria-current="page">旅游</a></li>
-        </ul>
-        </nav>
-    </div>
-</div>
-
-    <div class="card">
     
     <div class="card-content article ">
         
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分钟 读完 (大约 849 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/10/20/travel/shsz/">2019国庆上海苏州四日游记</a>
+                知识储备-雯
             
         </h1>
         <div class="content">
@@ -193,96 +163,79 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#9-yue-30-ri-wai-tan-hen-jiu-yi-qian-yang-rou-chuan">9月30日 外滩  很久以前羊肉串</a></li>
-<li><a href="#10-yue-01-ri-wu-kang-lu">10月01日 武康路</a></li>
-<li><a href="#10-yue-2-ri-xie-mian-cheng-pin-shu-dian-jin-ji-hu">10月2日 蟹面 诚品书店 金鸡湖</a></li>
-<li><a href="#10-yue-3-ri-yi-yuan-liu-yuan">10月3日 怡园 留园</a></li>
-<li><a href="#10-yue-4-ri-gui-tu">10月4日 归途</a></li>
+<li><a href="#java-ji-he">Java集合</a><ul>
+<li><a href="#arraylist-he-linkedlist-de-qu-bie">- ArrayList 和 LinkedList的区别</a></li>
+<li><a href="#tan-tan-dui-hashmap-de-liao-jie">- 谈谈对hashMap的了解</a></li>
+<li><a href="#tan-tan-dui-concurrenthashmap-de-liao-jie">- 谈谈对ConcurrentHashMap的了解</a></li>
+<li><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</a><ul>
+<li><a href="#arrayblockingqueue-shi-object-shu-zu-shi-xian-de-xian-cheng-an-quan-de-you-jie-zu-sai-dui-lie">ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列</a></li>
+<li><a href="#linkedblockingqueue-shi-yi-ge-dan-xiang-lian-biao-shi-xian-de-zu-sai-dui-lie">LinkedBlockingQueue是一个单向链表实现的阻塞队列</a></li>
 </ul>
-<!-- tocstop -->
-
-</div>
-
-<h3><span id="9-yue-30-ri-wai-tan-hen-jiu-yi-qian-yang-rou-chuan">9月30日  外滩  很久以前羊肉串</span><a href="#9-yue-30-ri-wai-tan-hen-jiu-yi-qian-yang-rou-chuan" class="header-anchor">#</a></h3><p>接到小菜猫，先去旅馆放下东西，直接去外滩。 南京东路上都是武警，维持秩序，看着有点厉害。我是第二次来外滩，小菜猫是第一次，还是很好看的，人很多，当晚有灯光表演，30分钟一次，我们赶上了一半。海风很舒服。整个外滩的爱国氛围也很浓厚。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%A4%96%E6%BB%A9.jpeg" alt="外滩"></p>
-<p>去吃了很久以前羊肉串，吃到晚上12点多，羊肉真的好嫩，当面烤也是特色，配上啤酒，舒服，长肉。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%BE%88%E4%B9%85%E4%BB%A5%E5%89%8D%E7%BE%8A%E8%82%89%E4%B8%B2.jpeg" alt></p>
-<h3><span id="10-yue-01-ri-wu-kang-lu">10月01日 武康路</span><a href="#10-yue-01-ri-wu-kang-lu" class="header-anchor">#</a></h3><p>武康路没有拍什么照片，是一条安静古老的小路，下着小雨，氛围很好</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%A5%BC.jpeg" alt></p>
-<p>在这里出发去世界上最大的星巴克</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%9C%80%E5%A4%A7%E7%9A%84%E6%98%9F%E5%B7%B4%E5%85%8B.jpeg" alt></p>
-<p>一栋星巴克，里面两层。点了一杯奶和一杯咖啡。没有太好喝但环境很好，主要咖啡☕️咱也不懂。里面有些机器在做咖啡，全流程透明化。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%98%9F%E5%B7%B4%E5%85%8Bbb.jpeg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%98%9F%E5%B7%B4%E5%85%8B%E5%B7%A5%E4%B8%9A%E8%89%BA%E6%9C%AF.jpeg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%98%9F%E5%B7%B4%E5%85%8B21.jpeg" alt></p>
-<p>下午5点多了，风雨越来越大，继续出发，去豫园&amp;城隍庙，但到了之后风雨太大，也没找到豫园在哪，哈哈，就转地铁回去了。</p>
-<p>晚上去吃了和府捞面，办了会员，赠了个虾，嚯，真虾(瞎)</p>
-<h3><span id="10-yue-2-ri-xie-mian-cheng-pin-shu-dian-jin-ji-hu">10月2日 蟹面 诚品书店 金鸡湖</span><a href="#10-yue-2-ri-xie-mian-cheng-pin-shu-dian-jin-ji-hu" class="header-anchor">#</a></h3><p>上午出门去吃蟹面，尴尬的是行李太沉，不该带着行李去吃，不过蟹面还是很不错，从没吃过这样式儿的，带汤的那碗很不错，人超级多，排了好一会儿</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E8%9F%B9%E9%9D%A2.jpeg" alt></p>
-<p>出发去苏州~</p>
-<p>上海到苏州也太快了，半个小时就到了，小菜猫睡了一会儿，我还没睡就到了，放下行李先奔了金鸡湖</p>
-<p>诚品书店太安静了，没怎么拍照片，金鸡湖还是很美的，毕竟北方湖还是很少的。见到漂亮的湖，小风一吹，还是很爽。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E9%87%91%E9%B8%A1%E6%B9%96.jpeg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E9%87%91%E9%B8%A1%E6%B9%962.jpeg" alt></p>
-<p>美美哒<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E9%87%91%E9%B8%A1%E6%B9%963.jpeg" alt></p>
-<p>晚上吃了高级台湾自助火锅，到了才发现是自助，不过还是靠实力吃回来了。</p>
-<h3><span id="10-yue-3-ri-yi-yuan-liu-yuan">10月3日 怡园 留园</span><a href="#10-yue-3-ri-yi-yuan-liu-yuan" class="header-anchor">#</a></h3><p>上午要去留园，然后我拉肚子，耽误了坐车，就先去了怡园，没想到怡园还不错，后来发现留园反而因为人多，毫无观赏体验。</p>
-<p>怡园</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%80%A1%E5%9B%AD.jpeg" alt></p>
-<p>留园就不放了，人太多了，下次不去那么多人的地方了。。</p>
-<h3><span id="10-yue-4-ri-gui-tu">10月4日 归途</span><a href="#10-yue-4-ri-gui-tu" class="header-anchor">#</a></h3><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E8%A7%84%E7%A8%8B.jpeg" alt></p>
-<p>沿途的风光也不错，回家啦</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-19T22:54:24.000Z">2019-09-20</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2 分钟 读完 (大约 238 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/09/20/travel/shszplan/">2019国庆上海苏州四日游行程计划</a>
-            
-        </h1>
-        <div class="content">
-            <div class="toc">
-
-<!-- toc -->
-
-<ul>
-<li><a href="#2019-guo-qing-shang-hai-su-zhou-si-tian-lu-xing">2019 国庆上海苏州四天旅行</a><ul>
-<li><a href="#xing-cheng-gui-hua">行程规划</a></li>
+</li>
+</ul>
+</li>
+<li><a href="#java-bing-fa-lei">Java并发类</a><ul>
+<li><a href="#volatile-yuan-li">- volatile原理</a></li>
+<li><a href="#java-de-le-guan-suo-cas-suo-yuan-li">- java的乐观锁CAS锁原理</a></li>
+<li><a href="#sychronized-he-valotile-de-qu-bie">- sychronized 和 valotile 的区别</a></li>
+<li><a href="#sychronized-reentranlock-de-qu-bie">- sychronized reentranlock 的区别</a></li>
+<li><a href="#threadlocal-yuan-li">- ThreadLocal原理</a></li>
+</ul>
+</li>
+<li><a href="#spring">spring</a><ul>
+<li><a href="#tan-tan-dui-springioc-de-liao-jie">- 谈谈对springIoc的了解</a></li>
+<li><a href="#tan-tan-dui-springaop-de-liao-jie">- 谈谈对springAop的了解</a></li>
+</ul>
+</li>
+<li><a href="#jvm">jvm</a><ul>
+<li><a href="#java-nei-cun-qu-yu">- Java内存区域</a><ul>
+<li><a href="#xian-cheng-si-you">线程私有</a></li>
+<li><a href="#xian-cheng-gong-you">线程公有</a></li>
+</ul>
+</li>
+<li><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</a></li>
+<li><a href="#gc-dui-xiang-cun-huo-pan-ding-suan-fa">- gc对象存活判定算法</a></li>
+<li><a href="#gc-la-ji-shou-ji-qi-ji-qi-you-que-dian">- gc垃圾收集器及其优缺点</a></li>
+<li><a href="#biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he">- 标记算法和复制算法的区別，用在什么场合</a></li>
+<li><a href="#cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian">- cms垃圾收集器的回收步骤及其优缺点？</a></li>
+</ul>
+</li>
+<li><a href="#mysql">mysql</a><ul>
+<li><a href="#shi-me-qing-kuang-xia-suo-yin-shi-xiao">- 什么情况下索引失效</a></li>
+<li><a href="#innodb-zhi-chi-de-suo-yin-lei-xing">- InnoDB 支持的索引类型</a></li>
+<li><a href="#b-shu-he-b-shu-de-qu-bie-he-hong-hei-shu-de-qu-bie">- B+树和 B 树的区别，和红黑树的区别</a></li>
+<li><a href="#ping-shi-zen-me-chuang-jian-suo-yin-de">- 平时怎么创建索引的</a></li>
+<li><a href="#ru-he-you-hua-sql">- 如何优化sql</a></li>
+<li><a href="#fen-ku-fen-biao">- 分库分表</a></li>
+<li><a href="#mysql-shu-ju-ku-shi-wu-ge-chi-ji-bie-fen-bie-jie-jue-shi-me-wen-ti-next-key-suo-yuan-li-ru-he-jie-jue-huan-du">- mysql数据库事务隔离级别，分別解決什么问题，next-key锁原理、如何解决幻读？</a></li>
+<li><a href="#rr-rc-qu-bie">- RR RC区别</a></li>
+</ul>
+</li>
+<li><a href="#redis">redis</a><ul>
+<li><a href="#redis-zhi-chi-de-shu-ju-jie-gou">- redis支持的数据结构</a></li>
+<li><a href="#redis-huan-cun-ji-chuan-huan-cun-chuan-tou-huan-cun-xue-beng-zen-me-jie-jue">- redis缓存击穿、缓存穿透、缓存雪崩怎么解决</a></li>
+</ul>
+</li>
+<li><a href="#es">es</a></li>
+<li><a href="#mq">mq</a><ul>
+<li><a href="#mq-shi-yong-chang-jing">- mq使用场景</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing">- kafka如何保证消息顺序性</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing">- kafka如何保证消息可靠性</a></li>
+</ul>
+</li>
+<li><a href="#wang-luo">网络</a><ul>
+<li><a href="#tcp-ip-mo-xing-fen-ceng-ji-ge-ceng-xie-yi-ju-li">- tcp/ip模型分层及各层协议举例</a></li>
+<li><a href="#tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie">- tcp如何保证可靠传输，tcp、udp区别</a></li>
+<li><a href="#wei-shi-me-yao-san-ci-wo-shou-si-ci-hui-shou">- 为什么要三次握手，四次挥手</a></li>
+<li><a href="#si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl">- 四次挥手的closewait, timewait分别在哪，为什么timewait要等待2msl</a></li>
+</ul>
+</li>
+<li><a href="#qi-ta">其他</a><ul>
+<li><a href="#zhu-cong-yan-chi-zen-me-ban">- 主从延迟怎么办</a></li>
+<li><a href="#tan-tan-dui-java-nio-de-liao-jie">- 谈谈对Java NIO的了解</a></li>
+<li><a href="#tan-tan-dui-java-nei-cun-mo-xing-de-liao-jie">- 谈谈对Java内存模型的了解</a></li>
+<li><a href="#ru-he-chuang-jian-xian-cheng-chi">- 如何创建线程池</a></li>
+<li><a href="#xian-cheng-chi-de-yuan-li">- 线程池的原理</a></li>
 </ul>
 </li>
 </ul>
@@ -290,12 +243,248 @@
 
 </div>
 
-<h3><span id="2019-guo-qing-shang-hai-su-zhou-si-tian-lu-xing">2019 国庆上海苏州四天旅行</span><a href="#2019-guo-qing-shang-hai-su-zhou-si-tian-lu-xing" class="header-anchor">#</a></h3><h4><span id="xing-cheng-gui-hua">行程规划</span><a href="#xing-cheng-gui-hua" class="header-anchor">#</a></h4><p>北京前往上海 9.30 14:10 - 20:09 G141 检票口 11    </p>
-<h5><span id="9-yue-30-ri">9月30日</span><a href="#9-yue-30-ri" class="header-anchor">#</a></h5><p>住宿 上海家荣酒店公寓(中山公园店)<br>21点 很久以前羊肉串(中山公园店)   </p>
-<h5><span id="10-yue-1-ri">10月1日</span><a href="#10-yue-1-ri" class="header-anchor">#</a></h5><p>上午 9点<br>武康路<br>上午 11点<br>田子坊<br>下午1点<br>豫园&amp;城隍庙 ，明朝时期的私人花园，拥有“城市山林”、“奇秀甲于东南”两种美称，是江南园林中的一颗明珠。<br>下午4点<br>东方明珠<br>南京路步行街<br>下午7点半<br>外滩  外滩观光隧道  </p>
-<h5><span id="10-yue-2-ri">10月2日</span><a href="#10-yue-2-ri" class="header-anchor">#</a></h5><p>上午9点<br>中华艺术宫<br>上午12点<br>退房<br>下午14:41 上海前往苏州  14:41 - 15:15 D3010 检票口 25A<br>住宿 骏怡连锁酒店<br>下午4点半<br>诚品书店<br>金鸡湖<br>阳澄湖大闸蟹   </p>
-<h5><span id="10-yue-3-ri">10月3日</span><a href="#10-yue-3-ri" class="header-anchor">#</a></h5><p>上午9点<br>拙政园<br>苏州博物馆<br>下午1点<br>虎丘<br>留园<br>网师园夜景</p>
-<h5><span id="10-yue-4-ri">10月4日</span><a href="#10-yue-4-ri" class="header-anchor">#</a></h5><p>苏州前往北京 10.4 11:40 - 17:10 G128 检票口 A1</p>
+<h2><span id="java-ji-he">Java集合</span><a href="#java-ji-he" class="header-anchor">#</a></h2><h3><span id="arraylist-he-linkedlist-de-qu-bie">- ArrayList 和 LinkedList的区别</span><a href="#arraylist-he-linkedlist-de-qu-bie" class="header-anchor">#</a></h3><ol>
+<li>数据结构  数组 / 双向链表 </li>
+<li>是否支持快速随机访问</li>
+<li>随机插入删除速度, ArrayList需要整体位移</li>
+</ol>
+<h3><span id="tan-tan-dui-hashmap-de-liao-jie">- 谈谈对hashMap的了解</span><a href="#tan-tan-dui-hashmap-de-liao-jie" class="header-anchor">#</a></h3><p>基本：底层数据结构, 数组 + 链表，长度超过8变为红黑树，非线程安全<br>加分：HashMap在put时, 经过了两次hash，一个是JDK自带的对对象key的hash，一个是内部扰动函数hash，做高16位与低16位异或，加大散列的效果<br>加分：HashMap 的长度为什么是2的幂次方。1. 散列值用之前要对数组长度取模，求桶位(n - 1) &amp; hash 更高效；2. 扩容的时候也可以用 hash值与扩容后的最高位 &amp; 判断节点是在高位还是低位，更高效。<br>加分：HashMap 非线程安全，多线程操作导致死循环问题，1.7  并发下头插形成循环链表，1.8 用尾插修复， 但仍可能造成丢失数据。</p>
+<h3><span id="tan-tan-dui-concurrenthashmap-de-liao-jie">- 谈谈对ConcurrentHashMap的了解</span><a href="#tan-tan-dui-concurrenthashmap-de-liao-jie" class="header-anchor">#</a></h3><p>1.7   结构： 分段的数组+链表;<br>      并发：分段锁，锁一段数组 segment，默认有16个segment, 并发度只有默认是16<br>      线程安全: segment上锁，继承ReentrantLock可重入锁</p>
+<p>1.8   结构： Node数组+链表 + 红黑树;<br>      并发： 并发控制使用 synchronized 和 CAS<br>      线程安全: CAS和synchronized来保证并发安全, synchronized只锁定当前链表或红黑二叉树的首节点, 只要hash不冲突，就不会产生并发，效率又提升N倍</p>
+<p>loadFactor和threshold的关系?   </p>
+<p>HashMap中size表示当前共有多少个KV对，capacity表示当前HashMap的容量是多少，默认值是16，每次扩容都是成倍的。loadFactor是装载因子，当Map中元素个数超过loadFactor* capacity的值时，会触发扩容。loadFactor* capacity可以用threshold表示。  </p>
+<h3><span id="arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</span><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li" class="header-anchor">#</a></h3><h4><span id="arrayblockingqueue-shi-object-shu-zu-shi-xian-de-xian-cheng-an-quan-de-you-jie-zu-sai-dui-lie">ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列</span><a href="#arrayblockingqueue-shi-object-shu-zu-shi-xian-de-xian-cheng-an-quan-de-you-jie-zu-sai-dui-lie" class="header-anchor">#</a></h4><p>1.数组实现：使用数组实现循环队列<br>2.有界：内部为数组实现，一旦创建完成，数组的长度不能再改变<br>3.线程安全：使用了 ReentrantLock 和 两个 condition(notEmpty, notFull) 来保证线程安全<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
+<h4><span id="linkedblockingqueue-shi-yi-ge-dan-xiang-lian-biao-shi-xian-de-zu-sai-dui-lie">LinkedBlockingQueue是一个单向链表实现的阻塞队列</span><a href="#linkedblockingqueue-shi-yi-ge-dan-xiang-lian-biao-shi-xian-de-zu-sai-dui-lie" class="header-anchor">#</a></h4><p>1.链表实现： head是链表的表头， last是链表的表尾。取出数据时，都是从表头head处取出，出队； 新增数据时，都是从表尾last处插入，入队。<br>2.可有界可无界：可以在创建时指定容量大小，防止队列过度膨胀。如果未指定队列容量，默认容量大小为Integer.MAX_VALUE<br>3.线程安全：使用了 两个 ReentrantLock 和 两个 condition，putLock是插入锁，takeLock是取出锁；notEmpty是“非空条件”，notFull是“未满条件”。通过它们对链表进行并发控制<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
+<h2><span id="java-bing-fa-lei">Java并发类</span><a href="#java-bing-fa-lei" class="header-anchor">#</a></h2><h3><span id="volatile-yuan-li">- volatile原理</span><a href="#volatile-yuan-li" class="header-anchor">#</a></h3><ol>
+<li>Volatile的特征<br>A、禁止指令重排（有例外）<br>B、可见性</li>
+<li>Volatile的内存语义<br>当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存。<br>当读一个volatile变量时，JMM会把线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量</li>
+<li>Volatile的重排序<br>两个volatile变量操作不能够进行重排序；</li>
+</ol>
+<h3><span id="java-de-le-guan-suo-cas-suo-yuan-li">- java的乐观锁CAS锁原理</span><a href="#java-de-le-guan-suo-cas-suo-yuan-li" class="header-anchor">#</a></h3><p>CAS英文全称Compare and Swap，直白翻译过来即比较并交换，是一种无锁算法，在不使用锁即没有线程阻塞下实现多线程之间的变量同步，基于处理器的读-改-写原子指令来操作数据，可以保证数据在并发操作下的一致性。</p>
+<p>CAS包含三个操作数：内存位置V，预期值A，写入的新值B。在执行数据操作时，当且仅当V的值等于A时，CAS才会通过原子操作方式用新值B来更新V的值（无论操作是否成功都会返回）。</p>
+<p>CAS的含义是：我认为V的值应该为A，如果是，那么将V的值更新为B，否则不修改并告诉V的值实际为多少</p>
+<p>CAS是怎么获取到预期值的?  通过unsafe类获取到的</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public final int getAndAddInt(Object var1, long var2, int var4) &#123;</span><br><span class="line">   int var5;</span><br><span class="line">   do &#123;</span><br><span class="line">      var5 = this.getIntVolatile(var1, var2);</span><br><span class="line">   &#125; while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));</span><br><span class="line"></span><br><span class="line">   return var5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>CAS修改的值为什么要是volatile? 可见性</p>
+<p>在compareAndSet的操作中，JNI借助CPU指令完成的，属于原子操作，保证多个线程在执行过程中看到同一个变量的修改值<br>unsafe：操作内存内存空间<br>valueOffset：value在内存中的偏移量（把存储单元的实际地址与其所在段的段地址之间的距离称为段内偏移），这里我们可以简单认为是内存地址，在类加载的时候，通过unsafe获取到value的偏移量。<br>value： 顾名思义代表存储值，被volatile修饰，保证在线程间的可见性   </p>
+<h3><span id="sychronized-he-valotile-de-qu-bie">- sychronized 和 valotile 的区别</span><a href="#sychronized-he-valotile-de-qu-bie" class="header-anchor">#</a></h3><ol>
+<li>volatile更轻量，性能更好，但volatile只能用于变量而synchronized关键字可以修饰方法以及代码块  </li>
+<li>多线程访问volatile关键字不会发生阻塞，而synchronized关键字可能会发生阻塞  </li>
+<li>volatile关键字能保证数据的可见性，但不能保证数据的原子性 （eg： i++）.synchronized关键字两者都能保证</li>
+<li>volatile关键字主要用于解决变量在多个线程之间的可见性，而 synchronized关键字解决的是多个线程之间访问资源的同步性</li>
+</ol>
+<h3><span id="sychronized-reentranlock-de-qu-bie">- sychronized reentranlock 的区别</span><a href="#sychronized-reentranlock-de-qu-bie" class="header-anchor">#</a></h3><ol>
+<li>synchronized 依赖于 JVM 而 ReentrantLock 依赖于 API</li>
+<li>等待可中断  lock.lockInterruptibly()， 线程可以选择放弃等待，改为处理其他事情</li>
+<li>可实现公平锁</li>
+<li>可实现选择性通知（锁可以绑定多个条件）</li>
+</ol>
+<h3><span id="threadlocal-yuan-li">- ThreadLocal原理</span><a href="#threadlocal-yuan-li" class="header-anchor">#</a></h3><p>每个Thread 维护一个 ThreadLocalMap 映射表，这个映射表的 key是 ThreadLocal 实例本身，value 是真正需要存储的 Object。也就是说 ThreadLocal 本身并不存储值，它只是作为一个 key 来让线程从 ThreadLocalMap 获取 value。</p>
+<p>由于每一条线程均含有各自私有的ThreadLocalMap容器，这些容器相互独立互不影响，因此不会存在线程安全性问题，从而也无需使用同步机制来保证多条线程访问容器的互斥性。</p>
+<h2><span id="spring">spring</span><a href="#spring" class="header-anchor">#</a></h2><h3><span id="tan-tan-dui-springioc-de-liao-jie">- 谈谈对springIoc的了解</span><a href="#tan-tan-dui-springioc-de-liao-jie" class="header-anchor">#</a></h3><p>   <a href="https://www.zhihu.com/question/313785621" title="知乎" target="_blank" rel="noopener">如何完美阐述你对IOC的理解？</a></p>
+<p>   // 最底层map: Map&lt;String, Object&gt; singletonObjects = new ConcurrentHashMap(256);  </p>
+<p>   个人理解：<br>   1.控制反转是一种设计思想，将对象生命周期和依赖的控制由对象转给了ioc容器，对象由主动创建其它对象变为被动由ioc容器注入<br>   2.springioc容器控制了对象的创建、销毁及整个生命周期，，可以动态注入依赖的对象<br>   3.将对象与对象间解耦，对象不再直接创建依赖其它对象，都依赖springioc容器  </p>
+<p>   扩展：<a href="../2019/09/10/spring/springioc初始化" title="springIoc的初始化过程">springIoc的初始化过程</a></p>
+<p>它负责业务对象的构建管理和业务对象间的依赖绑定。</p>
+<h3><span id="tan-tan-dui-springaop-de-liao-jie">- 谈谈对springAop的了解</span><a href="#tan-tan-dui-springaop-de-liao-jie" class="header-anchor">#</a></h3><p>   AOP为面向切面编程，底层是通过动态代理实现，实质上就是将相同逻辑的重复代码横向抽取出来, 拦截对象方法，对方法进行改造、增强！比如在 <strong>方法执行前</strong>、<strong>方法返回后</strong>、<strong>方法前后</strong>、<strong>方法抛出异常后</strong> 等地方进行一定的增强处理，应用场景： 事务、日志、权限、监控打点</p>
+<p>   基于动态代理来实现，在容器启动的时候生成代理实例。默认地，如果使用接口的，用 JDK 提供的动态代理实现，如果没有接口，使用 CGLIB 实现</p>
+<p>   优点：每个关注点现在都集中于一处，而不是分散到多处代码中；服务模块更简洁，服务模块只需关注核心代码  </p>
+<p>   @Pointcut(切点)：用于定义哪些方法需要被增强或者说需要被拦截<br>   @Before、@After、@Around、@AfterReturning、@AfterThrowing（增强）: 添加到切点指定位置的一段逻辑代码</p>
+<p>   注：@AfterReturning 比 @After 的方法参数多被代理方法的返回值</p>
+<p>   参考：<br>   <a href="https://javadoop.com/post/spring-aop-intro" title="知乎" target="_blank" rel="noopener">Spring AOP 使用介绍，从前世到今生</a><br>   <a href="https://juejin.im/post/5b06bf2df265da0de2574ee1" title="掘金" target="_blank" rel="noopener">Spring AOP就是这么简单啦</a> </p>
+<h2><span id="jvm">jvm</span><a href="#jvm" class="header-anchor">#</a></h2><h3><span id="java-nei-cun-qu-yu">- Java内存区域</span><a href="#java-nei-cun-qu-yu" class="header-anchor">#</a></h3><h4><span id="xian-cheng-si-you">线程私有</span><a href="#xian-cheng-si-you" class="header-anchor">#</a></h4><p>程序计数器<br>存放当前线程所执行的字节码的行号指示器。如果线程执行的是一个Java程序，计数器记录正在执行的虚拟机字节码指令地址；正在执行的是native方法，则计数器的值为空</p>
+<p>Java虚拟机栈</p>
+<p>描述Java方法执行的内存模型，每个方法执行的同时都会创建一个栈帧来存储局部变量表（编译期可知的各种基本数据类型，对象引用【reference类型】，内存空间的分配是在编译期完成的，方法运行期间不会改变局部变量表的大小）、操作数栈、动态链接、方法出口等。</p>
+<p>本地方法栈</p>
+<p>为虚拟机使用到的native方法服务</p>
+<h4><span id="xian-cheng-gong-you">线程公有</span><a href="#xian-cheng-gong-you" class="header-anchor">#</a></h4><p>Java堆（GC堆）</p>
+<p>存放对象实例，所有的对象实例和数组都在堆上分配。程序运行时分支可能不一样，只有运行期间才能知道创建哪些对象，这部分内存的分配和回收是动态的</p>
+<p>metaspace</p>
+<p>存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码</p>
+<p>直接内存</p>
+<p>不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存。NIO使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作，避免了Java堆和Native堆来回复制数据。直接内存的回收是在虚拟机进行full gc的时候顺带进行的，并不会自己触发垃圾回收</p>
+<h3><span id="tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</span><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi" class="header-anchor">#</a></h3><ol>
+<li>过程   <ul>
+<li>加载<br>  通过全类名获取定义此类的二进制字节流<br>  将字节流所代表的静态存储结构转换为方法区的运行时数据结构<br>  在内存中生成一个代表该类的 Class 对象,作为方法区这些数据的访问入口   </li>
+<li>连接<br>  验证<br>文件格式、元数据、字节码、符号引用验证   </li>
+<li>准备<br>  正式为类变量分配内存并设置类变量初始值的阶段，设置数据类型默认的零值   </li>
+<li>解析<br>  解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程   </li>
+<li>初始化<br>  真正执行类中定义的 Java 程序代码<br>初始化阶段是执行类构造器 <clinit> ()方法的过程   </clinit></li>
+</ul>
+</li>
+<li>类加载器<br> BootstrapClassLoader<br> ExtensionClassLoader<br> AppClassLoader(应用程序类加载器)   </li>
+</ol>
+<h3><span id="gc-dui-xiang-cun-huo-pan-ding-suan-fa">- gc对象存活判定算法</span><a href="#gc-dui-xiang-cun-huo-pan-ding-suan-fa" class="header-anchor">#</a></h3><p>1.1引用计数算法</p>
+<p>给对象添加一个引用计数器，当有地方引用它时加1，当引用失效时计数减1，任何时刻计数器为0时的对象都不会再被引用。</p>
+<p>缺点：存在两个对象不会被继续访问，但是两者循环调用的情况，由于存在循环调用导致两个对象都不会被回收。</p>
+<p>1.2可达性分析算法</p>
+<p>通过一系列被称作gc roots对象作为起点，从这些起点向下搜索，搜索所走过的路径成为引用链，当一个对象到gc roots没有任何引用链时证明此对象不可用。</p>
+<p>Java中gc roots的对象包括：</p>
+<p>虚拟机栈中引用的对象<br>native方法中引用的对象<br>类静态属性、常量中引用的对象  </p>
+<h3><span id="gc-la-ji-shou-ji-qi-ji-qi-you-que-dian">- gc垃圾收集器及其优缺点</span><a href="#gc-la-ji-shou-ji-qi-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p>垃圾回收器种类:Serial、ParNew、Parallel Scavenge、Serial Old、Parallel Old、CMS(ConCurrent Mark Sweep)、G1(Garbage First)</p>
+<p>我们通常使用parnew(多线程stw复制算法，新生代) + cms(标记清除，老年代）</p>
+<h3><span id="biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he">- 标记算法和复制算法的区別，用在什么场合</span><a href="#biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he" class="header-anchor">#</a></h3><p>CMS 标记清除、Serial Old，Parallel old 标记整理：适用于存活对象比较多的场景<br>Serial、ParNew、PS 收集器 复制算法：用在那种不可达对象比较多的场合  </p>
+<h3><span id="cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian">- cms垃圾收集器的回收步骤及其优缺点？</span><a href="#cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p>cms回收器的标记过程:</p>
+<p>CMS以获取最短回收停顿时间为目标的收集器,使用“标记-清除”算法,分为以下6个步骤</p>
+<p>1.STW initial mark:第一次暂停,初始化标记,从root标记old space存活对象(the set of objects reachable from roots (application code))</p>
+<p>2.Concurrent marking:运行时标记,从上一步得到的集合出发,遍历old space,标记存活对象 (all live objects that are transitively reachable from previous set)</p>
+<p>3.Concurrent precleaning:并发的标记前一阶段被修改的对象(card table)</p>
+<p>4.STW remark:第二次暂停,检查,标记,检查脏页的对象,标记前一阶段被修改的对象 (revisiting any objects that were modified during the concurrent marking phase)</p>
+<p>5.Concurrent sweeping:运行过程中清理,扫描old space,释放不可到达对象占用的空间</p>
+<p>6.Concurrent reset:此次CMS结束后,重设CMS状态等待下次CMS的触发 </p>
+<h2><span id="mysql">mysql</span><a href="#mysql" class="header-anchor">#</a></h2><h3><span id="shi-me-qing-kuang-xia-suo-yin-shi-xiao">- 什么情况下索引失效</span><a href="#shi-me-qing-kuang-xia-suo-yin-shi-xiao" class="header-anchor">#</a></h3><ol>
+<li>不符合联合最左匹配<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/v2-7f20eb4512b782ac973c60b0d15cb3fc_hd.jpg" alt></li>
+<li>like前导模糊查询 （可以通过 REVERSE()函数来创建一个函数索引解决）</li>
+<li>字段类型不匹配</li>
+<li>索引字段施加函数</li>
+<li>or的多个字段都要索引（只要有一个没有索引，就无法使用索引）</li>
+<li>!= , &lt;&gt; is null, is not null都会使索引失效</li>
+</ol>
+<h3><span id="innodb-zhi-chi-de-suo-yin-lei-xing">- InnoDB 支持的索引类型</span><a href="#innodb-zhi-chi-de-suo-yin-lei-xing" class="header-anchor">#</a></h3><ol>
+<li>B+树索引：  </li>
+<li>全文索引：就是倒排索引<br>仅能再char、varchar、text类型的列上面创建全文索引<br>但是面对高级的搜索还是略显简陋，且性能问题也是担忧。  </li>
+<li>哈希索引：<br>哈希索引在InnoDB中只是一种系统自动优化的功能<br>Hash 索引仅仅能满足”=”,”IN”和”&lt;&gt;”查询，不能使用范围查询。<br>Hash 索引无法被用来避免数据的排序操作。<br>在MySQL运行的过程中，如果InnoDB发现，有很多SQL存在这类很长的寻路，并且有很多SQL会命中相同的页面(page)，InnoDB会在自己的内存缓冲区(Buffer)里，开辟一块区域，建立自适应哈希所有AHI，以加速查询。InnoDB的自使用哈希索引，更像“索引的索引”  </li>
+</ol>
+<h3><span id="b-shu-he-b-shu-de-qu-bie-he-hong-hei-shu-de-qu-bie">- B+树和 B 树的区别，和红黑树的区别</span><a href="#b-shu-he-b-shu-de-qu-bie-he-hong-hei-shu-de-qu-bie" class="header-anchor">#</a></h3><p>为什么不用B树?:<br>因为B树的所有节点都是包含键和值的,这就导致了每个几点可以存储的内容就变少了,出度就少了,树的高度会增高,查询的 时候磁盘I/O会增多,影响性能。由于B+Tree内节点去掉了data域,因此可以拥有更大的出度,拥有更好的性能。</p>
+<p>和红黑树:<br>B+树跟红黑树不用比，B+树的高很低，红黑树比不了。</p>
+<h3><span id="ping-shi-zen-me-chuang-jian-suo-yin-de">- 平时怎么创建索引的</span><a href="#ping-shi-zen-me-chuang-jian-suo-yin-de" class="header-anchor">#</a></h3><ol>
+<li><p>选择区分度高的列做索引</p>
+</li>
+<li><p>根据查询场景、查询语句的查询条件设计索引</p>
+</li>
+<li><p>如果要为多列去创建索引，遵循最左匹配原则使用联合索引去创建</p>
+</li>
+<li><p>在长字符类型的字段上使用前缀索引，减少空间占用</p>
+</li>
+<li><p>扩展索引的时候尽量做追加，不是新建</p>
+</li>
+</ol>
+<h3><span id="ru-he-you-hua-sql">- 如何优化sql</span><a href="#ru-he-you-hua-sql" class="header-anchor">#</a></h3><ol>
+<li>让sql使用索引，如果查看sql使用索引情况，explain查看执行计划<br>通过explain命令可以得到下面这些信息: 表的读取顺序，数据读取操作的操作类型哪些索引可以使用哪些索引被实际使用，表之间的引用，每张表有多少行被优化器查询等信息。 rows是核心指标，绝大部分rows小的语句执行一定很快。<br>Extra字段几种需要优化的情况<br>Using filesort 需要优化，MYSQL需要进行额外的步骤来对返回的行排序。<br>Using temporary需要优化，发生这种情况一般都是需要进行优化的。mysql需要创建一张临时表用来处理此类查询<br>Using where 表示 MySQL 服务器从存储引擎收到行后再进行“后过滤”</li>
+</ol>
+<h3><span id="fen-ku-fen-biao">- 分库分表</span><a href="#fen-ku-fen-biao" class="header-anchor">#</a></h3><p>根据userid取模做的分库分表</p>
+<p>两个场景，业务解耦垂直拆分，读写性能瓶颈做水平拆分。</p>
+<ol>
+<li>垂直切分</li>
+</ol>
+<p>业务维度切分，解耦</p>
+<ol start="2">
+<li>水平切分</li>
+</ol>
+<p>主库写入并发瓶颈，分库<br>表数据量过大，影响查询性能和维护索引性能，分表</p>
+<h3><span id="mysql-shu-ju-ku-shi-wu-ge-chi-ji-bie-fen-bie-jie-jue-shi-me-wen-ti-next-key-suo-yuan-li-ru-he-jie-jue-huan-du">- mysql数据库事务隔离级别，分別解決什么问题，next-key锁原理、如何解决幻读？</span><a href="#mysql-shu-ju-ku-shi-wu-ge-chi-ji-bie-fen-bie-jie-jue-shi-me-wen-ti-next-key-suo-yuan-li-ru-he-jie-jue-huan-du" class="header-anchor">#</a></h3><p>READ-UNCOMMITTED(未提交读): 可能会导致脏读、幻读或不可重复读<br>READ-COMMITTED(提交读): 可以阻止脏读，但是幻读或不可重复读仍有可能发生<br>REPEATABLE-READ(可重复读，mysql默认隔离级别): 可以阻止脏读和不可重复读，幻读通过mvcc解决了快照读，next-key锁解决了当前读<br>SERIALIZABLE(串行化读): 该级别可以防止脏读、不可重复读以及幻读</p>
+<h3><span id="rr-rc-qu-bie">- RR RC区别</span><a href="#rr-rc-qu-bie" class="header-anchor">#</a></h3><p>区别就在于rr解决了不可重复读和幻读，怎么解决的，通过MVCC和next-key锁.    </p>
+<p>不可重复读：rc级别下的mvcc总是读取数据行的最新快照，而rr级别下的mvcc，会在事务第一次select的时候，为数据行生成一个快照，后面每次都读这个快照，除非自己更新，所以rr下是可重复读，别的事务提交也无法影响你的事务。   </p>
+<p>幻读：快照读下rr级别不会出现幻读，因为rr级别的mvcc读的是事务第一次读取时的快照；在当前读下rr级别使用了next-key锁（临键锁），临键锁包括行锁+间隙锁， 来避免两个当前读时有其它事务插入数据，所以当前读使用next-key锁解决的幻读。 最后备注下：如果是先快照读再当前读，影响行数不一致是否属于幻读，是有争议的但大多认为并不是幻读。   </p>
+<h2><span id="redis">redis</span><a href="#redis" class="header-anchor">#</a></h2><h3><span id="redis-zhi-chi-de-shu-ju-jie-gou">- redis支持的数据结构</span><a href="#redis-zhi-chi-de-shu-ju-jie-gou" class="header-anchor">#</a></h3><p>String</p>
+<p>最常规的get/set操作，value可以是数字和string<br>    一般做一些复杂的计数功能的缓存<br>hash</p>
+<p>value存放的是结构化的对象<br>比较方便的就是操作其中的某个字段<br>在做单点登录的时候，就是用这种数据结构存储用户信息，以cookieId作为key，设置30分钟为缓存过期时间，能很好的模拟出类似session的效果</p>
+<p>list</p>
+<p>使用List的数据结构，可以做简单的消息队列的功能<br>还有一个是，利用lrange命令，做基于redis的分页功能，性能极佳，用户体验好<br>一个场景，很合适—取行情信息。就也是个生产者和消费者的场景。LIST可以很好的完成排队，先进先出的原则。</p>
+<p>set</p>
+<p>set堆放的是一堆不重复值的集合。所以可以做全局去重的功能<br>为什么不用JVM自带的Set进行去重？因为我们的系统一般都是集群部署，使用JVM自带的Set，比较麻烦，难道为了一个做一个全局去重，再起一个公共服务，太麻烦了<br>另外，就是利用交集、并集、差集等操作，可以计算共同喜好，全部的喜好，自己独有的喜好等功能</p>
+<p>sorted set  </p>
+<p>sorted set多了一个权重参数score,集合中的元素能够按score进行排列。可以做排行榜应用，取TOP N操作。</p>
+<h3><span id="redis-huan-cun-ji-chuan-huan-cun-chuan-tou-huan-cun-xue-beng-zen-me-jie-jue">- redis缓存击穿、缓存穿透、缓存雪崩怎么解决</span><a href="#redis-huan-cun-ji-chuan-huan-cun-chuan-tou-huan-cun-xue-beng-zen-me-jie-jue" class="header-anchor">#</a></h3><p><strong>缓存穿透</strong></p>
+<p>定义: 访问一个<strong>不存在的key</strong>，缓存不起作用，请求会穿透到DB，流量大时DB会挂掉。</p>
+<p>解决方案：</p>
+<ol>
+<li>缓存空值 （值少时）</li>
+<li>布隆过滤器， 特性: 没有的肯定没有，有的不一定有</li>
+</ol>
+<p><strong>缓存击穿</strong></p>
+<p>定义：<strong>并发性,一个存在的key，在缓存过期的一刻</strong>，同时有<strong>大量的并发请求</strong>，这些请求都会击穿到DB，造成瞬时DB请求量大、压力骤增。</p>
+<p>解决方案：</p>
+<ol>
+<li>分布式锁，在访问key之前，采用分布式锁SETNX（set if not exists）来设置另一个短期key来锁住当前key的访问，访问结束再删除该短期key</li>
+<li>双重缓存，设置不同过期，其实同时解决了key过热 和 缓存击穿问题，如果更新的操作确实很耗时，返回的有损请求比较多，那确实需要双重缓存了，再放一份到本地、分布式缓存的另一个key</li>
+</ol>
+<p><strong>缓存雪崩</strong></p>
+<p>定义：<strong>大量的key</strong>设置了相同的过期时间，或者某台服务器宕机，导致大量缓存在<strong>同一时刻全部失效</strong>，造成瞬时DB请求量大、压力骤增，引起雪崩。</p>
+<p>解决方案：</p>
+<ol>
+<li>提前预防，主从加集群，主从可以一个实例挂了，另一个可以顶上。集群数据分片，即使一个分片上的主从都挂了，打到db的量也不会是全部</li>
+<li>将key的过期时间设置时添加一个随机时间，分散过期时间</li>
+<li>如果是热点key，可以加分布式锁，减少并发量</li>
+<li>二级缓存（本地缓存），减少db压力</li>
+</ol>
+<p>击穿是单个，必定是热点key，雪崩是很多，不一定是热点key，对应的解决方案也有不一样的地方，雪崩有一个设置过期时间加随机数，雪崩用二级缓存比较好使，但击穿就没太大必要</p>
+<h2><span id="es">es</span><a href="#es" class="header-anchor">#</a></h2><h2><span id="mq">mq</span><a href="#mq" class="header-anchor">#</a></h2><h3><span id="mq-shi-yong-chang-jing">- mq使用场景</span><a href="#mq-shi-yong-chang-jing" class="header-anchor">#</a></h3><ul>
+<li>解耦<ul>
+<li>多个下游相同依赖</li>
+<li>数据驱动的任务依赖（下游任务强依赖上游数据到达）</li>
+</ul>
+</li>
+<li>异步<ul>
+<li>上游不关心执行结果</li>
+<li>上游关注执行结果，但执行时间很长（改为异步操作，再尝试获取结果）</li>
+</ul>
+</li>
+<li>削峰<ul>
+<li>请求高峰期</li>
+</ul>
+</li>
+</ul>
+<h3><span id="kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing">- kafka如何保证消息顺序性</span><a href="#kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing" class="header-anchor">#</a></h3><ol>
+<li>一个partition内保证顺序性</li>
+<li>可以通过message key来定义，同一个key的message可以保证只发送到同一个partition</li>
+</ol>
+<h3><span id="kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing">- kafka如何保证消息可靠性</span><a href="#kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing" class="header-anchor">#</a></h3><ol>
+<li>多副本写入</li>
+<li>数据持久化，通过后台线程将消息持久化到磁盘</li>
+<li>生产者确认，分片所有副本写入成功才返回。发送失败重试</li>
+<li>消费组回复消费成功ack，确保消费一次</li>
+</ol>
+<h2><span id="wang-luo">网络</span><a href="#wang-luo" class="header-anchor">#</a></h2><h3><span id="tcp-ip-mo-xing-fen-ceng-ji-ge-ceng-xie-yi-ju-li">- tcp/ip模型分层及各层协议举例</span><a href="#tcp-ip-mo-xing-fen-ceng-ji-ge-ceng-xie-yi-ju-li" class="header-anchor">#</a></h3><p>分层<br>应用层<br>   任务是通过应用进程间的交互来完成特定网络应用, dns, http, smtp<br>传输层<br>   负责向两台主机进程之间的通信提供通用的数据传输服务, tcp, udp<br>网络层<br>   选择合适的网间路由和交换结点， 确保数据及时传送, ip，ICMP<br>数据链路层<br>   两台主机之间的数据传输，这就需要使用专门的链路层的协议， ARP   </p>
+<h3><span id="tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie">- tcp如何保证可靠传输，tcp、udp区别</span><a href="#tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie" class="header-anchor">#</a></h3><p>tcp与udp区别</p>
+<ol>
+<li>是否建立连接， udp不建立连接，tcp三次握手   </li>
+<li>是否可靠，udp不需要确认， tcp会有确认、重传、窗口、拥塞等机制   </li>
+<li>应用场景， udp一般用于即时通信，qq，直播； tcp用于文件传输，收发邮件、登录等  </li>
+</ol>
+<h3><span id="wei-shi-me-yao-san-ci-wo-shou-si-ci-hui-shou">- 为什么要三次握手，四次挥手</span><a href="#wei-shi-me-yao-san-ci-wo-shou-si-ci-hui-shou" class="header-anchor">#</a></h3><p>为什么要三次握手<br>    确认双发收发功能都正常   </p>
+<p>为什么要四次挥手<br>    确认双方都没有数据再发送</p>
+<h3><span id="si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl">- 四次挥手的closewait, timewait分别在哪，为什么timewait要等待2msl</span><a href="#si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl" class="header-anchor">#</a></h3><p>2MSL是两倍的MSL(Maximum Segment Lifetime)，MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间</p>
+<p>如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接</p>
+<p>TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK</p>
+<h2><span id="qi-ta">其他</span><a href="#qi-ta" class="header-anchor">#</a></h2><h3><span id="zhu-cong-yan-chi-zen-me-ban">- 主从延迟怎么办</span><a href="#zhu-cong-yan-chi-zen-me-ban" class="header-anchor">#</a></h3><p>主从延迟的原因：<br>主库写入数据并且生成binlog文件， 从库异步读取更新   </p>
+<p>解决方案：<br>一、更新操作，做SQL优化，减少批量更新操作<br>二、查询场景，   </p>
+<ol>
+<li>强制读主，对主库压力大，谨慎使用   </li>
+<li>延迟读从，更新时写一个过期时间为主从延迟时间的缓存key，读的时候添加一个判断   </li>
+<li>识别重试机制，通过消息发送的版本号与数据库数据版本对比识别最新数据，如果不一致，通过等待重试来保证   </li>
+</ol>
+<h3><span id="tan-tan-dui-java-nio-de-liao-jie">- 谈谈对Java NIO的了解</span><a href="#tan-tan-dui-java-nio-de-liao-jie" class="header-anchor">#</a></h3><p>NIO（Non-blocking I/O，在Java领域，也称为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，已经成为解决高并发与大量连接、I/O处理问题的有效方式。<br>传统的BIO模型严重依赖于线程。但线程是很”贵”的资源。创建和销毁成本很高，本身占用较大内存，切换成本是很高。<br>NIO由原来占用线程的阻塞读写变成了单线程轮询事件，找到可以进行读写的网络描述符进行读写。大大地节约了线程，为处理海量连接提供了可能<br>总结NIO带来了什么：    </p>
+<ul>
+<li>事件驱动模型  </li>
+<li>避免多线程</li>
+<li>单线程处理多任务</li>
+<li>非阻塞I/O，I/O读写不再阻塞，而是返回0</li>
+</ul>
+<h3><span id="tan-tan-dui-java-nei-cun-mo-xing-de-liao-jie">- 谈谈对Java内存模型的了解</span><a href="#tan-tan-dui-java-nei-cun-mo-xing-de-liao-jie" class="header-anchor">#</a></h3><p>jmm是为了解决线程间通信问题，线程间通信通常有两种解决方法，共享内存或通知机制， jmm使用了共享内存的方式，jmm定义了一套happens-before规则来规范多线程下的执行顺序和多线程下变量的可见性问题，happens-before规则底层是通过禁止部分编译器和处理器的指令重排序实现的。</p>
+<h3><span id="ru-he-chuang-jian-xian-cheng-chi">- 如何创建线程池</span><a href="#ru-he-chuang-jian-xian-cheng-chi" class="header-anchor">#</a></h3><ol>
+<li>Executors - 不允许<br> CachedThreadPool 和 ScheduledThreadPool ： 允许创建的线程数量为 Integer.MAX_VALUE ，可能会创建大量线程，从而导致OOM<br> FixedThreadPool 和 SingleThreadExecutor ： 允许请求的队列长度为 Integer.MAX_VALUE ，可能堆积大量的请求，从而导致OOM    </li>
+<li>ThreadPoolExcutor<br> 参数： 核心线程数， 最大线程数，非核心线程空闲存活时间，阻塞队列，拒绝策略，有必要的话还有ThreadFactory线程工厂.<br> 好处：    <ul>
+<li>corePoolSize, maximumPoolSize 弹性控制线程数量，可伸缩，可扩容可释放      </li>
+<li>keepAliveTime, TimeUnit.SECONDS 设置后在回收前可让其他任务使用，减少重新创建线程的开销     </li>
+<li>BlockingQueue, 设置队列大小，起到缓冲的作用     </li>
+<li>rejectHandler  </li>
+</ul>
+</li>
+</ol>
+<h3><span id="xian-cheng-chi-de-yuan-li">- 线程池的原理</span><a href="#xian-cheng-chi-de-yuan-li" class="header-anchor">#</a></h3><ol>
+<li><p>先讲构造参数<br>corePoolSize： 线程池核心线程数最大值<br>maximumPoolSize： 线程池最大线程数大小<br>keepAliveTime： 线程池中非核心线程空 闲的存活时间大小<br>unit： 线程空闲存活时间单位<br>workQueue： 存放任务的阻塞队列<br>threadFactory： 用于设置创建线程的工厂，可以给创建的线程设置有意义的名字，可方便排查问题。<br>handler：  线城池的饱和策略事件，主要有四种类型。  </p>
+</li>
+<li><p>再描述提交任务后的执行过程     </p>
+<ul>
+<li>提交一个任务，线程池里存活的核心线程数小于线程数corePoolSize时，线程池会创建一个核心线程去处理提交的任务。</li>
+<li>如果线程池核心线程数已满，即线程数已经等于corePoolSize，一个新提交的任务，会被放进任务队列workQueue排队等待执行。</li>
+<li>当线程池里面存活的线程数已经等于corePoolSize了,并且任务队列workQueue也满，判断线程数是否达到maximumPoolSize，即最大线程数是否已满，如果没到达，创建一个非核心线程执行提交的任务。</li>
+<li>如果当前的线程数达到了maximumPoolSize，还有新的任务过来的话，直接采用拒绝策略处理。</li>
+</ul>
+</li>
+</ol>
 
         </div>
         
@@ -306,55 +495,24 @@
 
 
 
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-04-09T22:54:24.000Z">2018-04-10</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    11 分钟 读完 (大约 1665 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
             
-                <a class="has-link-black-ter" href="/2018/04/10/travel/hz/">2018清明杭州游记</a>
-            
-        </h1>
-        <div class="content">
-            <p>作者：小菜猫<br>共四天时间4.4~4.7<br>花费4000  </p>
-<p>第一天<br>乘坐G57 7:20从北京南站出发，13:02到达杭州东车站，坐1号线到住宿的酒店，<br>住宿的地方定在1号线乔司附件，网上预订，200多一点点，休息洗漱片刻在周边吃了碗牛肉面，卤是现做的，很香<br>天气有一些阴沉，所以穿的还比较多一些，坐地铁大概半个多小时到凤起路站下车，下车走了十几分钟到达西湖边，顺着河边往前走就到了白堤(白堤原名“白沙堤”，是将杭州市区与风景区相连的纽带，东起“断桥残雪”，经锦带桥向西，止于“平湖秋月”，长约2里。在唐即称白沙堤、沙堤，其后在宋、明又称孤山路、十锦塘。唐代诗人白居易任杭州刺史时有诗云：“最爱湖东行不足，绿杨荫里白沙堤。”即指此堤。后人为纪念这位诗人，称为白堤。) ，人不太多，一方面当天是工作日，另一方面到白堤的时候是下午五点，经过了断桥，在断桥上拍了很多照片，风景很漂亮。<br>顺着白堤向前走，到了中山公园，公园里有孤山，没有上去，只拍了张照片，再顺着路走，最后走到了岳庙附近，没有进去看看，坐51路去吃饭了（51路是环西湖路，很方便），在美团上看到e路吃~杭帮菜，团购了两个人的套餐，有东坡肉，西湖醋鱼，叫花鸡和酸辣土豆丝和牛肉羹，最喜欢吃的是东坡肉和鱼，酸辣土豆丝清口，牛肉羹我不太喜欢，都被对面的人喝了<br>吃饭的地方在龙翔地铁站附近，购物中心，杭州给我的感觉是这是一个有追求有品位的城市，建筑都很漂亮，有特色，广告也很赏心悦目，晚上就在购物中心里逛了逛，坐车回酒店，休息 </p>
-<p>第二天<br>9点出发，坐车到龙翔站，出地铁时发现下雨了，提早看过天气预报，说今天会有雨，准备了雨伞，见路边有卖泰芒的，35一个，买 了一个，除了芒果一样好吃，其他的都不好，芒果汁也不好喝，冰淇淋和芒果的量也小，相比厦门30块钱的泰芒，显得太没诚意了，今天来西湖的人明显多了好多，雨下的比较大，沿着湖边走，到了观看音乐喷泉的地方，继续向前走，看到有坐船的地方，就买票上去了，坐船到小瀛洲，看三潭印月，在船上看风景时，突然想到“水光潋滟晴方好，山色空蒙雨亦奇”然后想到这就是描写西湖的时，顿时觉得这诗写的真好，岛是田字形，人比较多，又下着雨，刮着风，拍照也不是很方便，就欣赏风景吧，转完之后，从花港坐返回的船到苏堤（），在旁边买的东坡饼吃，10元一个，不建议吃，不好吃也太贵了，又买了豆腐吃15，还可以，吃完后在雷锋塔附近吃的面和馄饨，没有进去看雷峰塔，去了对面的净慈寺，10元门票，是为了看南屏晚钟的，进去发现人超级少，很安静，进门右边的殿就是放钟的地方，可以敲钟10元一次，钟真的好大，也好厚，第一次见这么大的钟，惊呆了我，去主殿看了看，很大很高的佛祖，拜了拜，主殿后面还有两个殿，还有一个净慈寺博物馆，展示了很多艺术品。。在最后一个殿上可以很清楚的看到雷峰塔，感觉也是棒棒哒，净慈寺让整个人都静了下来<br>从净慈寺出来去了太子湾公园，之前有人推荐来这里看樱花，没找到樱花，却碰上了郁金花展览，也不错，在亭子里休息半小时后决定撤退，公交站台挤了好多人，还好有工作人员维持秩序，等了几趟车，终于等到开往龙翔站的公交，车上真暖和，外面真冷，下车之后，直奔kfc,买东西吃，吃完后决定去看电影头号玩家，定好之后，坐车去电影院，电影很棒，看完都十点了，导航到附近的地铁站，回家。今天下雨刮风，西湖边人又多，在西湖上玩的时间比较少，反而在净慈寺和太子湾的时间比较多，人少安静，旅游重要的是感受，感受到了就行，不用每个景点都要打卡去看看，反而能欣赏到不一样的美  </p>
-<p>第三天<br>退房去客运中心坐车去乌镇，把行李箱寄存在客运中心，一个小时十分钟到达乌镇，在乌镇附近吃了碗馄饨加发糕后，进去，因为晚上就赶火车回去了，不打算去东栅了，只买了西栅的门票，进去一会看到了乌镇大剧院和木心美术馆，很不错，拍照，再往里就是江南水乡的小房子，很好看呦，就是人有点多，挤挤的，染布厂也转了转，在香市看到好肥的鱼，太肥了，去店里逛了逛，get了一个拍照利器~小帽子，沿着湖边走，找到了坐回去船的地方，60一位，坐船欣赏美景也不错，最后从入口旁边通往大剧院的一个小道到了大剧院，在周围拍照，拍的效果很好，因为风景美，人也很少，转完之后，坐车回杭州，完美</p>
+                
+<a class="button is-success donate">
+    <span class="icon is-small">
+        <i class="fab fa-weixin"></i>
+    </span>
+    <span>微信</span>
+    <div class="qrcode"><img src="/images/wechat.png" alt="微信"></div>
+</a>
 
+                
         </div>
-        
-        
-        
     </div>
 </div>
-
-
-
-
 
 
 
@@ -1947,7 +2105,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="大菜猫" height="28">
+                    <img src="/images/logo.svg" alt="知识储备-雯" height="28">
                 
                 </a>
                 <p class="is-size-7">

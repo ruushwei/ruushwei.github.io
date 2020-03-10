@@ -110,6 +110,8 @@
                 
                 <a class="navbar-item" href="/interview">知识储备</a>
                 
+                <a class="navbar-item" href="/interview-wen">知识储备-雯</a>
+                
                 <a class="navbar-item" href="/arithmetic">算法</a>
                 
                 <a class="navbar-item" href="/business">创业</a>
@@ -173,7 +175,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 239 个字)
+                    7 分钟 读完 (大约 1073 个字)
                 </span>
                 
                 
@@ -182,7 +184,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/链表节点NODE/">Hashmap源码解析-链表节点NODE</a>
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/构造函数/">Hashmap源码解析-构造函数</a>
             
         </h1>
         <div class="content">
@@ -197,16 +199,23 @@
 <li><a href="../遍历">遍历</a></li>
 <li><a href="../&hashtable">&amp;hashtable</a></li>
 </ol>
-<h4 id="链表节点NODE"><a href="#链表节点NODE" class="headerlink" title="链表节点NODE"></a>链表节点NODE</h4><p>重点:</p>
-<p>1.单链表</p>
-<p>2.hashCode()是将key的hashCode和value的hashCode异或得到</p>
+<h4 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h4><p>构造函数:</p>
+<p>默认构造函数什么都不做，只是将加载因子设为默认加载因子。</p>
+<p>有初始值大小的构造函数，</p>
+<p>​    会将threshold设置为大于输入参数且最近的2的整数次幂的数,比如10，设置阈值16.</p>
+<p>​    即使有initialCapacity参数的构造，也是设置threshold，不会现在设置cap，如要设置cap就需要new资源了，而原理是在等真的插入的时候才去通过resize操作申请内存资源, 见resize.md,put.md</p>
+<p>重点:</p>
+<p>1.参数最大容量,默认的加载因子,加载因子,阈值</p>
+<p>2.哈希桶, Node&lt;K,V&gt;[] table, 是Node数组, 存放链表, 长度初始化时为0, 之后是2的N次方</p>
+<p>3.loadFactor和threshold的关系</p>
+<p>4.tableSizeFor函数的原理, 见下面解析</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/链表节点NODE/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/构造函数/#more">阅读更多</a>
                 </div>
             </div>
         </div>
