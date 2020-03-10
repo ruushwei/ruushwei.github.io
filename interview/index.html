@@ -15,7 +15,7 @@
 <meta property="og:description" content="- 谈谈对springIoc的了解 - 谈谈对springAop的了解 - 动态代理和静态代理的区别 - Java反射的原理 - 常见Java集合类 - ArrayList 和 LinkedList的区别 - Java并发容器有哪些 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2020-03-08T10:21:02.417Z">
+<meta property="og:updated_time" content="2020-03-10T00:30:31.724Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识储备">
 <meta name="twitter:description" content="- 谈谈对springIoc的了解 - 谈谈对springAop的了解 - 动态代理和静态代理的区别 - Java反射的原理 - 常见Java集合类 - ArrayList 和 LinkedList的区别 - Java并发容器有哪些 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程">
@@ -248,7 +248,9 @@
 <li><a href="#zen-me-pei-zhi-can-shu">- 怎么配置参数</a></li>
 <li><a href="#zu-sai-dui-lie-yuan-li-1">- 阻塞队列原理</a></li>
 <li><a href="#you-na-xie-zu-sai-dui-lie">- 有哪些阻塞队列</a></li>
-<li><a href="#mq-ru-he-bao-zheng-xiao-xi-de-ke-kao-xing">- mq如何保证消息的可靠性</a></li>
+<li><a href="#mq-shi-yong-chang-jing">- mq使用场景</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing">- kafka如何保证消息顺序性</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing">- kafka如何保证消息可靠性</a></li>
 <li><a href="#callable-future-futuretask-completablefuture-fen-bie-shi-shi-me">- Callable、Future、FutureTask、CompletableFuture分别是什么</a></li>
 <li><a href="#java-yi-bu-bian-cheng-huo-qu-xian-cheng-fan-hui-jie-guo-de-fang-fa">- java异步编程，获取线程返回结果的方法</a></li>
 <li><a href="#xian-shang-xu-yao-guan-zhu-na-xie-ji-qi-can-shu">- 线上需要关注哪些机器参数</a></li>
@@ -706,7 +708,27 @@
 <p>DelayQueue<br>DelayQueue（延迟队列）是一个任务定时周期的延迟执行的队列。根据指定的执行时间从小到大排序，否则根据插入到队列的先后排序。newScheduledThreadPool线程池使用了这个队列。</p>
 <p>PriorityBlockingQueue<br>PriorityBlockingQueue（优先级队列）是具有优先级的无界阻塞队列；</p>
 <p>SynchronousQueue<br>SynchronousQueue（同步队列）一个不存储元素的阻塞队列，每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQuene，newCachedThreadPool线程池使用了这个队列。</p>
-<h3><span id="mq-ru-he-bao-zheng-xiao-xi-de-ke-kao-xing">- mq如何保证消息的可靠性</span><a href="#mq-ru-he-bao-zheng-xiao-xi-de-ke-kao-xing" class="header-anchor">#</a></h3><ol>
+<h3><span id="mq-shi-yong-chang-jing">- mq使用场景</span><a href="#mq-shi-yong-chang-jing" class="header-anchor">#</a></h3><ul>
+<li>解耦<ul>
+<li>多个下游相同依赖</li>
+<li>数据驱动的任务依赖（下游任务强依赖上游数据到达）</li>
+</ul>
+</li>
+<li>异步<ul>
+<li>上游不关心执行结果</li>
+<li>上游关注执行结果，但执行时间很长（改为异步操作，再尝试获取结果）</li>
+</ul>
+</li>
+<li>削峰<ul>
+<li>请求高峰期</li>
+</ul>
+</li>
+</ul>
+<h3><span id="kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing">- kafka如何保证消息顺序性</span><a href="#kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing" class="header-anchor">#</a></h3><ol>
+<li>一个partition内保证顺序性</li>
+<li>可以通过message key来定义，同一个key的message可以保证只发送到同一个partition</li>
+</ol>
+<h3><span id="kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing">- kafka如何保证消息可靠性</span><a href="#kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing" class="header-anchor">#</a></h3><ol>
 <li>多副本写入</li>
 <li>数据持久化，通过后台线程将消息持久化到磁盘</li>
 <li>生产者确认，分片所有副本写入成功才返回。发送失败重试</li>
