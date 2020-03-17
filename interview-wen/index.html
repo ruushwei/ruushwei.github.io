@@ -15,7 +15,7 @@
 <meta property="og:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2020-03-10T16:13:27.120Z">
+<meta property="og:updated_time" content="2020-03-10T16:27:23.687Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识储备-雯">
 <meta name="twitter:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
@@ -305,7 +305,8 @@
 <p>直接内存</p>
 <p>不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存。NIO使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作，避免了Java堆和Native堆来回复制数据。直接内存的回收是在虚拟机进行full gc的时候顺带进行的，并不会自己触发垃圾回收</p>
 <h3><span id="tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</span><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi" class="header-anchor">#</a></h3><ol>
-<li>过程   <ul>
+<li><p>过程   </p>
+<ul>
 <li>加载<br>  通过全类名获取定义此类的二进制字节流<br>  将字节流所代表的静态存储结构转换为方法区的运行时数据结构<br>  在内存中生成一个代表该类的 Class 对象,作为方法区这些数据的访问入口   </li>
 <li>连接<br>  验证<br>文件格式、元数据、字节码、符号引用验证   </li>
 <li>准备<br>  正式为类变量分配内存并设置类变量初始值的阶段，设置数据类型默认的零值   </li>
@@ -313,7 +314,9 @@
 <li>初始化<br>  真正执行类中定义的 Java 程序代码<br>初始化阶段是执行类构造器 <clinit> ()方法的过程   </clinit></li>
 </ul>
 </li>
-<li>类加载器<br> BootstrapClassLoader<br> ExtensionClassLoader<br> AppClassLoader(应用程序类加载器)   </li>
+<li><p>双亲委派模式<br>Java的类加载使用双亲委派模式，即一个类加载器在加载类时，先把这个请求委托给自己的父类加载器去执行，如果父类加载器还存在父类加载器，就继续向上委托，直到顶层的启动类加载器。如果父类加载器能够完成类加载，就成功返回，如果父类加载器无法完成加载，那么子加载器才会尝试自己去加载。这种双亲委派模式的好处，一个可以避免类的重复加载，另外也避免了java的核心API被篡改。</p>
+<p>BootstrapClassLoader<br> ExtensionClassLoader<br> AppClassLoader(应用程序类加载器)   </p>
+</li>
 </ol>
 <h3><span id="gc-dui-xiang-cun-huo-pan-ding-suan-fa">- gc对象存活判定算法</span><a href="#gc-dui-xiang-cun-huo-pan-ding-suan-fa" class="header-anchor">#</a></h3><p>1.1引用计数算法</p>
 <p>给对象添加一个引用计数器，当有地方引用它时加1，当引用失效时计数减1，任何时刻计数器为0时的对象都不会再被引用。</p>
@@ -324,7 +327,7 @@
 <p>虚拟机栈中引用的对象<br>native方法中引用的对象<br>类静态属性、常量中引用的对象  </p>
 <h3><span id="gc-la-ji-shou-ji-qi-ji-qi-you-que-dian">- gc垃圾收集器及其优缺点</span><a href="#gc-la-ji-shou-ji-qi-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p>垃圾回收器种类:Serial、ParNew、Parallel Scavenge、Serial Old、Parallel Old、CMS(ConCurrent Mark Sweep)、G1(Garbage First)</p>
 <p>我们通常使用parnew(多线程stw复制算法，新生代) + cms(标记清除，老年代）</p>
-<h3><span id="biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he">- 标记算法和复制算法的区別，用在什么场合</span><a href="#biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he" class="header-anchor">#</a></h3><p>CMS 标记清除、Serial Old，Parallel old 标记整理：适用于存活对象比较多的场景<br>Serial、ParNew、PS 收集器 复制算法：用在那种不可达对象比较多的场合  </p>
+<h3><span id="biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he">- 标记算法和复制算法的区別，用在什么场合</span><a href="#biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he" class="header-anchor">#</a></h3><p>CMS 标记清除;<br>Serial Old，Parallel old 标记整理：适用于存活对象比较多的场景;<br>Serial、ParNew、PS 收集器 复制算法：用在那种不可达对象比较多的场合;</p>
 <h3><span id="cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian">- cms垃圾收集器的回收步骤及其优缺点？</span><a href="#cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p>cms回收器的标记过程:</p>
 <p>CMS以获取最短回收停顿时间为目标的收集器,使用“标记-清除”算法,分为以下6个步骤</p>
 <p>1.STW initial mark:第一次暂停,初始化标记,从root标记old space存活对象(the set of objects reachable from roots (application code))</p>
