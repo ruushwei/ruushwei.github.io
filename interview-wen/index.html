@@ -7,18 +7,18 @@
 
 
 
-    <meta name="description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
+    <meta name="description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - loadFactor和threshold的关系? - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理   Java并发类 - volatile原理 - java的乐观锁CAS锁原理 - syc">
 <meta property="og:type" content="website">
 <meta property="og:title" content="知识储备-雯">
 <meta property="og:url" content="https://www.techwei.cn/interview-wen/index.html">
 <meta property="og:site_name" content="大菜猫">
-<meta property="og:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
+<meta property="og:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - loadFactor和threshold的关系? - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理   Java并发类 - volatile原理 - java的乐观锁CAS锁原理 - syc">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2020-03-10T16:27:23.687Z">
+<meta property="og:updated_time" content="2020-03-26T05:35:15.571Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识储备-雯">
-<meta name="twitter:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列 LinkedBlockingQueue是一个单向链表实现的阻">
+<meta name="twitter:description" content="Java集合 - ArrayList 和 LinkedList的区别 - 谈谈对hashMap的了解 - loadFactor和threshold的关系? - 谈谈对ConcurrentHashMap的了解 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理   Java并发类 - volatile原理 - java的乐观锁CAS锁原理 - syc">
 <meta name="twitter:image" content="https://www.techwei.cn/images/og_image.png">
 
 
@@ -166,12 +166,9 @@
 <li><a href="#java-ji-he">Java集合</a><ul>
 <li><a href="#arraylist-he-linkedlist-de-qu-bie">- ArrayList 和 LinkedList的区别</a></li>
 <li><a href="#tan-tan-dui-hashmap-de-liao-jie">- 谈谈对hashMap的了解</a></li>
+<li><a href="#loadfactor-he-threshold-de-guan-xi">- loadFactor和threshold的关系?</a></li>
 <li><a href="#tan-tan-dui-concurrenthashmap-de-liao-jie">- 谈谈对ConcurrentHashMap的了解</a></li>
-<li><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</a><ul>
-<li><a href="#arrayblockingqueue-shi-object-shu-zu-shi-xian-de-xian-cheng-an-quan-de-you-jie-zu-sai-dui-lie">ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列</a></li>
-<li><a href="#linkedblockingqueue-shi-yi-ge-dan-xiang-lian-biao-shi-xian-de-zu-sai-dui-lie">LinkedBlockingQueue是一个单向链表实现的阻塞队列</a></li>
-</ul>
-</li>
+<li><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</a></li>
 </ul>
 </li>
 <li><a href="#java-bing-fa-lei">Java并发类</a><ul>
@@ -180,6 +177,8 @@
 <li><a href="#sychronized-he-valotile-de-qu-bie">- sychronized 和 valotile 的区别</a></li>
 <li><a href="#sychronized-reentranlock-de-qu-bie">- sychronized reentranlock 的区别</a></li>
 <li><a href="#threadlocal-yuan-li">- ThreadLocal原理</a></li>
+<li><a href="#aqs-tong-bu-qi-yuan-li">- AQS同步器原理？</a></li>
+<li><a href="#countdownlatch-cyclicbarrier-qu-bie">- CountDownLatch、CyclicBarrier区别</a></li>
 </ul>
 </li>
 <li><a href="#spring">spring</a><ul>
@@ -216,7 +215,6 @@
 <li><a href="#redis-huan-cun-ji-chuan-huan-cun-chuan-tou-huan-cun-xue-beng-zen-me-jie-jue">- redis缓存击穿、缓存穿透、缓存雪崩怎么解决</a></li>
 </ul>
 </li>
-<li><a href="#es">es</a></li>
 <li><a href="#mq">mq</a><ul>
 <li><a href="#mq-shi-yong-chang-jing">- mq使用场景</a></li>
 <li><a href="#kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing">- kafka如何保证消息顺序性</a></li>
@@ -245,54 +243,82 @@
 
 <h2><span id="java-ji-he">Java集合</span><a href="#java-ji-he" class="header-anchor">#</a></h2><h3><span id="arraylist-he-linkedlist-de-qu-bie">- ArrayList 和 LinkedList的区别</span><a href="#arraylist-he-linkedlist-de-qu-bie" class="header-anchor">#</a></h3><ol>
 <li>数据结构  数组 / 双向链表 </li>
-<li>是否支持快速随机访问</li>
-<li>随机插入删除速度, ArrayList需要整体位移</li>
+<li>是否支持快速随机访问，arraylist支持，linkedlist不支持</li>
+<li>随机插入删除速度, ArrayList慢因为需要整体位移，linkedlist快</li>
 </ol>
 <h3><span id="tan-tan-dui-hashmap-de-liao-jie">- 谈谈对hashMap的了解</span><a href="#tan-tan-dui-hashmap-de-liao-jie" class="header-anchor">#</a></h3><p>基本：底层数据结构, 数组 + 链表，长度超过8变为红黑树，非线程安全<br>加分：HashMap在put时, 经过了两次hash，一个是JDK自带的对对象key的hash，一个是内部扰动函数hash，做高16位与低16位异或，加大散列的效果<br>加分：HashMap 的长度为什么是2的幂次方。1. 散列值用之前要对数组长度取模，求桶位(n - 1) &amp; hash 更高效；2. 扩容的时候也可以用 hash值与扩容后的最高位 &amp; 判断节点是在高位还是低位，更高效。<br>加分：HashMap 非线程安全，多线程操作导致死循环问题，1.7  并发下头插形成循环链表，1.8 用尾插修复， 但仍可能造成丢失数据。</p>
+<p>白话：hashmap是非线程安全的集合。底层是数组+链表，链表长度超过8会转成红黑树。hashmap中table的长度总是2的幂次方，这样可以使用&amp;运算代替取余运算(%)来提高效率，在求桶位和扩容时获取节点新位置在左边还是右边的时候。</p>
+<h3><span id="loadfactor-he-threshold-de-guan-xi">- loadFactor和threshold的关系?</span><a href="#loadfactor-he-threshold-de-guan-xi" class="header-anchor">#</a></h3><p>size: 当前共有多少个KV对<br>capacity: 当前HashMap的容量是多少, 桶位数, table大小, 默认是16<br>loadFactor: 负载因子，默认0.75<br>threshold: loadFactor* capacity，</p>
+<p>白话：负载因子就是控制碰撞几率的，调的小，碰撞的概率小，调的大，碰的概率就大。阈值就是扩容时机。阈值等于负载因子乘以table大小</p>
 <h3><span id="tan-tan-dui-concurrenthashmap-de-liao-jie">- 谈谈对ConcurrentHashMap的了解</span><a href="#tan-tan-dui-concurrenthashmap-de-liao-jie" class="header-anchor">#</a></h3><p>1.7   结构： 分段的数组+链表;<br>      并发：分段锁，锁一段数组 segment，默认有16个segment, 并发度只有默认是16<br>      线程安全: segment上锁，继承ReentrantLock可重入锁</p>
 <p>1.8   结构： Node数组+链表 + 红黑树;<br>      并发： 并发控制使用 synchronized 和 CAS<br>      线程安全: CAS和synchronized来保证并发安全, synchronized只锁定当前链表或红黑二叉树的首节点, 只要hash不冲突，就不会产生并发，效率又提升N倍</p>
-<p>loadFactor和threshold的关系?   </p>
-<p>HashMap中size表示当前共有多少个KV对，capacity表示当前HashMap的容量是多少，默认值是16，每次扩容都是成倍的。loadFactor是装载因子，当Map中元素个数超过loadFactor* capacity的值时，会触发扩容。loadFactor* capacity可以用threshold表示。  </p>
-<h3><span id="arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</span><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li" class="header-anchor">#</a></h3><h4><span id="arrayblockingqueue-shi-object-shu-zu-shi-xian-de-xian-cheng-an-quan-de-you-jie-zu-sai-dui-lie">ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列</span><a href="#arrayblockingqueue-shi-object-shu-zu-shi-xian-de-xian-cheng-an-quan-de-you-jie-zu-sai-dui-lie" class="header-anchor">#</a></h4><p>1.数组实现：使用数组实现循环队列<br>2.有界：内部为数组实现，一旦创建完成，数组的长度不能再改变<br>3.线程安全：使用了 ReentrantLock 和 两个 condition(notEmpty, notFull) 来保证线程安全<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
-<h4><span id="linkedblockingqueue-shi-yi-ge-dan-xiang-lian-biao-shi-xian-de-zu-sai-dui-lie">LinkedBlockingQueue是一个单向链表实现的阻塞队列</span><a href="#linkedblockingqueue-shi-yi-ge-dan-xiang-lian-biao-shi-xian-de-zu-sai-dui-lie" class="header-anchor">#</a></h4><p>1.链表实现： head是链表的表头， last是链表的表尾。取出数据时，都是从表头head处取出，出队； 新增数据时，都是从表尾last处插入，入队。<br>2.可有界可无界：可以在创建时指定容量大小，防止队列过度膨胀。如果未指定队列容量，默认容量大小为Integer.MAX_VALUE<br>3.线程安全：使用了 两个 ReentrantLock 和 两个 condition，putLock是插入锁，takeLock是取出锁；notEmpty是“非空条件”，notFull是“未满条件”。通过它们对链表进行并发控制<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
+<p>白话：线程安全的map。1.7版本是使用分段锁实现的线程安全，segment上加锁，在构建的时候可以设置大小，默认是16，就是并发度默认只有16. 1.8版本的线程安全是用synchronized+cas实现的，使用synchronized锁住链表或红黑树的头结点，使用cas来进行size++和首个节点入桶。1.8的并发度是随着桶位增加而增加的，所以并发效率会随扩容提升很多倍。</p>
+<h3><span id="arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</span><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li" class="header-anchor">#</a></h3><p>ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列<br>1.数组实现：使用数组实现循环队列<br>2.有界：内部为数组实现，一旦创建完成，数组的长度不能再改变<br>3.线程安全：使用了 ReentrantLock 和 两个 condition(notEmpty, notFull) 来保证线程安全<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
+<p>LinkedBlockingQueue是一个单向链表实现的阻塞队列<br>1.链表实现： head是链表的表头，last是链表的表尾。取出数据时，都是从表头head处取出，出队； 新增数据时，都是从表尾last处插入，入队。<br>2.可有界可无界：可以在创建时指定容量大小，防止队列过度膨胀。如果未指定队列容量，默认容量大小为Integer.MAX_VALUE<br>3.线程安全：使用了 两个 ReentrantLock 和 两个 condition，putLock是插入锁，takeLock是取出锁；notEmpty是“非空条件”，notFull是“未满条件”。通过它们对链表进行并发控制<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
+<p>白话: ArrayBlockingQueue和LinkedBlockingQueue都是线程安全的阻塞队列。 ArrayBlockingQueue底层是数组实现，是有界的队列，线程安全是使用一个 ReentrantLock 和 两个 condition实现的。 LinkedBlockingQueue底层是单向链表实现，是可有界可无界的队列，线程安全是使用两个 ReentrantLock 和 两个 condition实现的。</p>
 <h2><span id="java-bing-fa-lei">Java并发类</span><a href="#java-bing-fa-lei" class="header-anchor">#</a></h2><h3><span id="volatile-yuan-li">- volatile原理</span><a href="#volatile-yuan-li" class="header-anchor">#</a></h3><ol>
-<li>Volatile的特征<br>A、禁止指令重排（有例外）<br>B、可见性</li>
+<li>Volatile的特征<br>A、可见性<br>B、禁止指令重排</li>
 <li>Volatile的内存语义<br>当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存。<br>当读一个volatile变量时，JMM会把线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量</li>
 <li>Volatile的重排序<br>两个volatile变量操作不能够进行重排序；</li>
 </ol>
+<p>白话：volatile有两个特性，可见性和禁止指令重排序。可见性，当一个线程更新volatile变量后，这个变量会立即写入到主内存中，其他线程读取时会从主内存中读取最新的值。禁止指令重排序，两个对volatile变量的操作不能被重排序，底层是通过内存栅栏实现的。</p>
 <h3><span id="java-de-le-guan-suo-cas-suo-yuan-li">- java的乐观锁CAS锁原理</span><a href="#java-de-le-guan-suo-cas-suo-yuan-li" class="header-anchor">#</a></h3><p>CAS英文全称Compare and Swap，直白翻译过来即比较并交换，是一种无锁算法，在不使用锁即没有线程阻塞下实现多线程之间的变量同步，基于处理器的读-改-写原子指令来操作数据，可以保证数据在并发操作下的一致性。</p>
 <p>CAS包含三个操作数：内存位置V，预期值A，写入的新值B。在执行数据操作时，当且仅当V的值等于A时，CAS才会通过原子操作方式用新值B来更新V的值（无论操作是否成功都会返回）。</p>
 <p>CAS的含义是：我认为V的值应该为A，如果是，那么将V的值更新为B，否则不修改并告诉V的值实际为多少</p>
-<p>CAS是怎么获取到预期值的?  通过unsafe类获取到的</p>
+<p>CAS是怎么获取到预期值的?  通过unsafe类获取到的<br>unsafe：操作内存内存空间的类     </p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public final int getAndAddInt(Object var1, long var2, int var4) &#123;</span><br><span class="line">   int var5;</span><br><span class="line">   do &#123;</span><br><span class="line">      var5 = this.getIntVolatile(var1, var2);</span><br><span class="line">   &#125; while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));</span><br><span class="line"></span><br><span class="line">   return var5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>valueOffset：value在内存中的偏移量（把存储单元的实际地址与其所在段的段地址之间的距离称为段内偏移），这里我们可以简单认为是内存地址，在类加载的时候，通过unsafe获取到value的偏移量。<br>value： 顾名思义代表存储值，被volatile修饰，保证在线程间的可见性   </p>
 <p>CAS修改的值为什么要是volatile? 可见性</p>
-<p>在compareAndSet的操作中，JNI借助CPU指令完成的，属于原子操作，保证多个线程在执行过程中看到同一个变量的修改值<br>unsafe：操作内存内存空间<br>valueOffset：value在内存中的偏移量（把存储单元的实际地址与其所在段的段地址之间的距离称为段内偏移），这里我们可以简单认为是内存地址，在类加载的时候，通过unsafe获取到value的偏移量。<br>value： 顾名思义代表存储值，被volatile修饰，保证在线程间的可见性   </p>
+<p>白话：CAS是Compare and Swap，比较并交换，是一种乐观锁实现线程安全的方式，更加轻量。底层是通过cpu的原子指令实现的比较并替换。使用的时候参数有内存位置，预期值，写入的新值，当通过内存位置拿到的值和预期值相等时，就用新值进行替换，整个操作是原子的，cpu指令保证。</p>
 <h3><span id="sychronized-he-valotile-de-qu-bie">- sychronized 和 valotile 的区别</span><a href="#sychronized-he-valotile-de-qu-bie" class="header-anchor">#</a></h3><ol>
 <li>volatile更轻量，性能更好，但volatile只能用于变量而synchronized关键字可以修饰方法以及代码块  </li>
 <li>多线程访问volatile关键字不会发生阻塞，而synchronized关键字可能会发生阻塞  </li>
 <li>volatile关键字能保证数据的可见性，但不能保证数据的原子性 （eg： i++）.synchronized关键字两者都能保证</li>
 <li>volatile关键字主要用于解决变量在多个线程之间的可见性，而 synchronized关键字解决的是多个线程之间访问资源的同步性</li>
 </ol>
+<p>白话: 1. 3.即可</p>
 <h3><span id="sychronized-reentranlock-de-qu-bie">- sychronized reentranlock 的区别</span><a href="#sychronized-reentranlock-de-qu-bie" class="header-anchor">#</a></h3><ol>
-<li>synchronized 依赖于 JVM 而 ReentrantLock 依赖于 API</li>
+<li>synchronized 依赖于 JVM实现线程安全 而 ReentrantLock 依赖于 API，底层依赖AQS</li>
 <li>等待可中断  lock.lockInterruptibly()， 线程可以选择放弃等待，改为处理其他事情</li>
 <li>可实现公平锁</li>
 <li>可实现选择性通知（锁可以绑定多个条件）</li>
 </ol>
 <h3><span id="threadlocal-yuan-li">- ThreadLocal原理</span><a href="#threadlocal-yuan-li" class="header-anchor">#</a></h3><p>每个Thread 维护一个 ThreadLocalMap 映射表，这个映射表的 key是 ThreadLocal 实例本身，value 是真正需要存储的 Object。也就是说 ThreadLocal 本身并不存储值，它只是作为一个 key 来让线程从 ThreadLocalMap 获取 value。</p>
 <p>由于每一条线程均含有各自私有的ThreadLocalMap容器，这些容器相互独立互不影响，因此不会存在线程安全性问题，从而也无需使用同步机制来保证多条线程访问容器的互斥性。</p>
+<p>白话：用多线程多份数据，来避免线程不安全</p>
+<h3><span id="aqs-tong-bu-qi-yuan-li">- AQS同步器原理？</span><a href="#aqs-tong-bu-qi-yuan-li" class="header-anchor">#</a></h3><p>**AQS使用一个volatile的int类型的成员变量来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作。AQS通过CAS完成对state值的修改</p>
+<p>核心思想是，如果被请求的共享资源空闲，将当前请求资源的线程设置为有效的工作线程，将共享资源设置为锁定状态；如果共享资源被占用，将暂时获取不到锁的线程加入到队列中, 需要一定的阻塞等待唤醒机制机制来保证锁分配。这个机制主要用的是CLH队列实现的**</p>
+<p>AQS是通过将每条请求共享资源的线程封装成一个节点来实现锁的分配。</p>
+<p>通过简单的几行代码就能实现同步功能，这就是AQS的强大之处。</p>
+<p>自定义同步器实现的相关方法也只是为了通过修改State字段来实现多线程的独占模式或者共享模式。自定义同步器需要实现以下方法（ReentrantLock需要实现的方法如下，并不是全部）：</p>
+<p>ReentrantLock这类自定义同步器自己实现了获取锁和释放锁的方式，而其余的等待队列的处理、线程中断等功能，异常与性能处理，还有并发优化等细节工作，都是由AQS统一提供，这也是AQS的强大所在。对同步器这类应用层来说，AQS屏蔽了底层的，同步器只需要设计自己的加锁和解锁逻辑即可</p>
+<p>一般来说，自定义同步器要么是独占方式，要么是共享方式，它们也只需实现tryAcquire-tryRelease、tryAcquireShared-tryReleaseShared中的一种即可。AQS也支持自定义同步器同时实现独占和共享两种方式，如ReentrantReadWriteLock。ReentrantLock是独占锁，所以实现了tryAcquire-tryRelease。</p>
+<p>独占与共享最大不同就在各自的tryacquire里，对于独占来说只有true或false，只有一个线程得以执行任务；而对于共享锁的tryAcquireShared来说，线程数没达到限制都可以直接执行。<br>但本质上都是对AQS同步状态的修改，一个是0与1之间，另一个允许更多而已</p>
+<p>应用：<br>1.ReentrantLock<br>使用AQS保存锁重复持有的次数。当一个线程获取锁时，ReentrantLock记录当前获得锁的线程标识，用于检测是否重复获取，以及错误线程试图解锁操作时异常情况的处理。<br>2.Semaphore<br>使用AQS同步状态来保存信号量的当前计数。tryRelease会增加计数，acquireShared会减少计数。<br>3.CountDownLatch<br>使用AQS同步状态来表示计数。计数为0时，所有的Acquire操作（CountDownLatch的await方法）才可以通过</p>
+<p>白话：AQS是jdk提供的一个同步器，可以很方便的生成自定义同步器。AQS内部使用一个volatile的state来表示同步状态，通过一个FIFO队列来做多线程获取资源的排队操作，AQS通过CAS来做state变量的修改。实现AQS只要实现其中判断获取锁和释放锁的方法即可，AQS内部会去做队列入队出队等复杂逻辑处理。使用AQS实现的同步器有ReentrantLock，Semaphore，CountDownLatch。</p>
+<h3><span id="countdownlatch-cyclicbarrier-qu-bie">- CountDownLatch、CyclicBarrier区别</span><a href="#countdownlatch-cyclicbarrier-qu-bie" class="header-anchor">#</a></h3><p>CountDownLatch<br>一个或多个线程等待其他线程完成一些列操作<br>CountDownLatch是一个同步辅助类，当CountDownLatch类中的计数器减少为0之前所有调用await方法的线程都会被阻塞，如果计数器减少为0，则所有线程被唤醒继续运行。</p>
+<p>典型应用场景</p>
+<p>开始执行前等待n个线程完成各自任务：例如有一个任务想要往下执行，但必须要等到其他任务执行完毕后才可以继续往下执行。假如这个想要继续往下执行的任务调用一个CountDownLatch对象的await()方法，其他的任务执行完自己的任务后调用同一个CountDownLatch对象上的countDown()方法，这个调用await()方法的任务将一直阻塞等待，直到这个CountDownLatch对象的计数值减到0为止。</p>
+<p>CyclicBarrier<br>多个线程相互等待，直到到达同一个同步点，再继续一起执行。CyclicBarrier适用于多个线程有固定的多步需要执行，线程间互相等待，当都执行完了，在一起执行下一步。</p>
+<p>CyclicBarrier是全部线程一起去执行下一步，CountDownLatch是只有当时等待的线程去执行下一步.</p>
+<p>CyclicBarrier和CountDownLatch的异同</p>
+<p>1.CyclicBarrier和CountDownLatch都可以通过一个条件去控制多个线程，然后在条件满足时做一些操作。CyclicBarrier在条件满足时可以让所有线程都继续运行，而CountDownLatch只能让一开始就在等待的线程去运行。</p>
+<p>2.CyclicBarrier可以复用，开启屏障之后count会回归到初始值，可以进行下一次屏障拦截线程。而CountDownLatch只能使用一次，倒计时完毕后count的值不会变化。</p>
+<p>白话：同CyclicBarrier和CountDownLatch的异同</p>
 <h2><span id="spring">spring</span><a href="#spring" class="header-anchor">#</a></h2><h3><span id="tan-tan-dui-springioc-de-liao-jie">- 谈谈对springIoc的了解</span><a href="#tan-tan-dui-springioc-de-liao-jie" class="header-anchor">#</a></h3><p>   <a href="https://www.zhihu.com/question/313785621" title="知乎" target="_blank" rel="noopener">如何完美阐述你对IOC的理解？</a></p>
 <p>   // 最底层map: Map&lt;String, Object&gt; singletonObjects = new ConcurrentHashMap(256);  </p>
-<p>   个人理解：<br>   1.控制反转是一种设计思想，将对象生命周期和依赖的控制由对象转给了ioc容器，对象由主动创建其它对象变为被动由ioc容器注入<br>   2.springioc容器控制了对象的创建、销毁及整个生命周期，，可以动态注入依赖的对象<br>   3.将对象与对象间解耦，对象不再直接创建依赖其它对象，都依赖springioc容器  </p>
+<p>   个人理解：<br>   1.控制反转是一种设计思想，将对象生命周期和依赖的控制由对象转给了ioc容器，对象由主动创建其它对象变为被动由ioc容器注入<br>   2.ioc容器控制了对象的创建、销毁及整个生命周期<br>   3.将对象与对象间解耦，对象不再直接创建依赖其它对象，都依赖springioc容器  </p>
 <p>   扩展：<a href="../2019/09/10/spring/springioc初始化" title="springIoc的初始化过程">springIoc的初始化过程</a></p>
 <p>它负责业务对象的构建管理和业务对象间的依赖绑定。</p>
+<p>白话：同个人理解</p>
 <h3><span id="tan-tan-dui-springaop-de-liao-jie">- 谈谈对springAop的了解</span><a href="#tan-tan-dui-springaop-de-liao-jie" class="header-anchor">#</a></h3><p>   AOP为面向切面编程，底层是通过动态代理实现，实质上就是将相同逻辑的重复代码横向抽取出来, 拦截对象方法，对方法进行改造、增强！比如在 <strong>方法执行前</strong>、<strong>方法返回后</strong>、<strong>方法前后</strong>、<strong>方法抛出异常后</strong> 等地方进行一定的增强处理，应用场景： 事务、日志、权限、监控打点</p>
 <p>   基于动态代理来实现，在容器启动的时候生成代理实例。默认地，如果使用接口的，用 JDK 提供的动态代理实现，如果没有接口，使用 CGLIB 实现</p>
 <p>   优点：每个关注点现在都集中于一处，而不是分散到多处代码中；服务模块更简洁，服务模块只需关注核心代码  </p>
 <p>   @Pointcut(切点)：用于定义哪些方法需要被增强或者说需要被拦截<br>   @Before、@After、@Around、@AfterReturning、@AfterThrowing（增强）: 添加到切点指定位置的一段逻辑代码</p>
 <p>   注：@AfterReturning 比 @After 的方法参数多被代理方法的返回值</p>
 <p>   参考：<br>   <a href="https://javadoop.com/post/spring-aop-intro" title="知乎" target="_blank" rel="noopener">Spring AOP 使用介绍，从前世到今生</a><br>   <a href="https://juejin.im/post/5b06bf2df265da0de2574ee1" title="掘金" target="_blank" rel="noopener">Spring AOP就是这么简单啦</a> </p>
+<p>白话：AOP为面向切面编程，底层是通过动态代理实现，实质上就是将相同逻辑的重复代码横向抽取出来, 拦截对象方法，对方法进行改造、增强. 应用场景比如日志、权限、监控打点。</p>
 <h2><span id="jvm">jvm</span><a href="#jvm" class="header-anchor">#</a></h2><h3><span id="java-nei-cun-qu-yu">- Java内存区域</span><a href="#java-nei-cun-qu-yu" class="header-anchor">#</a></h3><h4><span id="xian-cheng-si-you">线程私有</span><a href="#xian-cheng-si-you" class="header-anchor">#</a></h4><p>程序计数器<br>存放当前线程所执行的字节码的行号指示器。如果线程执行的是一个Java程序，计数器记录正在执行的虚拟机字节码指令地址；正在执行的是native方法，则计数器的值为空</p>
 <p>Java虚拟机栈</p>
 <p>描述Java方法执行的内存模型，每个方法执行的同时都会创建一个栈帧来存储局部变量表（编译期可知的各种基本数据类型，对象引用【reference类型】，内存空间的分配是在编译期完成的，方法运行期间不会改变局部变量表的大小）、操作数栈、动态链接、方法出口等。</p>
@@ -302,42 +328,44 @@
 <p>存放对象实例，所有的对象实例和数组都在堆上分配。程序运行时分支可能不一样，只有运行期间才能知道创建哪些对象，这部分内存的分配和回收是动态的</p>
 <p>metaspace</p>
 <p>存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码</p>
-<p>直接内存</p>
-<p>不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存。NIO使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作，避免了Java堆和Native堆来回复制数据。直接内存的回收是在虚拟机进行full gc的时候顺带进行的，并不会自己触发垃圾回收</p>
+<p>白话：只说名称即可</p>
 <h3><span id="tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</span><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi" class="header-anchor">#</a></h3><ol>
 <li><p>过程   </p>
 <ul>
-<li>加载<br>  通过全类名获取定义此类的二进制字节流<br>  将字节流所代表的静态存储结构转换为方法区的运行时数据结构<br>  在内存中生成一个代表该类的 Class 对象,作为方法区这些数据的访问入口   </li>
+<li>加载<br>  通过全类名获取定义此类的二进制字节流<br>  将字节流所代表的静态存储结构转换为metaspace的运行时数据结构<br>  在内存中生成一个代表该类的 Class 对象,作为metaspace这些数据的访问入口   </li>
 <li>连接<br>  验证<br>文件格式、元数据、字节码、符号引用验证   </li>
 <li>准备<br>  正式为类变量分配内存并设置类变量初始值的阶段，设置数据类型默认的零值   </li>
 <li>解析<br>  解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程   </li>
-<li>初始化<br>  真正执行类中定义的 Java 程序代码<br>初始化阶段是执行类构造器 <clinit> ()方法的过程   </clinit></li>
+<li>初始化<br>  真正执行类中定义的 Java 程序代码<br>// 初始化阶段是执行类构造器 <clinit> ()方法的过程   </clinit></li>
 </ul>
 </li>
 <li><p>双亲委派模式<br>Java的类加载使用双亲委派模式，即一个类加载器在加载类时，先把这个请求委托给自己的父类加载器去执行，如果父类加载器还存在父类加载器，就继续向上委托，直到顶层的启动类加载器。如果父类加载器能够完成类加载，就成功返回，如果父类加载器无法完成加载，那么子加载器才会尝试自己去加载。这种双亲委派模式的好处，一个可以避免类的重复加载，另外也避免了java的核心API被篡改。</p>
 <p>BootstrapClassLoader<br> ExtensionClassLoader<br> AppClassLoader(应用程序类加载器)   </p>
 </li>
 </ol>
+<p>白话：ClassLoader名不用记，别的要记</p>
 <h3><span id="gc-dui-xiang-cun-huo-pan-ding-suan-fa">- gc对象存活判定算法</span><a href="#gc-dui-xiang-cun-huo-pan-ding-suan-fa" class="header-anchor">#</a></h3><p>1.1引用计数算法</p>
 <p>给对象添加一个引用计数器，当有地方引用它时加1，当引用失效时计数减1，任何时刻计数器为0时的对象都不会再被引用。</p>
 <p>缺点：存在两个对象不会被继续访问，但是两者循环调用的情况，由于存在循环调用导致两个对象都不会被回收。</p>
 <p>1.2可达性分析算法</p>
 <p>通过一系列被称作gc roots对象作为起点，从这些起点向下搜索，搜索所走过的路径成为引用链，当一个对象到gc roots没有任何引用链时证明此对象不可用。</p>
 <p>Java中gc roots的对象包括：</p>
-<p>虚拟机栈中引用的对象<br>native方法中引用的对象<br>类静态属性、常量中引用的对象  </p>
+<p>虚拟机栈中引用的对象<br>native方法中引用的对象<br>类静态属性、常量中引用的对象 </p>
+<p>白话：答：引用计数算法、可达性分析算法 名就行了</p>
 <h3><span id="gc-la-ji-shou-ji-qi-ji-qi-you-que-dian">- gc垃圾收集器及其优缺点</span><a href="#gc-la-ji-shou-ji-qi-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p>垃圾回收器种类:Serial、ParNew、Parallel Scavenge、Serial Old、Parallel Old、CMS(ConCurrent Mark Sweep)、G1(Garbage First)</p>
 <p>我们通常使用parnew(多线程stw复制算法，新生代) + cms(标记清除，老年代）</p>
 <h3><span id="biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he">- 标记算法和复制算法的区別，用在什么场合</span><a href="#biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he" class="header-anchor">#</a></h3><p>CMS 标记清除;<br>Serial Old，Parallel old 标记整理：适用于存活对象比较多的场景;<br>Serial、ParNew、PS 收集器 复制算法：用在那种不可达对象比较多的场合;</p>
 <h3><span id="cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian">- cms垃圾收集器的回收步骤及其优缺点？</span><a href="#cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p>cms回收器的标记过程:</p>
 <p>CMS以获取最短回收停顿时间为目标的收集器,使用“标记-清除”算法,分为以下6个步骤</p>
-<p>1.STW initial mark:第一次暂停,初始化标记,从root标记old space存活对象(the set of objects reachable from roots (application code))</p>
-<p>2.Concurrent marking:运行时标记,从上一步得到的集合出发,遍历old space,标记存活对象 (all live objects that are transitively reachable from previous set)</p>
-<p>3.Concurrent precleaning:并发的标记前一阶段被修改的对象(card table)</p>
-<p>4.STW remark:第二次暂停,检查,标记,检查脏页的对象,标记前一阶段被修改的对象 (revisiting any objects that were modified during the concurrent marking phase)</p>
-<p>5.Concurrent sweeping:运行过程中清理,扫描old space,释放不可到达对象占用的空间</p>
-<p>6.Concurrent reset:此次CMS结束后,重设CMS状态等待下次CMS的触发 </p>
+<p>1.STW initial mark:<strong>初始标记</strong>,第一次暂停,从root标记old space存活对象(the set of objects reachable from roots (application code))</p>
+<p>2.Concurrent marking:<strong>并发标记</strong>,从上一步得到的集合出发,遍历old space,标记存活对象 (all live objects that are transitively reachable from previous set)</p>
+<p>3.Concurrent precleaning:<strong>并发预清理</strong>。并发的标记前一阶段被修改的对象(card table)</p>
+<p>4.STW remark:<strong>重新标记</strong>。第二次暂停,检查,标记,检查脏页的对象,标记前一阶段被修改的对象 (revisiting any objects that were modified during the concurrent marking phase)</p>
+<p>5.Concurrent sweeping:<strong>并发清理</strong>。运行过程中清理,扫描old space,释放不可到达对象占用的空间</p>
+<p>6.Concurrent reset:<strong>并发重置</strong>。此次CMS结束后,重设CMS状态等待下次CMS的触发 </p>
+<p>白话：步骤名称，细问再说</p>
 <h2><span id="mysql">mysql</span><a href="#mysql" class="header-anchor">#</a></h2><h3><span id="shi-me-qing-kuang-xia-suo-yin-shi-xiao">- 什么情况下索引失效</span><a href="#shi-me-qing-kuang-xia-suo-yin-shi-xiao" class="header-anchor">#</a></h3><ol>
-<li>不符合联合最左匹配<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/v2-7f20eb4512b782ac973c60b0d15cb3fc_hd.jpg" alt></li>
+<li>不符合联合最左匹配</li>
 <li>like前导模糊查询 （可以通过 REVERSE()函数来创建一个函数索引解决）</li>
 <li>字段类型不匹配</li>
 <li>索引字段施加函数</li>
@@ -366,6 +394,7 @@
 <h3><span id="ru-he-you-hua-sql">- 如何优化sql</span><a href="#ru-he-you-hua-sql" class="header-anchor">#</a></h3><ol>
 <li>让sql使用索引，如果查看sql使用索引情况，explain查看执行计划<br>通过explain命令可以得到下面这些信息: 表的读取顺序，数据读取操作的操作类型哪些索引可以使用哪些索引被实际使用，表之间的引用，每张表有多少行被优化器查询等信息。 rows是核心指标，绝大部分rows小的语句执行一定很快。<br>Extra字段几种需要优化的情况<br>Using filesort 需要优化，MYSQL需要进行额外的步骤来对返回的行排序。<br>Using temporary需要优化，发生这种情况一般都是需要进行优化的。mysql需要创建一张临时表用来处理此类查询<br>Using where 表示 MySQL 服务器从存储引擎收到行后再进行“后过滤”</li>
 </ol>
+<p>白话: 让sql使用索引, 通过explain查看sql执行计划，看是否正常使用索引，关注下possible keys, keys 是否使用到索引,rows扫描行数。还有Extra字段，如果有 Using filesort、  Using temporary、Using where都说明需要优化了。Using filesort说明服务器使用额外步骤做排序操作了，Using where也表示服务器做额外的过滤了，Using temporary表示新建了一张临时表来做查询。都需要优化。</p>
 <h3><span id="fen-ku-fen-biao">- 分库分表</span><a href="#fen-ku-fen-biao" class="header-anchor">#</a></h3><p>根据userid取模做的分库分表</p>
 <p>两个场景，业务解耦垂直拆分，读写性能瓶颈做水平拆分。</p>
 <ol>
@@ -413,7 +442,7 @@
 <li>二级缓存（本地缓存），减少db压力</li>
 </ol>
 <p>击穿是单个，必定是热点key，雪崩是很多，不一定是热点key，对应的解决方案也有不一样的地方，雪崩有一个设置过期时间加随机数，雪崩用二级缓存比较好使，但击穿就没太大必要</p>
-<h2><span id="es">es</span><a href="#es" class="header-anchor">#</a></h2><h2><span id="mq">mq</span><a href="#mq" class="header-anchor">#</a></h2><h3><span id="mq-shi-yong-chang-jing">- mq使用场景</span><a href="#mq-shi-yong-chang-jing" class="header-anchor">#</a></h3><ul>
+<h2><span id="mq">mq</span><a href="#mq" class="header-anchor">#</a></h2><h3><span id="mq-shi-yong-chang-jing">- mq使用场景</span><a href="#mq-shi-yong-chang-jing" class="header-anchor">#</a></h3><ul>
 <li>解耦<ul>
 <li>多个下游相同依赖</li>
 <li>数据驱动的任务依赖（下游任务强依赖上游数据到达）</li>
@@ -451,14 +480,16 @@
 <h3><span id="si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl">- 四次挥手的closewait, timewait分别在哪，为什么timewait要等待2msl</span><a href="#si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl" class="header-anchor">#</a></h3><p>2MSL是两倍的MSL(Maximum Segment Lifetime)，MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间</p>
 <p>如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接</p>
 <p>TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK</p>
-<h2><span id="qi-ta">其他</span><a href="#qi-ta" class="header-anchor">#</a></h2><h3><span id="zhu-cong-yan-chi-zen-me-ban">- 主从延迟怎么办</span><a href="#zhu-cong-yan-chi-zen-me-ban" class="header-anchor">#</a></h3><p>主从延迟的原因：<br>主库写入数据并且生成binlog文件， 从库异步读取更新   </p>
-<p>解决方案：<br>一、更新操作，做SQL优化，减少批量更新操作<br>二、查询场景，   </p>
+<h2><span id="qi-ta">其他</span><a href="#qi-ta" class="header-anchor">#</a></h2><h3><span id="zhu-cong-yan-chi-zen-me-ban">- 主从延迟怎么办</span><a href="#zhu-cong-yan-chi-zen-me-ban" class="header-anchor">#</a></h3><p>主从延迟的原因：<br>主库写入数据并且生成binlog文件，从库异步读取更新，程序读从库但还没更新就去读取了   </p>
+<p>解决方案：<br>一、更新操作方面，做SQL优化，避免大批量更新<br>二、查询场景，   </p>
 <ol>
 <li>强制读主，对主库压力大，谨慎使用   </li>
 <li>延迟读从，更新时写一个过期时间为主从延迟时间的缓存key，读的时候添加一个判断   </li>
 <li>识别重试机制，通过消息发送的版本号与数据库数据版本对比识别最新数据，如果不一致，通过等待重试来保证   </li>
 </ol>
-<h3><span id="tan-tan-dui-java-nio-de-liao-jie">- 谈谈对Java NIO的了解</span><a href="#tan-tan-dui-java-nio-de-liao-jie" class="header-anchor">#</a></h3><p>NIO（Non-blocking I/O，在Java领域，也称为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，已经成为解决高并发与大量连接、I/O处理问题的有效方式。<br>传统的BIO模型严重依赖于线程。但线程是很”贵”的资源。创建和销毁成本很高，本身占用较大内存，切换成本是很高。<br>NIO由原来占用线程的阻塞读写变成了单线程轮询事件，找到可以进行读写的网络描述符进行读写。大大地节约了线程，为处理海量连接提供了可能<br>总结NIO带来了什么：    </p>
+<p>白话：解决方案其实说二的1、2就够了，更新和识别重试比较少见</p>
+<h3><span id="tan-tan-dui-java-nio-de-liao-jie">- 谈谈对Java NIO的了解</span><a href="#tan-tan-dui-java-nio-de-liao-jie" class="header-anchor">#</a></h3><p>NIO（Non-blocking I/O，在Java领域，也称为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，已经成为解决高并发与大量连接、I/O处理问题的有效方式。<br>传统的BIO模型严重依赖于线程。但线程是很”贵”的资源。创建和销毁成本很高，本身占用较大内存，切换成本是很高。<br>NIO由原来占用线程的阻塞读写变成了单线程轮询事件，找到可以进行读写的网络描述符进行读写。大大地节约了线程，为处理海量连接提供了可能     </p>
+<p>总结NIO带来了什么：    </p>
 <ul>
 <li>事件驱动模型  </li>
 <li>避免多线程</li>
