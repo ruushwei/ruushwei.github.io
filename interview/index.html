@@ -15,7 +15,7 @@
 <meta property="og:description" content="java - 常见Java集合类 - ArrayList 和 LinkedList的区别 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 - 阻塞队列原理 - 项目中用到过哪些数据结构 - BIO、NIO、AIO 的区別和联系 - 谈谈对Java NIO的了解 - 谈谈对hashMap的了解 - loadFactor和threshold的关系?">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2020-03-29T01:34:52.012Z">
+<meta property="og:updated_time" content="2020-04-08T01:28:01.231Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="知识储备">
 <meta name="twitter:description" content="java - 常见Java集合类 - ArrayList 和 LinkedList的区别 - ArrayBlockingQueue和LinkedBlockingQueue的实现原理 - 阻塞队列原理 - 项目中用到过哪些数据结构 - BIO、NIO、AIO 的区別和联系 - 谈谈对Java NIO的了解 - 谈谈对hashMap的了解 - loadFactor和threshold的关系?">
@@ -386,6 +386,7 @@
 <p>虚引用</p>
 <p>虚引等同于没有引用，拥有虚引用的对象可以在任何时候被垃圾回收器回收。</p>
 <p>弱引用的出现就是为了垃圾回收服务的。它引用一个对象，但是并不阻止该对象被回收。<br>如果使用一个强引用的话，只要该引用存在，那么被引用的对象是不能被回收的。<br>弱引用则没有这个问题。在垃圾回收器运行的时候，如果一个对象的所有引用都是弱引用的话，该对象会被回收</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%BC%BA%E8%BD%AF%E5%BC%B1%E8%99%9A.png" alt></p>
 <h3><span id="threadlocal-yuan-li">- ThreadLocal原理</span><a href="#threadlocal-yuan-li" class="header-anchor">#</a></h3><p>用多线程多份数据，来避免线程不安全</p>
 <p>每个Thread 维护一个 ThreadLocalMap 映射表，这个映射表的 key是 ThreadLocal 实例本身，value 是真正需要存储的 Object。也就是说 ThreadLocal 本身并不存储值，它只是作为一个 key 来让线程从 ThreadLocalMap 获取 value。</p>
 <p>由于每一条线程均含有各自私有的ThreadLocalMap容器，这些容器相互独立互不影响，因此不会存在线程安全性问题，从而也无需使用同步机制来保证多条线程访问容器的互斥性。</p>
