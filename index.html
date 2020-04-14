@@ -154,7 +154,71 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time>
+                <time class="level-item has-text-grey" datetime="2020-04-14T02:54:24.000Z">2020-04-14</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/jvm/">jvm</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1030 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/04/14/jvm/gcoptimiz/">gc调优（parnew+cms）</a>
+            
+        </h1>
+        <div class="content">
+            <h3><span id="1-ru-he-zuo-gc-diao-you">1如何做gc调优</span><a href="#1-ru-he-zuo-gc-diao-you" class="header-anchor">#</a></h3><p>调优目的：减少系统停顿时间<br>优化目标：减少younggc、减少cmsgc、减少fullgc<br>Old GC：只清理老年代空间的 GC 事件，只有 CMS 的并发收集是这个模式。<br>Full GC：清理整个堆的 GC 事件，包括新生代、老年代、元空间等 。</p>
+<h4><span id="1-1younggc-yuan-yin">1.1younggc原因</span><a href="#1-1younggc-yuan-yin" class="header-anchor">#</a></h4><p>1.请求中生成的对象多。新生代空间较小，Eden区很快被填满，就会导致频繁young GC     </p>
+<h4><span id="1-1-ru-he-jian-shao-younggc">1.1如何减少younggc</span><a href="#1-1-ru-he-jian-shao-younggc" class="header-anchor">#</a></h4><p>1.增大新生代空间<br>2.减少请求中生成对象大小<br>1.2cmsgc原因<br>1.有过多的对象到达了老年代，频繁触发cms gc<br>1.2如何减少cmsgc<br>1.增大老年代大小<br>2.减少进入老年代的对象大小, 提高晋升年龄阈值（如果小的话，比如改成了3、4）</p>
+<h4><span id="1-3fullgc-yuan-yin">1.3fullgc原因</span><a href="#1-3fullgc-yuan-yin" class="header-anchor">#</a></h4><p>1.metaspace扩容</p>
+<p>2.CMS GC时出现promotion failed(晋升失败)和concurrent mode failure 触发串行full gc。</p>
+<pre><code>promotion failed: 当新生代发生垃圾回收，老年代有足够的空间可以容纳晋升的对象，但是由于空闲空间的碎片化，导致晋升失败，此时会触发单线程且带压缩动作的Full GC
+concurrent mode failure: 发生的原因一般是CMS正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止CMS，直接进行Serial Old GC</code></pre><p>3.统计得到的Young GC晋升到老年代的平均大小大于老年代的剩余空间；</p>
+<p>4.主动触发Full GC，</p>
+<pre><code>程序代码执行System.gc(); 
+命令行中dump整个堆: 执行jmap -histo:live [pid]</code></pre><h4><span id="1-3-ru-he-jian-shao-fullgc">1.3如何减少fullgc</span><a href="#1-3-ru-he-jian-shao-fullgc" class="header-anchor">#</a></h4><p>原因1. 启动时设置好metaspace，避免因扩容导致fullgc<br>    “-XX:MetaspaceSize=256M”,<br>    “-XX:MaxMetaspaceSize=256M”</p>
+<p>原因2&amp;3. 减少cms gc</p>
+<p>•降低触发CMS GC的阈值, 以保证有足够的空间。即参数-XX:CMSInitiatingOccupancyFraction的值，让CMS GC尽早执行。<br>•增大老年代空间<br>•让对象尽量在新生代回收，避免进入老年代</p>
+<p>原因4. 避免使用System.gc()</p>
+<h3><span id="2-jvm-ru-he-nei-cun-fen-pei">2.Jvm如何内存分配</span><a href="#2-jvm-ru-he-nei-cun-fen-pei" class="header-anchor">#</a></h3><p>eg: 16G内存机器，9G老年代，4G新生代，3G直接内存</p>
+<h3><span id="3-gc-diao-you-an-li">3.gc调优案例</span><a href="#3-gc-diao-you-an-li" class="header-anchor">#</a></h3><h4><span id="3-1younggc">3.1younggc</span><a href="#3-1younggc" class="header-anchor">#</a></h4><p>1.请求中生成的对象大，eg:历史数据因历史原因对应很多或很大的返回结果，频繁访问造成gc较多，可以在场景允许的情况下将这部分数据下掉或者做个截断处理。减少younggc的频率和复制对象所花费的时间。<br>2.增大新生代大小</p>
+<h4><span id="3-2fullgc">3.2fullgc</span><a href="#3-2fullgc" class="header-anchor">#</a></h4><p>1.服务启动时metaspace扩容触发fullgc，导致刚启动时服务不稳定，jvm启动参数中设置好Metaspace的size和最大size。<br>2.服务偶尔发生concurrent mode failure。服务瞬间的可用性下降严重。修改jvm参数，降低触发cms gc的阈值（90%-&gt;75%），避免触发串行full gc。</p>
+<h4><span id="3-3cmsgc">3.3cmsgc</span><a href="#3-3cmsgc" class="header-anchor">#</a></h4><p>1.增大old区。肯定是有用的，至少能减少触发的频率<br>2.也可能是晋升年龄阈值比较小。-XX:MaxTenuringThreshold，默认15, 可能有人改小了，让年龄小的就直接到old区了，比如改成3、4。</p>
+<h3><span id="bei-zhu-cms-nei-cun-sui-pian-wen-ti">备注：cms内存碎片问题</span><a href="#bei-zhu-cms-nei-cun-sui-pian-wen-ti" class="header-anchor">#</a></h3><p>通常 CMS 的 GC 过程基于标记清除算法，不带压缩动作，导致越来越多的内存碎片需要压缩。常见以下场景会触发内存碎片压缩<br>新生代 Young GC 出现新生代晋升担保失败（promotion failed)）</p>
+<p>程序主动执行System.gc()</p>
+<p>可通过参数 CMSFullGCsBeforeCompaction 的值，设置多少次 Full GC 触发一次压缩。默认值为 0，代表每次进入 Full GC 都会触发压缩，带压缩动作的算法为上面提到的单线程 Serial Old 算法，暂停时间（STW）时间非常长，需要尽可能减少压缩时间。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-09T02:54:24.000Z">2020-03-09</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
@@ -173,7 +237,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/07/09/mysql/事务隔离级别2/">innodb事务隔离级别</a>
+                <a class="has-link-black-ter" href="/2020/03/09/mysql/事务隔离级别2/">innodb事务隔离级别</a>
             
         </h1>
         <div class="content">
@@ -871,72 +935,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-14T02:54:24.000Z">2019-07-14</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/读书笔记/">读书笔记</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    9 分钟 读完 (大约 1404 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/07/14/read/controll/">读《自控力》</a>
-            
-        </h1>
-        <div class="content">
-            <h2><span id="qian-yan">前言</span><a href="#qian-yan" class="header-anchor">#</a></h2><p>看了本周”李自然说”讨论学习方法，里面有一句话非常喜欢，人和人的差距大于人和猪的差距。 </p>
-<p>这句话夸张的表达了人和人的差距会有多大，人和人理解问题的深度、处事的态度、说话的逻辑和好听程度，有趣指数，相信大家都想做人上人，百里挑一的人，不止是为了获得更多的财富，更是让自己的生活满意，做事情处事不惊，游刃有余。 今天开始阅读《自控力》，不是说这一本书能带我走向人生巅峰，只希望是个好的开始。</p>
-<h2><span id="01-yi-zhi-li-shi-shi-me-wei-shi-me-zhi-guan-chong-yao">01 意志力是什么，为什么至关重要</span><a href="#01-yi-zhi-li-shi-shi-me-wei-shi-me-zhi-guan-chong-yao" class="header-anchor">#</a></h2><p>###意志力</p>
-<p>就是驾驭 “我不要”， “我要做”，”我想要” 这三种力量。</p>
-<h4><span id="wo-bu-yao-di-zhi-you-huo">“我不要” : 抵制诱惑！</span><a href="#wo-bu-yao-di-zhi-you-huo" class="header-anchor">#</a></h4><p>抵制甜甜圈，香烟，清仓大甩卖，或一夜情等等很诱人的东西，这些东西阻碍你实现你真正想要的，比如瘦身，好的肺，幸福的家庭等，如果你一面对就会无法抵抗，那就要提升意志力，提升“我不要”的能力。</p>
-<p>这些东西可能会带来即时的快感，但只是因为真正美好的东西暂时离你远，因为时空的距离感，让你选择了当前的选项，但如果思维清晰，目标明确，就不要为眼前的小利益而放弃大目标。</p>
-<p>比如你想换工作、换城市，考虑清楚之后，知道换了之后的结果是好的，但过程中有困难和安逸给你选，如果选了安逸，就是当前的诱惑赢了，如果选了困难，就是意志力的体现，对当前诱惑说出 “我不要” ！</p>
-<h4><span id="wo-yao-zuo-jin-ri-shi-jin-ri-bi">“我要做” ：今日事今日毕 ！</span><a href="#wo-yao-zuo-jin-ri-shi-jin-ri-bi" class="header-anchor">#</a></h4><p>“明日复明日”，拖延症晚期患者有些事情可能拖到下辈子再做，是这部分意志力薄弱，我理解不可能每天真毕，但“做” 和 “拖”的差距是很大的，是“我要做”意志力的体现。</p>
-<h4><span id="wo-xiang-yao-zhen-zheng-yao-de-shi-shi-me">“我想要”： 真正要的是什么！</span><a href="#wo-xiang-yao-zhen-zheng-yao-de-shi-shi-me" class="header-anchor">#</a></h4><p>当我们在冲动的时候有时会觉得这就是自己想要的，想要玩游戏、想要喝酒、巧克力蛋糕、骂人等等，但一定得想清楚，你真正要的是什么样的身材，什么样的素养，什么样的生活，是否希望苗条、升职加薪、家庭美满，是否吃”巧克力蛋糕”, 吃多少，要在关键时刻遏制住一时冲动，明确自己的目标，强大的目标明确能力，是“我想要”意志力的体现。</p>
-<h4><span id="xiao-zong-jie">小总结</span><a href="#xiao-zong-jie" class="header-anchor">#</a></h4><p>个人理解意志力的体现肯定不是要让我们当机器人或当狗（加班狗、奋斗狗），而是像某口号一样，集中力量办大事，只是集中的是自己的力量，办的是“我想要”的事。</p>
-<h3><span id="liang-ge-zi-wo">两个自我</span><a href="#liang-ge-zi-wo" class="header-anchor">#</a></h3><p>大脑中有两个部分，一部分是控制自己，一部分是冲动的自己。冲动为原始的冲动，我们的本能; 控制自己的就是我们的前额皮质。</p>
-<p>“两个自我发生分歧的时候，总会有一方击败另一方。决定放弃的一方并没有做错，只是双方觉得重要的东西不同而已。”</p>
-<p>原始的本能冲动是我们必不可少的，没有欲望，人就会变得沮丧，没有恐惧，就没法保护自己，没有厌恶，就没法提高自己，我们不是要消灭冲动的自己，而是要学会利用冲动的自己，换句话就是在合适的时候冲动，合适的时候控制。</p>
-<p>原始的冲动带着自己进步，而当冲动要带我们走向错误的时候，控制自己的能力需要体现。</p>
-<h3><span id="zi-wo-yi-shi">自我意识</span><a href="#zi-wo-yi-shi" class="header-anchor">#</a></h3><p>自我意识体现在做决定的时候，意识到要做自己的选择，生活才是自己的。</p>
-<p>这里重点是意识到自己可以做的选择。一件事，我根据自己的想法做出选择，是自我意识，而我如果没思考，下意识走了简单舒适的选择时，就是自我意识的缺失，一种随波逐流，这样选的结果不一定不好，但不会一直是自己想要的。</p>
-<p>做一个有自我的人</p>
-<h3><span id="ming-xiang">冥想</span><a href="#ming-xiang" class="header-anchor">#</a></h3><p>冥想通过坐着闭眼专注于”呼“ ”吸“， 锻炼自己的控制能力，注意力集中能力，意志力。</p>
-<p>冥想我相信对应现实中的注意力集中能力，自控能力都会有一定提升。</p>
-<p>今天进行了人生第一次冥想，虽然大部分时间都无法专注于呼吸，但我看到了挑战，当我能完全专注于呼吸的时候，那我的集中注意力的能力就会变得很强。</p>
-<p>mark一篇完整冥想步骤文章</p>
-<p><a href="https://mp.weixin.qq.com/s/2nV2u66ScuLJEHEXcrHkMQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/2nV2u66ScuLJEHEXcrHkMQ</a></p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1005,7 +1003,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        57
+                        58
                     </p>
                 </div>
             </div>
@@ -1171,7 +1169,7 @@
                 <span class="level-item">jvm</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/kafka/">
@@ -1345,7 +1343,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 13.33px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -1364,8 +1362,21 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T02:54:24.000Z">2020-04-14</time></div>
+                    <a href="/2020/04/14/jvm/gcoptimiz/" class="has-link-black-ter is-size-6">gc调优（parnew+cms）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/jvm/">jvm</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-09T02:54:24.000Z">2020-03-09</time></div>
+                    <a href="/2020/03/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1412,19 +1423,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1438,9 +1436,20 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2020/04/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1769,7 +1778,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1961,8 +1970,21 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T02:54:24.000Z">2020-04-14</time></div>
+                    <a href="/2020/04/14/jvm/gcoptimiz/" class="has-link-black-ter is-size-6">gc调优（parnew+cms）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/jvm/">jvm</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-09T02:54:24.000Z">2020-03-09</time></div>
+                    <a href="/2020/03/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -2009,19 +2031,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2035,9 +2044,20 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2020/04/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -2366,7 +2386,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
