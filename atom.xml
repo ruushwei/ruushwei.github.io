@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.techwei.cn/"/>
-  <updated>2020-08-06T13:08:55.352Z</updated>
+  <updated>2020-08-10T15:51:52.365Z</updated>
   <id>https://www.techwei.cn/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>mybatis源码解析</title>
-    <link href="https://www.techwei.cn/2020/08/06/mybatis/cache/"/>
-    <id>https://www.techwei.cn/2020/08/06/mybatis/cache/</id>
+    <title>mybatis疑问解答</title>
+    <link href="https://www.techwei.cn/2020/08/07/mybatis/question/"/>
+    <id>https://www.techwei.cn/2020/08/07/mybatis/question/</id>
+    <published>2020-08-07T02:54:24.000Z</published>
+    <updated>2020-08-10T15:51:52.365Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;qing-shuo-shuo-mybatis-de-gong-zuo-yuan-li&quot;&gt;请说说MyBatis的工作原理？&lt;/span&gt;&lt;a href=&quot;#qing-shuo-shuo-mybatis-de-gong-zuo-yuan-li&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="mybatis" scheme="https://www.techwei.cn/categories/mybatis/"/>
+    
+    
+      <category term="mybatis" scheme="https://www.techwei.cn/tags/mybatis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mybatis架构流程</title>
+    <link href="https://www.techwei.cn/2020/08/06/mybatis/arti/"/>
+    <id>https://www.techwei.cn/2020/08/06/mybatis/arti/</id>
     <published>2020-08-06T02:54:24.000Z</published>
-    <updated>2020-08-06T13:08:55.352Z</updated>
+    <updated>2020-08-07T02:07:04.130Z</updated>
     
     <summary type="html">
     
@@ -357,6 +383,32 @@
   </entry>
   
   <entry>
+    <title>innodb事务隔离级别、MVCC</title>
+    <link href="https://www.techwei.cn/2019/07/09/mysql/%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/"/>
+    <id>https://www.techwei.cn/2019/07/09/mysql/隔离级别/</id>
+    <published>2019-07-09T02:54:24.000Z</published>
+    <updated>2020-03-08T10:13:48.451Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4&gt;&lt;span id=&quot;ge-chi-ji-bie&quot;&gt;隔离级别&lt;/span&gt;&lt;a href=&quot;#ge-chi-ji-bie&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;&lt;img
+        
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
     <title>netty模型</title>
     <link href="https://www.techwei.cn/2019/07/09/netty/model/"/>
     <id>https://www.techwei.cn/2019/07/09/netty/model/</id>
@@ -379,24 +431,6 @@
     
     
       <category term="netty" scheme="https://www.techwei.cn/tags/netty/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>策略模式</title>
-    <link href="https://www.techwei.cn/2019/07/09/designpatterns/strategy/"/>
-    <id>https://www.techwei.cn/2019/07/09/designpatterns/strategy/</id>
-    <published>2019-07-09T02:54:24.000Z</published>
-    <updated>2020-03-08T10:13:48.443Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-      <category term="设计模式" scheme="https://www.techwei.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="设计模式" scheme="https://www.techwei.cn/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   
@@ -427,6 +461,24 @@
   </entry>
   
   <entry>
+    <title>策略模式</title>
+    <link href="https://www.techwei.cn/2019/07/09/designpatterns/strategy/"/>
+    <id>https://www.techwei.cn/2019/07/09/designpatterns/strategy/</id>
+    <published>2019-07-09T02:54:24.000Z</published>
+    <updated>2020-03-08T10:13:48.443Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="设计模式" scheme="https://www.techwei.cn/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="设计模式" scheme="https://www.techwei.cn/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>tair &amp; redis 的选择</title>
     <link href="https://www.techwei.cn/2019/07/09/redis/%E4%B8%8Etair%E9%80%89%E6%8B%A9/"/>
     <id>https://www.techwei.cn/2019/07/09/redis/与tair选择/</id>
@@ -451,32 +503,6 @@
       <category term="redis" scheme="https://www.techwei.cn/tags/redis/"/>
     
       <category term="tair" scheme="https://www.techwei.cn/tags/tair/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>innodb事务隔离级别、MVCC</title>
-    <link href="https://www.techwei.cn/2019/07/09/mysql/%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/"/>
-    <id>https://www.techwei.cn/2019/07/09/mysql/隔离级别/</id>
-    <published>2019-07-09T02:54:24.000Z</published>
-    <updated>2020-03-08T10:13:48.451Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h4&gt;&lt;span id=&quot;ge-chi-ji-bie&quot;&gt;隔离级别&lt;/span&gt;&lt;a href=&quot;#ge-chi-ji-bie&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h4&gt;&lt;p&gt;&lt;img
-        
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
     
   </entry>
   
@@ -527,34 +553,6 @@
     
       <category term="java" scheme="https://www.techwei.cn/categories/java/"/>
     
-    
-      <category term="java" scheme="https://www.techwei.cn/tags/java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AQS原理解析</title>
-    <link href="https://www.techwei.cn/2019/06/02/concurrentProgramming/aqs/"/>
-    <id>https://www.techwei.cn/2019/06/02/concurrentProgramming/aqs/</id>
-    <published>2019-06-02T02:54:24.000Z</published>
-    <updated>2020-03-08T10:13:48.442Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h4&gt;&lt;span id=&quot;tan-tan-ni-dui-aqs-de-li-jie&quot;&gt;谈谈你对AQS的理解&lt;/span&gt;&lt;a href=&quot;#tan-tan-ni-dui-aqs-de-li-jie&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="并发" scheme="https://www.techwei.cn/categories/%E5%B9%B6%E5%8F%91/"/>
-    
-    
-      <category term="并发" scheme="https://www.techwei.cn/tags/%E5%B9%B6%E5%8F%91/"/>
     
       <category term="java" scheme="https://www.techwei.cn/tags/java/"/>
     
