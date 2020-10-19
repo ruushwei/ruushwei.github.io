@@ -163,6 +163,165 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-13T02:54:24.000Z">2020-08-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 679 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/13/design/pcursor/">pcursor基于游标的分页</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#yi-ji-yu-pian-yi-liang-fen-ye-ji-yu-you-biao-fen-ye">一、基于偏移量分页&amp;基于游标分页</a><ul>
+<li><a href="#1-ji-yu-pian-yi-liang-de-fen-ye">1.基于偏移量的分页</a></li>
+<li><a href="#2-ji-yu-you-biao-de-fen-ye">2.基于游标的分页</a></li>
+</ul>
+</li>
+<li><a href="#er-jie-kou-shi-xian">二、接口实现</a></li>
+<li><a href="#san-di-ceng-shi-xian">三、底层实现</a><ul>
+<li><a href="#1-pcursor-you-biao-ru-he-pin-jie">1. pcursor游标如何拼接</a></li>
+<li><a href="#2-pcursor-you-biao-ru-he-shi-yong">2.pcursor游标如何使用</a></li>
+<li><a href="#3-sheng-cheng-cha-xun-sql">3. 生成查询SQL</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="yi-ji-yu-pian-yi-liang-fen-ye-amp-ji-yu-you-biao-fen-ye">一、基于偏移量分页&amp;基于游标分页</span><a href="#yi-ji-yu-pian-yi-liang-fen-ye-amp-ji-yu-you-biao-fen-ye" class="header-anchor">#</a></h3><h4><span id="1-ji-yu-pian-yi-liang-de-fen-ye">1.基于偏移量的分页</span><a href="#1-ji-yu-pian-yi-liang-de-fen-ye" class="header-anchor">#</a></h4><p>适用于内容是静态的，或者不用实时返回数据最新的变化。特点：1.只要有新增或删除，就会有大量的数据偏移量的改变，造成重复展示或者漏展示。2.存在数据量大时的offset慢查询问题</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/clipboard_20200814041307.png" alt="img"></p>
+<h4><span id="2-ji-yu-you-biao-de-fen-ye">2.基于游标的分页</span><a href="#2-ji-yu-you-biao-de-fen-ye" class="header-anchor">#</a></h4><p>适用于查询结果在用户浏览过程中是变化的。特点：1.时间线里出现新的数据或删除数据，这些变化都可以在 “前一页” 或者 “后一页” 体现出来。 2.没有offset问题</p>
+<p>eg: 发现页 下拉获取最新，上拉获取更久</p>
+<h3><span id="er-jie-kou-shi-xian">二、接口实现</span><a href="#er-jie-kou-shi-xian" class="header-anchor">#</a></h3><p>请求参数</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">类型</th>
+<th align="left">逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">参数名</td>
+<td align="left">类型</td>
+<td align="left">逻辑</td>
+</tr>
+<tr>
+<td align="left">pcursor</td>
+<td align="left">String</td>
+<td align="left">初始值传 “” , 后续值使用后端返回值</td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">Integer</td>
+<td align="left">本次想获取的数据量</td>
+</tr>
+</tbody></table>
+<p>响应信息</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">类型</th>
+<th align="left">逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pcursor</td>
+<td align="left">String</td>
+<td align="left">透传给下一页查询 调用方判断是否为 “no_more”, 若是则不再调用，否则永远停不下来了</td>
+</tr>
+</tbody></table>
+<h3><span id="san-di-ceng-shi-xian">三、底层实现</span><a href="#san-di-ceng-shi-xian" class="header-anchor">#</a></h3><p>根据更新时间排序</p>
+<p>排序规则：order by update_time desc, id desc  原因: 更新时间 + id 的排序, 可以为所有数据确定顺序，即使更新时间相同，即确定每条记录的游标，游标为更新时间+id，只要查询条件不变，即游标可在该顺序下唯一确定一个位置</p>
+<h4><span id="1-pcursor-you-biao-ru-he-pin-jie">1. pcursor游标如何拼接</span><a href="#1-pcursor-you-biao-ru-he-pin-jie" class="header-anchor">#</a></h4><ul>
+<li>根据上面排序规则查询出数据</li>
+<li>取最后一个数据last，即为该排序下此次查询的终止位置</li>
+<li>根据last数据拼接成pcursor<br>pcursor = encrypt ( (“updateTime”, long, 1589439219430); (“id”, long, 95424 ); )</li>
+</ul>
+<h4><span id="2-pcursor-you-biao-ru-he-shi-yong">2.pcursor游标如何使用</span><a href="#2-pcursor-you-biao-ru-he-shi-yong" class="header-anchor">#</a></h4><ul>
+<li>pcursor解析为 上次查询last的 last.updateTime, last.id </li>
+<li>本次查询where条件中，updateTime &lt; last.updateTime or (update_time = last.updateTime and id &lt; last.id) order by update_time desc, id desc;<br>如下表格，为order by update_time desc, id desc，上次查询游标为last游标位置，则下次查询 updateTime &lt; 1555500001 or (updateTime = 1555500001 and id &lt; 32) order by update_time desc, id desc， 即为后三行数据</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">update_time</th>
+<th align="left">id</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1555500001</td>
+<td align="left">33</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500001</td>
+<td align="left">32</td>
+<td align="left">last 游标位置</td>
+</tr>
+<tr>
+<td align="left">1555500001</td>
+<td align="left">31</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500000</td>
+<td align="left">44</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500000</td>
+<td align="left">42</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h4><span id="3-sheng-cheng-cha-xun-sql">3. 生成查询SQL</span><a href="#3-sheng-cheng-cha-xun-sql" class="header-anchor">#</a></h4><p>若查询条件为 userId, status, updateTime 则查询语句为</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM</span><br><span class="line">    ad_xxx_info</span><br><span class="line">WHERE</span><br><span class="line">    user_id = xxx</span><br><span class="line">    AND STATUS = xxx</span><br><span class="line">    AND (</span><br><span class="line">        update_time &lt; xxx</span><br><span class="line">        OR ( update_time = xxx AND id &lt; xxx )</span><br><span class="line">    )</span><br><span class="line">ORDER BY</span><br><span class="line">    update_time DESC, id DESC</span><br><span class="line">LIMIT 20;</span><br></pre></td></tr></table></figure>
+
+<p>创建联合索引 (user_id, status, update_time) 查询即可全部走索引。注：主键也是索引的一部分，Extra为Using where。using where is fine <a href="https://stackoverflow.com/questions/9533841/mysql-fix-using-where" target="_blank" rel="noopener">https://stackoverflow.com/questions/9533841/mysql-fix-using-where</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time>
                 
                 <div class="level-item">
@@ -384,7 +543,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        60
+                        61
                     </p>
                 </div>
             </div>
@@ -404,7 +563,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        34
                     </p>
                 </div>
             </div>
@@ -529,7 +688,7 @@
                 <span class="level-item">design</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/git/">
@@ -743,7 +902,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 13.33px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.33px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 11.67px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 13.33px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.33px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/pcursor/" style="font-size: 10px;">pcursor</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -757,6 +916,32 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T12:54:24.000Z">2020-08-14</time></div>
+                    <a href="/2020/08/14/spring/springioc初始化/" class="has-link-black-ter is-size-6">spring架构</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/spring/">spring</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-13T02:54:24.000Z">2020-08-13</time></div>
+                    <a href="/2020/08/13/design/pcursor/" class="has-link-black-ter is-size-6">pcursor基于游标的分页</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -797,32 +982,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-09T02:54:24.000Z">2020-03-09</time></div>
-                    <a href="/2020/03/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -841,7 +1000,7 @@
                     <span class="level-item">八月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -918,7 +1077,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1140,7 +1299,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1232,6 +1391,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1381,6 +1547,32 @@
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T12:54:24.000Z">2020-08-14</time></div>
+                    <a href="/2020/08/14/spring/springioc初始化/" class="has-link-black-ter is-size-6">spring架构</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/spring/">spring</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-13T02:54:24.000Z">2020-08-13</time></div>
+                    <a href="/2020/08/13/design/pcursor/" class="has-link-black-ter is-size-6">pcursor基于游标的分页</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T02:54:24.000Z">2020-08-07</time></div>
                     <a href="/2020/08/07/mybatis/question/" class="has-link-black-ter is-size-6">mybatis疑问解答</a>
                     <p class="is-size-7 is-uppercase">
@@ -1416,32 +1608,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-09T02:54:24.000Z">2020-03-09</time></div>
-                    <a href="/2020/03/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1460,7 +1626,7 @@
                     <span class="level-item">八月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1537,7 +1703,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1759,7 +1925,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1851,6 +2017,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
