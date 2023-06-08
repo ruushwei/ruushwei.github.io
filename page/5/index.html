@@ -152,17 +152,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-05-06T12:54:24.000Z">2018-05-06</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/maven/">maven</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2019-09-09T03:14:51.000Z">2019-09-09</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    1 分钟 读完 (大约 195 个字)
+                    2 分钟 读完 (大约 345 个字)
                 </span>
                 
                 
@@ -171,34 +167,39 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2018/05/06/maven/脚手架/">maven脚手架</a>
+                <a class="has-link-black-ter" href="/2019/09/09/arithmetic/pointer/">指针算法</a>
             
         </h1>
         <div class="content">
-            <p>新建一个建立demo工程，在demo工程下执行：</p>
-<blockquote>
-<p>mvn archetype:create-from-project -DpackageName=com.xxx.web.campaign.demo</p>
-</blockquote>
-<p>找到 target/generated-sources/archetype 即是当前demo工程的脚手架</p>
-<p>先安装到本地测试一下</p>
-<blockquote>
-<p>mvn clean install</p>
-</blockquote>
-<p>cd到创建新的项目的目录下，执行</p>
-<blockquote>
-<p>mvn archetype:generate -DarchetypeCatalog=local</p>
-</blockquote>
-<p>输入 groupId、artifactId、version、package之后即可生成完整项目</p>
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#014-lian-biao-zhong-dao-shu-di-k-ge-jie-dian">014-链表中倒数第k个结点</a></li>
+<li><a href="#041-he-wei-s-de-lian-xu-zheng-shu-xu-lie-hua-dong-chuang-kou-si-xiang">041-和为S的连续正数序列(滑动窗口思想) *</a></li>
+<li><a href="#042-he-wei-s-de-liang-ge-shu-zi-shuang-zhi-zhen-si-xiang">042-和为S的两个数字(双指针思想) *</a></li>
+<li><a href="#sheng-zui-duo-shui-de-rong-qi">盛最多水的容器</a></li>
+<li><a href="#san-shu-zhi-he">三数之和</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<p>LinkedList   </p>
+<h4><span id="014-lian-biao-zhong-dao-shu-di-k-ge-jie-dian">014-链表中倒数第k个结点</span><a href="#014-lian-biao-zhong-dao-shu-di-k-ge-jie-dian" class="header-anchor">#</a></h4><p>双指针，快指针先走k-1步，然后快慢指针一起走，当快指针走到最后一个节点，慢指针指向倒数第K个节点</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> ListNode <span class="hljs-title">FindKthToTail</span><span class="hljs-params">(ListNode head,<span class="hljs-keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">if</span>(head == <span class="hljs-keyword">null</span> || k ==<span class="hljs-number">0</span> )&#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ListNode slow=head;</span><br><span class="line">        ListNode fast=head;</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;k;i++)&#123;</span><br><span class="line">            <span class="hljs-keyword">if</span>(fast == <span class="hljs-keyword">null</span>)&#123;</span><br><span class="line">                <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            fast=fast.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">while</span>(fast!=<span class="hljs-keyword">null</span>)&#123;</span><br><span class="line">            slow=slow.next;</span><br><span class="line">            fast=fast.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> slow;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="041-he-wei-s-de-lian-xu-zheng-shu-xu-lie-hua-dong-chuang-kou-si-xiang">041-和为S的连续正数序列(滑动窗口思想) *</span><a href="#041-he-wei-s-de-lian-xu-zheng-shu-xu-lie-hua-dong-chuang-kou-si-xiang" class="header-anchor">#</a></h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> ArrayList&lt;ArrayList&lt;integer&gt; &gt; FindContinuousSequence(<span class="hljs-keyword">int</span> sum) &#123;</span><br><span class="line">	ArrayList&lt;ArrayList&lt;integer&gt;&gt; p=<span class="hljs-keyword">new</span> ArrayList&lt;ArrayList&lt;integer&gt;&gt;();</span><br><span class="line">	<span class="hljs-comment">//因为是连续的，构成等差数列，用等差数列的求和公式</span></span><br><span class="line">	<span class="hljs-keyword">int</span> low=<span class="hljs-number">1</span>,hight=<span class="hljs-number">2</span>;</span><br><span class="line">	<span class="hljs-keyword">while</span>(low&lt;hight) &#123;</span><br><span class="line">		<span class="hljs-keyword">int</span> temp=(low+hight)*(hight-low+<span class="hljs-number">1</span>)/<span class="hljs-number">2</span>;</span><br><span class="line">		<span class="hljs-comment">//如果相等，说明这个连续的数列可以构成和为sum</span></span><br><span class="line">		<span class="hljs-keyword">if</span>(temp==sum) &#123;</span><br><span class="line">			ArrayList&lt;integer&gt; a=<span class="hljs-keyword">new</span> ArrayList&lt;integer&gt;();</span><br><span class="line">			<span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=low;i&lt;=hight;i++) &#123;</span><br><span class="line">				a.add(i);</span><br><span class="line">			&#125;</span><br><span class="line">			p.add(a);</span><br><span class="line">			<span class="hljs-comment">//继续找下一组</span></span><br><span class="line">			low++;</span><br><span class="line">		&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (temp&lt;sum) &#123;</span><br><span class="line">			hight++;</span><br><span class="line">		&#125;<span class="hljs-keyword">else</span> &#123;</span><br><span class="line">			low++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="hljs-keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="042-he-wei-s-de-liang-ge-shu-zi-shuang-zhi-zhen-si-xiang">042-和为S的两个数字(双指针思想)  *</span><a href="#042-he-wei-s-de-liang-ge-shu-zi-shuang-zhi-zhen-si-xiang" class="header-anchor">#</a></h4><p>左右双指针</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> ArrayList&lt;Integer&gt; <span class="hljs-title">FindNumbersWithSum</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] array, <span class="hljs-keyword">int</span> sum)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;Integer&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">    <span class="hljs-keyword">int</span> l = <span class="hljs-number">0</span>, r = array.length - <span class="hljs-number">1</span>;</span><br><span class="line">    <span class="hljs-keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (array[l] + array[r] == sum) &#123;</span><br><span class="line">            list.add(array[l]);</span><br><span class="line">            list.add(array[r]);</span><br><span class="line">            <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (array[l] + array[r] &gt; sum) &#123;</span><br><span class="line">            r--;</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            l++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="sheng-zui-duo-shui-de-rong-qi">盛最多水的容器</span><a href="#sheng-zui-duo-shui-de-rong-qi" class="header-anchor">#</a></h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">maxArea</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] height)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">int</span> left = <span class="hljs-number">0</span>, right = height.length - <span class="hljs-number">1</span>;</span><br><span class="line">    <span class="hljs-keyword">int</span> maxAreaSize = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">int</span> h = <span class="hljs-number">0</span>, w = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">        h = Integer.min(height[left], height[right]);</span><br><span class="line">        w = right - left;</span><br><span class="line">        maxAreaSize = Integer.max(w * h, maxAreaSize);</span><br><span class="line">        <span class="hljs-keyword">if</span> (height[left] &lt; height[right]) &#123;</span><br><span class="line">            left++;</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            right--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> maxAreaSize;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="san-shu-zhi-he">三数之和</span><a href="#san-shu-zhi-he" class="header-anchor">#</a></h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="hljs-keyword">int</span>[] nums) &#123;</span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; result = <span class="hljs-keyword">new</span> ArrayList();</span><br><span class="line">    <span class="hljs-comment">// 排序</span></span><br><span class="line">    Arrays.sort(nums);</span><br><span class="line">    <span class="hljs-keyword">int</span> l,r,sum;</span><br><span class="line">    <span class="hljs-comment">// 固定最左边的数字, 保证不重复</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i&lt;nums.length; i++) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">if</span>(i &gt; <span class="hljs-number">0</span> &amp;&amp; nums[i] == nums[i-<span class="hljs-number">1</span>]) <span class="hljs-keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">        l = i+<span class="hljs-number">1</span>;</span><br><span class="line">        r = nums.length - <span class="hljs-number">1</span>;</span><br><span class="line">        <span class="hljs-keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">            sum = nums[i] + nums[l] + nums[r];</span><br><span class="line">            <span class="hljs-keyword">if</span> (sum == <span class="hljs-number">0</span>) &#123;</span><br><span class="line">                result.add(Arrays.asList(nums[i],nums[l],nums[r]));</span><br><span class="line">                <span class="hljs-keyword">while</span> (l &lt; r &amp;&amp; nums[l] == nums[l + <span class="hljs-number">1</span>]) l++;   <span class="hljs-comment">// 去重</span></span><br><span class="line">                <span class="hljs-keyword">while</span> (l &lt; r &amp;&amp; nums[r] == nums[r - <span class="hljs-number">1</span>]) r--;   <span class="hljs-comment">// 去重</span></span><br><span class="line">                l++;</span><br><span class="line">            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (sum &lt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">                l++;</span><br><span class="line">            &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">                r--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         </div>
         
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/05/06/maven/脚手架/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
         
         
     </div>
@@ -217,7 +218,493 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-04-16T07:23:22.000Z">2018-04-16</time>
+                <time class="level-item has-text-grey" datetime="2019-09-09T03:14:51.000Z">2019-09-09</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    2 分钟 读完 (大约 225 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/09/09/arithmetic/stack/">栈&amp;队列算法</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#021-zhan-de-ya-ru-dan-chu-xu-lie">021-栈的压入、弹出序列 *</a></li>
+<li><a href="#215-shu-zu-zhong-de-di-k-ge-zui-da-yuan-su">215. 数组中的第K个最大元素</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h4><span id="021-zhan-de-ya-ru-dan-chu-xu-lie">021-栈的压入、弹出序列 *</span><a href="#021-zhan-de-ya-ru-dan-chu-xu-lie" class="header-anchor">#</a></h4><p>循环压入序列，先压入，再判断是否可以弹出，如果可以，循环弹出，更新弹出序列下标，最终如果栈正好为空，则表示成功</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">IsPopOrder</span><span class="hljs-params">(<span class="hljs-keyword">int</span> [] pushA,<span class="hljs-keyword">int</span> [] popA)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (pushA.length == <span class="hljs-number">0</span> || popA.length == <span class="hljs-number">0</span> || popA.length != pushA.length)</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;</span><br><span class="line">    Stack&lt;Integer&gt; stack = <span class="hljs-keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">    <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; pushA.length; i++) &#123;</span><br><span class="line">        stack.push(pushA[i]);</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">while</span> (!stack.isEmpty() &amp;&amp; stack.peek() == popA[j])&#123;</span><br><span class="line">            stack.pop();</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> stack.isEmpty();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="215-shu-zu-zhong-de-di-k-ge-zui-da-yuan-su">215. 数组中的第K个最大元素</span><a href="#215-shu-zu-zhong-de-di-k-ge-zui-da-yuan-su" class="header-anchor">#</a></h4><p>在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">findKthLargest</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] nums, <span class="hljs-keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (nums.length &lt; k) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="hljs-keyword">new</span> PriorityQueue&lt;Integer&gt;((a, b) -&gt; a - b);</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">        <span class="hljs-keyword">int</span> num = nums[i];</span><br><span class="line">        queue.offer(num);</span><br><span class="line">        <span class="hljs-keyword">if</span> (queue.size() &gt; k) &#123;</span><br><span class="line">            queue.poll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> queue.peek();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-09-03T02:54:24.000Z">2019-09-03</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/生活/">生活</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 617 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/09/03/life/天通苑东三区/">记录租房第三个住处-天通苑东三区</a>
+            
+        </h1>
+        <div class="content">
+            <p>上上周末8月24号搬到了新的租房，搬到了天通苑北一区，换了一居，也住了十几天了，感觉很不错，但之前的租房也很好，它有一个大大的天台，还可以上房顶，把照片记录下来。</p>
+<p>上周末回去稍微收拾了下屋子，卖了东西，图中为美丽聪慧的对象</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2711567514587_.pic.jpg" alt="客厅兼卧室"></p>
+<p>很大的地方还有个落地灯</p>
+<p>厨房以前在这个地方，这个屋在之前一段时间我们都把垫子搬过来打地铺睡，因为有一天我发现这里比较隔猫</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2701567514586_.pic.jpg" alt></p>
+<p>我的电脑桌放在这个地方</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2731567514589_.pic.jpg" alt></p>
+<p>大大的厕所，目前住过最大厕所<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/428161567558962_.pic.jpg" alt></p>
+<p>小储藏室<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2821567514600_.pic.jpg" alt></p>
+<p>通往天台的门，lily最爱去的地方，总是会在这个地方站好开叫，然后看你过来了就扒扒门，lily非常渴望自由，想出去玩</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2671567514583_.pic.jpg" alt></p>
+<p>出来啦！<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2771567514595_.pic.jpg" alt></p>
+<p>有一圈的天台，第一次见时真的很惊喜<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2791567514597_.pic.jpg" alt></p>
+<p>视野十分开阔，夕阳西下，喝酒吃肉，美滋滋</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2811567514599_.pic.jpg" alt></p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2761567514594_.pic.jpg" alt></p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2781567514596_.pic.jpg" alt></p>
+<p>在小区里捡到了很能叫又贪吃的新家庭成员，小 jojo</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/3021567516511_.pic.jpg" alt></p>
+<p>开始小小的很可爱，<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG301.jpeg" alt></p>
+<p>陪我玩电脑<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG297.jpeg" alt></p>
+<p>写博客<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG290.jpeg" alt></p>
+<p>要抱抱<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG293.jpeg" alt></p>
+<p>举高高<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG287.jpeg" alt></p>
+<p>与lily从打闹慢慢有点和谐相处</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG292.jpeg" alt></p>
+<p>学lily睡窗台<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/3031567557968_.pic.jpg" alt></p>
+<p>和我们一起睡觉，四生物一张床<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG294.jpeg" alt></p>
+<p>后来因为早上太闹，用梳妆台挡住这两个捣蛋鬼，jojo此时已显猪态<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG284.jpeg" alt></p>
+<p>幸福生活未完待续..</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-08-30T22:54:24.000Z">2019-08-31</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/rss/">rss</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    几秒 读完 (大约 43 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/08/31/rss/rss/">rss订阅</a>
+            
+        </h1>
+        <div class="content">
+            <p>使用 feedly 订阅 rss，实现多设备同步  </p>
+<p>教程：<a href="https://techmoon.xyz/feedly/" target="_blank" rel="noopener">https://techmoon.xyz/feedly/</a></p>
+<p>目前导出的我的订阅源, Feedly订阅.opml</p>
+<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">opml</span> <span class="hljs-attr">version</span>=<span class="hljs-string">"2.0"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Feedly订阅<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"NBA"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"NBA"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"千年孤寂 的 Youtube 视频"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"千年孤寂 的 Youtube 视频"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/youtube/channel/UC6QUkl7S6AYwkpQFhmdFIoQ"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.youtube.com/channel/UC6QUkl7S6AYwkpQFhmdFIoQ"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/184687394/#/article"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"听说不怕肚子疼 的 bilibili 专栏"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"听说不怕肚子疼 的 bilibili 专栏"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/article/184687394"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"产品"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"产品"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"李自然说 的 bilibili 空间"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/video/39089748"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/39089748"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"李自然说 的 bilibili 空间"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://post.smzdm.com/hot_7"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/smzdm/haowen/7"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"周热门-什么值得买好文"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"周热门-什么值得买好文"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://fz0512.com/feed"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"最好金龟换酒"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"最好金龟换酒"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://fz0512.com"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"少数派"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"少数派"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://sspai.com"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://sspai.com/feed"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"V2EX-最热主题"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/v2ex/topics/hot"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"V2EX-最热主题"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.v2ex.com/"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/wechat/csm/darkinsider"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://chuansongme.com/account/darkinsider"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"图片"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"图片"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"国家地理每日一图"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"国家地理每日一图"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.nationalgeographic.com"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://feedx.co/rss/nationalgeodayphoto.xml"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"好友"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"好友"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"大菜猫"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.techwei.cn/"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"大菜猫"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://techwei.cn/atom.xml"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://jacobchang.cn/"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"黄小豆的博客"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"黄小豆的博客"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://jacobchang.cn/atom.xml"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/video/11036610"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"爱浪的黄小豆 的 bilibili 空间"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"爱浪的黄小豆 的 bilibili 空间"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/11036610"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.yuanqiongqiong.cn/"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"袁琼琼的博客"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://yuanqiongqiong.cn/atom.xml"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"袁琼琼的博客"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"技术"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"技术"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/juejin/category/backend"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"掘金后端"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"掘金后端"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://juejin.im/welcome/backend"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"美团技术团队"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://tech.meituan.com/feed/"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/meituan/tech/home"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"美团技术团队"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://www.ruanyifeng.com/blog/"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://www.ruanyifeng.com/blog/atom.xml"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"阮一峰的网络日志"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"阮一峰的网络日志"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://chuansongme.com/account/importnew"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/wechat/csm/importnew"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"微信公众号 - ImportNew"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"微信公众号 - ImportNew"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://chuansongme.com/account/darkinsider"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/wechat/csm/darkinsider"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"新闻"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"新闻"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/gov/zhengce/zuixin"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"最新政策 - 中国政府网"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"最新政策 - 中国政府网"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://www.gov.cn/zhengce/zuixin.htm"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"生活"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"生活"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"美国日记"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"美国日记"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://cn.derekyang.us"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://cn.derekyang.us/?feed=rss2"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"人生不过如此"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://nana.blog.paowang.net"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"人生不过如此"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://nana.blog.paowang.net/feed/"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"电影"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"电影"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.douban.com"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://feedx.co/rss/doubanmvweek.xml"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"豆瓣电影本周口碑榜"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"豆瓣电影本周口碑榜"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"MovieTalk-电影七日谈 的 bilibili 空间"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"MovieTalk-电影七日谈 的 bilibili 空间"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/video/10869763"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/10869763"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"艺术"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"艺术"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://bing.com"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"必应今日美图"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"必应今日美图"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://feedx.co/rss/bingwallpaper.xml"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">opml</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">opml</span>&gt;</span></span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-14T02:54:24.000Z">2019-07-14</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/读书笔记/">读书笔记</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1404 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/07/14/read/controll/">读《自控力》</a>
+            
+        </h1>
+        <div class="content">
+            <h2><span id="qian-yan">前言</span><a href="#qian-yan" class="header-anchor">#</a></h2><p>看了本周”李自然说”讨论学习方法，里面有一句话非常喜欢，人和人的差距大于人和猪的差距。 </p>
+<p>这句话夸张的表达了人和人的差距会有多大，人和人理解问题的深度、处事的态度、说话的逻辑和好听程度，有趣指数，相信大家都想做人上人，百里挑一的人，不止是为了获得更多的财富，更是让自己的生活满意，做事情处事不惊，游刃有余。 今天开始阅读《自控力》，不是说这一本书能带我走向人生巅峰，只希望是个好的开始。</p>
+<h2><span id="01-yi-zhi-li-shi-shi-me-wei-shi-me-zhi-guan-chong-yao">01 意志力是什么，为什么至关重要</span><a href="#01-yi-zhi-li-shi-shi-me-wei-shi-me-zhi-guan-chong-yao" class="header-anchor">#</a></h2><p>###意志力</p>
+<p>就是驾驭 “我不要”， “我要做”，”我想要” 这三种力量。</p>
+<h4><span id="wo-bu-yao-di-zhi-you-huo">“我不要” : 抵制诱惑！</span><a href="#wo-bu-yao-di-zhi-you-huo" class="header-anchor">#</a></h4><p>抵制甜甜圈，香烟，清仓大甩卖，或一夜情等等很诱人的东西，这些东西阻碍你实现你真正想要的，比如瘦身，好的肺，幸福的家庭等，如果你一面对就会无法抵抗，那就要提升意志力，提升“我不要”的能力。</p>
+<p>这些东西可能会带来即时的快感，但只是因为真正美好的东西暂时离你远，因为时空的距离感，让你选择了当前的选项，但如果思维清晰，目标明确，就不要为眼前的小利益而放弃大目标。</p>
+<p>比如你想换工作、换城市，考虑清楚之后，知道换了之后的结果是好的，但过程中有困难和安逸给你选，如果选了安逸，就是当前的诱惑赢了，如果选了困难，就是意志力的体现，对当前诱惑说出 “我不要” ！</p>
+<h4><span id="wo-yao-zuo-jin-ri-shi-jin-ri-bi">“我要做” ：今日事今日毕 ！</span><a href="#wo-yao-zuo-jin-ri-shi-jin-ri-bi" class="header-anchor">#</a></h4><p>“明日复明日”，拖延症晚期患者有些事情可能拖到下辈子再做，是这部分意志力薄弱，我理解不可能每天真毕，但“做” 和 “拖”的差距是很大的，是“我要做”意志力的体现。</p>
+<h4><span id="wo-xiang-yao-zhen-zheng-yao-de-shi-shi-me">“我想要”： 真正要的是什么！</span><a href="#wo-xiang-yao-zhen-zheng-yao-de-shi-shi-me" class="header-anchor">#</a></h4><p>当我们在冲动的时候有时会觉得这就是自己想要的，想要玩游戏、想要喝酒、巧克力蛋糕、骂人等等，但一定得想清楚，你真正要的是什么样的身材，什么样的素养，什么样的生活，是否希望苗条、升职加薪、家庭美满，是否吃”巧克力蛋糕”, 吃多少，要在关键时刻遏制住一时冲动，明确自己的目标，强大的目标明确能力，是“我想要”意志力的体现。</p>
+<h4><span id="xiao-zong-jie">小总结</span><a href="#xiao-zong-jie" class="header-anchor">#</a></h4><p>个人理解意志力的体现肯定不是要让我们当机器人或当狗（加班狗、奋斗狗），而是像某口号一样，集中力量办大事，只是集中的是自己的力量，办的是“我想要”的事。</p>
+<h3><span id="liang-ge-zi-wo">两个自我</span><a href="#liang-ge-zi-wo" class="header-anchor">#</a></h3><p>大脑中有两个部分，一部分是控制自己，一部分是冲动的自己。冲动为原始的冲动，我们的本能; 控制自己的就是我们的前额皮质。</p>
+<p>“两个自我发生分歧的时候，总会有一方击败另一方。决定放弃的一方并没有做错，只是双方觉得重要的东西不同而已。”</p>
+<p>原始的本能冲动是我们必不可少的，没有欲望，人就会变得沮丧，没有恐惧，就没法保护自己，没有厌恶，就没法提高自己，我们不是要消灭冲动的自己，而是要学会利用冲动的自己，换句话就是在合适的时候冲动，合适的时候控制。</p>
+<p>原始的冲动带着自己进步，而当冲动要带我们走向错误的时候，控制自己的能力需要体现。</p>
+<h3><span id="zi-wo-yi-shi">自我意识</span><a href="#zi-wo-yi-shi" class="header-anchor">#</a></h3><p>自我意识体现在做决定的时候，意识到要做自己的选择，生活才是自己的。</p>
+<p>这里重点是意识到自己可以做的选择。一件事，我根据自己的想法做出选择，是自我意识，而我如果没思考，下意识走了简单舒适的选择时，就是自我意识的缺失，一种随波逐流，这样选的结果不一定不好，但不会一直是自己想要的。</p>
+<p>做一个有自我的人</p>
+<h3><span id="ming-xiang">冥想</span><a href="#ming-xiang" class="header-anchor">#</a></h3><p>冥想通过坐着闭眼专注于”呼“ ”吸“， 锻炼自己的控制能力，注意力集中能力，意志力。</p>
+<p>冥想我相信对应现实中的注意力集中能力，自控能力都会有一定提升。</p>
+<p>今天进行了人生第一次冥想，虽然大部分时间都无法专注于呼吸，但我看到了挑战，当我能完全专注于呼吸的时候，那我的集中注意力的能力就会变得很强。</p>
+<p>mark一篇完整冥想步骤文章</p>
+<p><a href="https://mp.weixin.qq.com/s/2nV2u66ScuLJEHEXcrHkMQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/2nV2u66ScuLJEHEXcrHkMQ</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1160 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/07/09/redis/单线程还快/">redis单线程还这么快</a>
+            
+        </h1>
+        <div class="content">
+            <h4><span id="wei-shi-me-redis-shi-yong-dan-xian-cheng-mo-xing-hui-da-dao-mei-miao-wan-ji-bie-de-chu-li-neng-li-ni-ke-yi-jiang-qi-gui-jie-wei-san-dian-shi-redis-ju-you-hen-gao-de-tun-tu-liang">为什么Redis使用单线程模型会达到每秒万级别的处理能力呢？可以将其归结为三点使Redis具有很高的吞吐量?</span><a href="#wei-shi-me-redis-shi-yong-dan-xian-cheng-mo-xing-hui-da-dao-mei-miao-wan-ji-bie-de-chu-li-neng-li-ni-ke-yi-jiang-qi-gui-jie-wei-san-dian-shi-redis-ju-you-hen-gao-de-tun-tu-liang" class="header-anchor">#</a></h4><h5><span id="1-chun-nei-cun-fang-wen">1. 纯内存访问</span><a href="#1-chun-nei-cun-fang-wen" class="header-anchor">#</a></h5><p>Redis将所有数据放在内存中，内存的响应时长大约为100纳秒，这是Redis达到每秒万级别访问的重要基础。 </p>
+<p>纯内存数据库，如果只是简单的 key-value，内存不是瓶颈。一般情况下，hash 查找可以达到每秒数百万次的数量级。瓶颈在于网络 IO 上。每次请求需要通过网络把请求发送到 redis 所在的机器，然后等待 redis 返回数据。时间大部分消耗在网络传输中。如果把 redis 和客户端放在同一台机器，网络延迟会更小，一般情况下可以打到 60000 次每秒甚至更高，取决于机器性能。</p>
+<h5><span id="2-i-o-duo-lu-fu-yong-shi-jian-qu-dong-mo-xing">2. I/O多路复用、事件驱动模型</span><a href="#2-i-o-duo-lu-fu-yong-shi-jian-qu-dong-mo-xing" class="header-anchor">#</a></h5><p>旨在解决IO的问题。多路I/O复用模型是非阻塞IO，内部实现采用epoll和自己实现的事件分离框架。</p>
+<p> 其利用select、poll、epoll 可以同时检测多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（epoll 是只轮询那些真正发出了事件的流），并且只依次顺序的处理就绪的流，这种做法就避免了大量的无用操作。</p>
+<p>“多路”指的是多个网络连接，“复用”指的是复用同一个线程。采用多路 I/O 复用技术可以让单个线程高效的处理多个连接请求（尽量减少网络 IO 的时间消耗）。</p>
+<p>总结就是Redis使用epoll作为I/O多路复用技术的实现，再加上Redis自身的事件处理模型将epoll中的连接、读写、关闭都转换为事件，不在网络I/O上浪费过多的时间，如下图所示。 </p>
+<h5><span id="3-dan-xian-cheng-bi-mian-liao-xian-cheng-qie-huan-he-jing-tai-chan-sheng-de-xiao-hao">3. 单线程避免了线程切换和竞态产生的消耗。</span><a href="#3-dan-xian-cheng-bi-mian-liao-xian-cheng-qie-huan-he-jing-tai-chan-sheng-de-xiao-hao" class="header-anchor">#</a></h5><h4><span id="xian-cheng-mo-xing">线程模型</span><a href="#xian-cheng-mo-xing" class="header-anchor">#</a></h4><h5><span id="zhu-xian-cheng">主线程</span><a href="#zhu-xian-cheng" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis.png" alt></p>
+<h4><span id="qi-ta">其它</span><a href="#qi-ta" class="header-anchor">#</a></h4><ol>
+<li><p>Redis会fork得到的子进程，用来处理RDB持久化以及AOF持久化等任务</p>
+</li>
+<li><p>一组异步任务处理线程，即Redis异步化组件——BIO组件</p>
+</li>
+</ol>
+<p>BIO组件目前包括三个线程，分别处理三种类型的任务：<br>1）文件句柄关闭任务<br>2）AOF持久化任务<br>3）空间懒释放  </p>
+<h4><span id="chi-jiu-hua">持久化</span><a href="#chi-jiu-hua" class="header-anchor">#</a></h4><p>Redis 提供了两种持久化策略</p>
+<p>RDB 持久化机制，会在一段时间内生成指定时间点的数据集快照(snapshot)</p>
+<p>AOF 持久化机制，记录 server 端收到的每一条写命令，当 server 重启时会进行重放以此来重建之前的数据集。AOF 文件中的命令全部以 Redis 协议的格式来保存，新命令会被追加(append)到文件的末尾。 Redis 还可以在后台对 AOF 文件进行重写(rewrite) ，使得 AOF 文件的体积不会超出保存数据集状态所需的实际大小。</p>
+<p>如果你仅使用 Redis 作为缓存加速访问，你可以关闭这两个持久化设置</p>
+<p>你也可以同时开启这两个持久化设置，但是在这种情况下，Redis 重启时会使用 AOF 文件来重建数据集，因为 AOF 文件保存的数据往往更加完整</p>
+<h4><span id="dan-xian-cheng-li-bi">单线程利弊</span><a href="#dan-xian-cheng-li-bi" class="header-anchor">#</a></h4><p>单线程模型能带来几个好处：<br>第一，单线程可以简化数据结构和算法的实现。并发数据结构实现不但困难而且开发测试比较麻烦。<br>第二，单线程避免了线程切换和竞态产生的消耗，对于服务端开发来说，锁和线程切换通常是性能杀手。</p>
+<p>但是单线程会有一个问题：<br>对于每个命令的执行时间是有要求的。如果某个命令执行过长，会造成其他命令的阻塞，对于Redis这种高性能的服务来说是致命的，所以Redis是面向快速执行场景的数据库。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    几秒 读完 (大约 71 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/07/09/redis/与tair选择/">tair &amp; redis 的选择</a>
+            
+        </h1>
+        <div class="content">
+            <h4><span id="tair-amp-redis-de-xuan-ze">tair &amp; redis 的选择</span><a href="#tair-amp-redis-de-xuan-ze" class="header-anchor">#</a></h4><ol>
+<li>延迟敏感程度, 延迟敏感，说什么也得redis  </li>
+<li>数据量大的话，数据量超过100GB全内存太浪费资源，延迟没有那么敏感，使用tair  </li>
+<li>使用复杂数据结构 redis  </li>
+<li>容忍数据丢失</li>
+</ol>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    几秒 读完 (大约 0 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/07/09/designpatterns/strategy/">策略模式</a>
+            
+        </h1>
+        <div class="content">
+            
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分钟 读完 (大约 972 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/07/09/netty/model/">netty模型</a>
+            
+        </h1>
+        <div class="content">
+            <h4><span id="ding-yi">定义</span><a href="#ding-yi" class="header-anchor">#</a></h4><p>netty是一个高性能、异步事情驱动的网络通信框架<br>NIO IO多路复用 、事情驱动模型</p>
+<p>1.设置主从reactor模式<br>2.指定IO类型<br>3.指定handler<br>4.绑定端口</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/640.jpeg" alt></p>
+<h4><span id="netty-you-dian">netty优点</span><a href="#netty-you-dian" class="header-anchor">#</a></h4><ol>
+<li><p>API使用简单，开发门槛低；  </p>
+</li>
+<li><p>功能强大，预置了多种编解码功能，支持多种主流协议；  </p>
+</li>
+<li><p>定制能力强，可以通过ChannelHandler对通信框架进行灵活地扩展；  </p>
+</li>
+<li><p>性能高，通过与其他业界主流的NIO框架对比，Netty的综合性能最优；  </p>
+</li>
+<li><p>成熟、稳定，Netty修复了已经发现的所有JDK NIO BUG，业务开发人员不需要再为NIO的BUG而烦恼；  </p>
+</li>
+<li><p>社区活跃，版本迭代周期短，发现的BUG可以被及时修复，同时，更多的新功能会加入；  </p>
+</li>
+<li><p>经历了大规模的商业应用考验，质量得到验证。在互联网、大数据、网络游戏、企业应用、电信软件等众多行业得到成功商用，证明了它已经完全能够满足不同行业的商业应用了。</p>
+</li>
+</ol>
+<h4><span id="gao-xing-neng-san-yao-su">高性能三要素</span><a href="#gao-xing-neng-san-yao-su" class="header-anchor">#</a></h4><ol>
+<li>reactor模型</li>
+<li>IO多路复用</li>
+<li>协议</li>
+</ol>
+<h4><span id="reactor-mo-xing">reactor模型</span><a href="#reactor-mo-xing" class="header-anchor">#</a></h4><h5><span id="dan-xian-cheng-mo-xing">单线程模型</span><a href="#dan-xian-cheng-mo-xing" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%8D%95.jpg" alt></p>
+<h5><span id="duo-xian-cheng-mo-xing">多线程模型</span><a href="#duo-xian-cheng-mo-xing" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%A4%9A.jpg" alt></p>
+<h5><span id="zhu-cong-xian-cheng-mo-xing">主从线程模型</span><a href="#zhu-cong-xian-cheng-mo-xing" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E4%B8%BB%E4%BB%8E.jpg" alt></p>
+<h4><span id="zu-jian">组件</span><a href="#zu-jian" class="header-anchor">#</a></h4><h5><span id="bootstrap-serverbootstrap">Bootstrap/ServerBootstrap</span><a href="#bootstrap-serverbootstrap" class="header-anchor">#</a></h5><p>顾名思义就是启动类，分别负责启动客户端和服务器端。这个类用来配置相关参数，比如设置EventLoopGroup，IO类型，handler等等，Netty的一切都从这里开始</p>
+<h5><span id="eventloopgroup">EventLoopGroup</span><a href="#eventloopgroup" class="header-anchor">#</a></h5><p>主从多线程Reactor模型，分别有两个线程池：  EventLoopGroupA和EventLoopGroupB。一个用于接收请求，另一个用于处理IO操作。</p>
+<p>一个EventLoopGroup就相当于一个线程池，而每一个EventLoop就是一个线程，当新的Channel被创建时（有新的请求进来），就会在EventLoopGroup里注册一下，同时会分配一个EventLoop给这个Channel，</p>
+<p>从此开始直到这个Channel被销毁，这个Channel只能被它绑定的这个EventLoop执行，这也就是为什么Netty可以不用考虑并发的原因。</p>
+<p>EventLoop是处理各个event的具体线程。除了处理IO读写等event外，EventLoop还需要进行系统任务和定时任务进行执行</p>
+<h5><span id="channel">Channel</span><a href="#channel" class="header-anchor">#</a></h5><p>Netty的Channel接口所提供的的API，大大降低了直接使用Socket类的复杂性</p>
+<h5><span id="channelpipeline-amp-channelhander">ChannelPipeline &amp; ChannelHander</span><a href="#channelpipeline-amp-channelhander" class="header-anchor">#</a></h5><p>Netty采用了一种叫做数据流（data flow）的处理机制，类似于Unix中的管道。即每一个Channel都有一个自己的ChannelPipeline，每一个pipeline里会有多个ChannelHandler。数据会像水流一样依次通过每一个handler被逐一处理。<br>流处理是双向混合的，分为Inbound和Outbound， 分别对应request和response。</p>
+<p>这个handler被分成两类：ChannelOutboundHandler和ChannelInboundHandler。当服务器处理进来的请求时，则只会调用实现了ChannelInboundHandler的handler；当服务器返回信息给客户端时，则只会调用实现了ChannelOutboundHandler的handler</p>
+<h5><span id="encoders-amp-decoders">Encoders &amp; Decoders</span><a href="#encoders-amp-decoders" class="header-anchor">#</a></h5><p>我们在解析处理请求时通常需要对数据格式进行转换，比如把字节变成对象，或者把对象转换为字节。针对这种常见的场景，Netty提供了编码和解码的接口：MessageToByteEncoder和ByteToMessageEncoder。</p>
+<p>其实两个抽象类分别继承了ChannelInboundHandlerAdapter和ChannelOutboundHandlerAdapter，说白了，使用起来和普通的handler没什么区别。自己写的类只要重写decode()或者encode()方法对数据进行处理即可</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
@@ -227,7 +714,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 分钟 读完 (大约 150 个字)
+                    10 分钟 读完 (大约 1531 个字)
                 </span>
                 
                 
@@ -236,515 +723,53 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2018/04/16/mysql/windowsmysql/">windows安装mysql zip包</a>
+                <a class="has-link-black-ter" href="/2019/07/09/mysql/隔离级别/">innodb事务隔离级别、MVCC</a>
             
         </h1>
         <div class="content">
-            <p>1 . 先解压，修改my_default.ini 文件里 basedir 和 datadir 的路径</p>
-<p>2 . 修改环境变量，将mysql的bin添加到path，</p>
-<p>3 . 以管理员身份打开cmd 窗口</p>
-<p>执行mysqld -install</p>
-<p>4 . 将my_default.ini 复制一份到 bin ，改为my.ini ，执行</p>
-<p>mysqld –initialize –user=mysql –console</p>
-<p>则生成data文件夹，并生成root 账号的密码！！</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1fqed1lmefgj30nn05vmza.jpg" alt="aa"></p>
-<p>5 . 命令行下执行 net start mysql 开启mysql服务</p>
-<p>6 . mysql -u root -p 登录</p>
-<p>输入上图中的密码，即可登陆</p>
-<p>7 . 修改root密码</p>
-<p>SET PASSWORD FOR ‘root’@’localhost’ = PASSWORD(‘root’);</p>
-<p>ok</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/04/16/mysql/windowsmysql/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
+            <h4><span id="ge-chi-ji-bie">隔离级别</span><a href="#ge-chi-ji-bie" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/isola.jpg" alt></p>
+<p>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据  </p>
+<p>提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)  </p>
+<p>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的，InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还存在幻象读  </p>
+<p>串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞</p>
+<h4><span id="mvcc">MVCC</span><a href="#mvcc" class="header-anchor">#</a></h4><p>InnoDB是一个多版本的存储引擎：为了支持事务的一些特性诸如并发和回滚，它保持着被修改行的旧版本信息。这些信息被存储在一个被叫做回滚段(rollback segment)的表空间中。InnoDB在回滚段中用这些信息来执行undo操作，以此支持事务回滚。它也用这些信息来构造行的更早的版本，以此支持一致性读（快照读）。</p>
+<p>在内部，InnoDB为数据库中存储的每一行添加三个隐藏字段。</p>
+<p>DB_TRX_ID：表明插入或者修改这一行的最后一个事务的事务标识符。如何查看行事务ID</p>
+<p>DB_ROLL_PTR：指向回滚段中的一个undo log记录，如果行被修改了，那么这个undo log记录包含的信息必须先于行修改被重新修改。</p>
+<p>DB_ROW_ID：单调递增的行ID。如果InnoDB自动生成了一个聚集索引，那么这个索引包含行ID值，否则DB_ROW_ID列不会出现在任何索引中。 </p>
+<h4><span id="suo-lei-xing">锁类型</span><a href="#suo-lei-xing" class="header-anchor">#</a></h4><p>共享锁（读锁，S锁）：若事务T对数据对象A加上S锁，则事务T可以读A但不能修改A，其他事务只能再对A加S锁，而不能加X锁，直到T释放S锁。  </p>
+<p>排他锁（写锁，X锁）：若事务T对数据对象A加上X锁，则只允许T读取和修改A，其他事务不能再对A加作何类型的锁，直到T释放A上的X锁。  </p>
+<p>意向共享锁（IS锁）：事务T在对表中数据对象加S锁前，首先需要对该表加IS（或更强的IX）锁。  </p>
+<p>意向排他锁（IX锁）：事务T在对表中的数据对象加X锁前，首先需要对该表加IX锁。</p>
+<h5><span id="yi-xiang-suo-bu-chong">意向锁补充</span><a href="#yi-xiang-suo-bu-chong" class="header-anchor">#</a></h5><ul>
+<li>InnoDB 支持多粒度锁，特定场景下，行级锁可以与表级锁共存。  </li>
+<li>意向锁之间互不排斥，但除了 IS 与 S 兼容外，意向锁会与 共享锁 / 排他锁 互斥。  </li>
+<li>IX，IS是表级锁，不会和行级的X，S锁发生冲突。只会和表级的X，S发生冲突。  </li>
+<li>意向锁在保证并发性的前提下，实现了行锁和表锁共存且满足事务隔离性的要求。  </li>
+</ul>
+<h4><span id="2pl-liang-jie-duan-suo">2pl 两阶段锁</span><a href="#2pl-liang-jie-duan-suo" class="header-anchor">#</a></h4><p>两段锁协议，先随便加，最后commit才能一起释放.<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2pl.jpg" alt></p>
+<h4><span id="gap-suo-you-he-yong">GAP锁有何用</span><a href="#gap-suo-you-he-yong" class="header-anchor">#</a></h4><p>其实这个多出来的GAP锁，就是RR隔离级别，相对于RC隔离级别，不会出现幻读的关键。</p>
+<p>确实，GAP锁锁住的位置，也不是记录本身，而是两条记录之间的GAP。</p>
+<p>所谓幻读，就是同一个事务，连续做两次当前读 (例如：select * from t1 where id = 10 for update;)，那么这两次当前读返回的是完全相同的记录 (记录数量一致，记录本身也一致)，第二次的当前读，不会比第一次返回更多的记录 (幻象)。  </p>
+<p>如何保证两次当前读返回一致的记录，那就需要在第一次当前读与第二次当前读之间，其他的事务不会插入新的满足条件的记录并提交。为了实现这个功能，GAP锁应运而生</p>
+<h4><span id="kuai-zhao-du-amp-dang-qian-du">快照读 &amp; 当前读</span><a href="#kuai-zhao-du-amp-dang-qian-du" class="header-anchor">#</a></h4><p>快照读：就是select</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> ….;</span><br></pre></td></tr></table></figure>
 
+<p>当前读：特殊的读操作，插入/更新/删除操作，属于当前读，处理的都是当前的数据，需要加锁。  </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">lock</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">share</span> <span class="hljs-keyword">mode</span>;</span><br><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">for</span> <span class="hljs-keyword">update</span>;</span><br><span class="line"><span class="hljs-keyword">insert</span>;</span><br><span class="line"><span class="hljs-keyword">update</span> ;</span><br><span class="line"><span class="hljs-keyword">delete</span>;</span><br></pre></td></tr></table></figure>
 
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-04-09T22:54:24.000Z">2018-04-10</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    11 分钟 读完 (大约 1665 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/04/10/travel/hz/">2018清明杭州游记</a>
-            
-        </h1>
-        <div class="content">
-            <p>作者：小菜猫<br>共四天时间4.4~4.7<br>花费4000  </p>
-<p>第一天<br>乘坐G57 7:20从北京南站出发，13:02到达杭州东车站，坐1号线到住宿的酒店，<br>住宿的地方定在1号线乔司附件，网上预订，200多一点点，休息洗漱片刻在周边吃了碗牛肉面，卤是现做的，很香<br>天气有一些阴沉，所以穿的还比较多一些，坐地铁大概半个多小时到凤起路站下车，下车走了十几分钟到达西湖边，顺着河边往前走就到了白堤(白堤原名“白沙堤”，是将杭州市区与风景区相连的纽带，东起“断桥残雪”，经锦带桥向西，止于“平湖秋月”，长约2里。在唐即称白沙堤、沙堤，其后在宋、明又称孤山路、十锦塘。唐代诗人白居易任杭州刺史时有诗云：“最爱湖东行不足，绿杨荫里白沙堤。”即指此堤。后人为纪念这位诗人，称为白堤。) ，人不太多，一方面当天是工作日，另一方面到白堤的时候是下午五点，经过了断桥，在断桥上拍了很多照片，风景很漂亮。<br>顺着白堤向前走，到了中山公园，公园里有孤山，没有上去，只拍了张照片，再顺着路走，最后走到了岳庙附近，没有进去看看，坐51路去吃饭了（51路是环西湖路，很方便），在美团上看到e路吃~杭帮菜，团购了两个人的套餐，有东坡肉，西湖醋鱼，叫花鸡和酸辣土豆丝和牛肉羹，最喜欢吃的是东坡肉和鱼，酸辣土豆丝清口，牛肉羹我不太喜欢，都被对面的人喝了<br>吃饭的地方在龙翔地铁站附近，购物中心，杭州给我的感觉是这是一个有追求有品位的城市，建筑都很漂亮，有特色，广告也很赏心悦目，晚上就在购物中心里逛了逛，坐车回酒店，休息 </p>
-<p>第二天<br>9点出发，坐车到龙翔站，出地铁时发现下雨了，提早看过天气预报，说今天会有雨，准备了雨伞，见路边有卖泰芒的，35一个，买 了一个，除了芒果一样好吃，其他的都不好，芒果汁也不好喝，冰淇淋和芒果的量也小，相比厦门30块钱的泰芒，显得太没诚意了，今天来西湖的人明显多了好多，雨下的比较大，沿着湖边走，到了观看音乐喷泉的地方，继续向前走，看到有坐船的地方，就买票上去了，坐船到小瀛洲，看三潭印月，在船上看风景时，突然想到“水光潋滟晴方好，山色空蒙雨亦奇”然后想到这就是描写西湖的时，顿时觉得这诗写的真好，岛是田字形，人比较多，又下着雨，刮着风，拍照也不是很方便，就欣赏风景吧，转完之后，从花港坐返回的船到苏堤（），在旁边买的东坡饼吃，10元一个，不建议吃，不好吃也太贵了，又买了豆腐吃15，还可以，吃完后在雷锋塔附近吃的面和馄饨，没有进去看雷峰塔，去了对面的净慈寺，10元门票，是为了看南屏晚钟的，进去发现人超级少，很安静，进门右边的殿就是放钟的地方，可以敲钟10元一次，钟真的好大，也好厚，第一次见这么大的钟，惊呆了我，去主殿看了看，很大很高的佛祖，拜了拜，主殿后面还有两个殿，还有一个净慈寺博物馆，展示了很多艺术品。。在最后一个殿上可以很清楚的看到雷峰塔，感觉也是棒棒哒，净慈寺让整个人都静了下来<br>从净慈寺出来去了太子湾公园，之前有人推荐来这里看樱花，没找到樱花，却碰上了郁金花展览，也不错，在亭子里休息半小时后决定撤退，公交站台挤了好多人，还好有工作人员维持秩序，等了几趟车，终于等到开往龙翔站的公交，车上真暖和，外面真冷，下车之后，直奔kfc,买东西吃，吃完后决定去看电影头号玩家，定好之后，坐车去电影院，电影很棒，看完都十点了，导航到附近的地铁站，回家。今天下雨刮风，西湖边人又多，在西湖上玩的时间比较少，反而在净慈寺和太子湾的时间比较多，人少安静，旅游重要的是感受，感受到了就行，不用每个景点都要打卡去看看，反而能欣赏到不一样的美  </p>
-<p>第三天<br>退房去客运中心坐车去乌镇，把行李箱寄存在客运中心，一个小时十分钟到达乌镇，在乌镇附近吃了碗馄饨加发糕后，进去，因为晚上就赶火车回去了，不打算去东栅了，只买了西栅的门票，进去一会看到了乌镇大剧院和木心美术馆，很不错，拍照，再往里就是江南水乡的小房子，很好看呦，就是人有点多，挤挤的，染布厂也转了转，在香市看到好肥的鱼，太肥了，去店里逛了逛，get了一个拍照利器~小帽子，沿着湖边走，找到了坐回去船的地方，60一位，坐船欣赏美景也不错，最后从入口旁边通往大剧院的一个小道到了大剧院，在周围拍照，拍的效果很好，因为风景美，人也很少，转完之后，坐车回杭州，完美</p>
+<h4><span id="liao-tian-tao-lun">聊天讨论</span><a href="#liao-tian-tao-lun" class="header-anchor">#</a></h4><p>全快照、全当前，不幻读， 先快照，再当前，幻读</p>
+<p>「 球球: 其实产生幻读的原因，就是以为读走了mvcc的副本， 」</p>
+<hr>
+<p>读如果也加gap锁，就真的不会幻读了，但代价太大</p>
+<p>「 宏伟: 张三账户余额有10000元；要转账给李四9000元，转给王五5000元；这两次转账肯定有一次因余额不足转账失败；如果在 rr 下，可重复读， 两次update 张三都会成功？ 」</p>
+<hr>
+<p>这个如果两个事务并发，都先读的1w元快照读，然后第1个事务直接update张三减钱， commit， 第2个事务 接着update张三减钱，都会成功，除非<br>1 用数据库乐观锁<br>2 自己搞个分布式锁，将读写操作原子化<br>3 用kafka让同一用户操作串行化</p>
+<p>敏: 交易相关的就不要快照读了, 交易要算钱，select的时候就要锁，不然这条数据之后未必可用</p>
+<h4><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h4><p>RR级别下，通过MVCC, 解决了两个快照读的幻读问题，<br>通过next-key锁，解决了两个当前读的幻读问题，但是快照读后的当前读是会幻读的.</p>
 
         </div>
         
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-03-29T04:54:24.000Z">2018-03-29</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/hadoop/">hadoop</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2 分钟 读完 (大约 309 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/03/29/hadoop/presto/">presto简介、与hive比较</a>
-            
-        </h1>
-        <div class="content">
-            <p>最近在查询hive数据做展示的时候，读取hive数据，一开始使用hive查询，但速度非常慢，偶然发现可以使用presto引擎，速度相比hive要快上许多，这里进行一下比较和整理下大概原因。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/03/29/hadoop/presto/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-02-09T09:23:22.000Z">2018-02-09</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/kafka/">kafka</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    32 分钟 读完 (大约 4786 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/02/09/kafka/kafka/">kafka基本概念、原理</a>
-            
-        </h1>
-        <div class="content">
-            <p>今天公司内部琼琼分享了kafka，也是我一直想听的，本文主要资料来源于该同学的分享，稍作整理，重点的个人理解，留作记录，否则怕过几天就忘记了。。</p>
-<h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><table>
-<thead>
-<tr>
-<th>概念</th>
-<th>定义</th>
-<th>理解</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>kafka</td>
-<td>分布式，基于发布/订阅的消息系统</td>
-<td>集群，时间驱动</td>
-</tr>
-<tr>
-<td>使用语言</td>
-<td>scala</td>
-<td>scala可能确实不错</td>
-</tr>
-<tr>
-<td>特点</td>
-<td>快速, 可扩展, 可持久化,  高吞吐量, 近实时, 支持消息分区, 批量读写消息</td>
-<td></td>
-</tr>
-<tr>
-<td>设计目标</td>
-<td>高吞吐率</td>
-<td>利用磁盘顺序读写的特性；topic可以划分为多个partition，提高并发性；支持数据批量发送和拉取</td>
-</tr>
-<tr>
-<td></td>
-<td>访问与持久化常数时间复杂度</td>
-<td>未得证</td>
-</tr>
-<tr>
-<td></td>
-<td>同步和异步复制两种HA</td>
-<td>HA: 高可用性</td>
-</tr>
-<tr>
-<td></td>
-<td>分布式消费 ,保证每个Partition消息顺序传输</td>
-<td>一个group里不会有多个consumer消费一个partition，所以可以保证一个partition消息顺序性</td>
-</tr>
-<tr>
-<td></td>
-<td>支持在线水平扩展</td>
-<td></td>
-</tr>
-</tbody></table>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/02/09/kafka/kafka/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-02-06T05:23:22.000Z">2018-02-06</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    几秒 读完 (大约 108 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/02/06/springboot/pageHelper/">pageHelper-springboot</a>
-            
-        </h1>
-        <div class="content">
-            <p>springboot Mybatis 数据库分页获取 ，使用pageHelper插件</p>
-<h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!--pagehelper--&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></span><br><span class="line">	<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.github.pagehelper<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">	<span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>pagehelper-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.1.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>引用此依赖可能会与其它springboot依赖冲突，此时可手动去除其它依赖</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">compile ('com.github.pagehelper:pagehelper-spring-boot-starter:1.2.5') &#123;</span><br><span class="line">    exclude group: 'org.springframework.boot', module: ''</span><br><span class="line">    exclude group: 'org.mybatis.spring.boot', module: ''</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="application-properties"><a href="#application-properties" class="headerlink" title="application.properties"></a>application.properties</h3><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#pagehelper分页插件配置</span><br><span class="line">pagehelper.helperDialect=mysql</span><br><span class="line">pagehelper.reasonable=true</span><br><span class="line">pagehelper.supportMethodsArguments=true</span><br><span class="line">pagehelper.params=count=countSql</span><br></pre></td></tr></table></figure>
-
-<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PageHelper.startPage(pageNum, pageSize);</span><br><span class="line">mapper.loadAll();</span><br></pre></td></tr></table></figure>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/02/06/springboot/pageHelper/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-02-04T09:00:22.000Z">2018-02-04</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/面经/">面经</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    11 分钟 读完 (大约 1684 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/02/04/mj/spring/">2017春季面经</a>
-            
-        </h1>
-        <div class="content">
-            <p>春季校园招聘准备内容 &amp; 两次面经总结     to学弟</p>
-<p>2017.12.25  之前并没有注意秋招，后知后觉的我辞了实习工作，开始准备春招</p>
-<p>开始面的一个游戏公司，较简单，然后面的好未来教育，三面的时候说招c++或php的。。后来还投了很多网申，今日头条，去哪儿，有道笔记，都进行了线上笔试，只面了美团和爱奇艺，都过了，去了美团，别的也没有信了，这个，，还是挺没准的，我建议多投简历</p>
-<p>招聘就像一场应试，线上笔试就答线上题，面试就是当面答题。线上笔试的话多是数据库、操作系统、算法之类的。如果内推的话是最好的，属于提前批，先到先得，简历不错可能直接进入面试，或者提前批笔试，有的公司可能内推不是太多就直接进入面试吧， 不过网申也是有机会的，我就是网申的</p>
-<p>面试内容分 知识面(一二面) &amp; 复杂面(三面) &amp; 轻松面(hr面，也有的公司没有)</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/02/04/mj/spring/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-01-31T07:23:22.000Z">2018-01-31</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/机器学习/">机器学习</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    10 分钟 读完 (大约 1573 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/01/31/ml/sale/">tensorflow多特征预测销量demo</a>
-            
-        </h1>
-        <div class="content">
-            <p>最近一直在搞这个，终于算是跑成了，知识点掌握不全面，但坑走过一两个还是有进步。。</p>
-<p>这个项目做得是多维度特征对于月销量的一个回归，操作主要包括两方面，训练并生成模型、 导入模型预测结果。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/01/31/ml/sale/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-12-02T04:54:24.000Z">2017-12-02</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/hadoop/">hadoop</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    24 分钟 读完 (大约 3533 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2017/12/02/hadoop/gfs论文分享/">gfs分享</a>
-            
-        </h1>
-        <div class="content">
-            <p>Google file system</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>问题： 如何高效可靠地存储如此大规模的数据 ？</p>
-<p>GFS是Google为其内部应用设计的分布式存储系统</p>
-<p>问题的关键点是 <strong>高效 、 可靠、规模巨大</strong></p>
-<p>传统操作系统的问题在于  1. 硬盘不够大，存不了那么多  2. 数据不安全，传上去，硬盘瞬间损坏了，数据就没了</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/12/02/hadoop/gfs论文分享/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-10-31T12:54:24.000Z">2017-10-31</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    5 分钟 读完 (大约 778 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2017/10/31/springboot/springboot文档理解/第三章 配置信息读取/">springboot文档阅读 第三章 配置信息读取</a>
-            
-        </h1>
-        <div class="content">
-            <p>稍微粘贴一下配置文件信息，但还是没有总结出最佳实践，todo待总结，不过想必是spring源码的配置方式吧。</p>
-<p><strong>判断环境是否是web环境</strong></p>
-<p><code>SpringApplication</code>将尝试为你创建正确类型的<code>ApplicationContext</code>，默认情况下，根据你开发的是否为web应用决定使用<code>AnnotationConfigApplicationContext</code>或<code>AnnotationConfigEmbeddedWebApplicationContext</code>。</p>
-<p>用于确定是否为web环境的算法相当简单（判断是否存在某些类），你可以使用<code>setWebEnvironment(boolean webEnvironment)</code>覆盖默认行为。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/10/31/springboot/springboot文档理解/第三章 配置信息读取/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
         
         
     </div>
@@ -778,6 +803,10 @@
             <li><a class="pagination-link is-current" href="/page/5/">5</a></li>
             
             <li><a class="pagination-link has-text-black-ter" href="/page/6/">6</a></li>
+            
+            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
             
         </ul>
     </nav>
@@ -827,7 +856,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        57
+                        92
                     </p>
                 </div>
             </div>
@@ -837,7 +866,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        25
+                        27
                     </p>
                 </div>
             </div>
@@ -847,7 +876,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        36
                     </p>
                 </div>
             </div>
@@ -950,7 +979,7 @@
                 <span class="level-item">design</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/git/">
@@ -958,7 +987,7 @@
                 <span class="level-item">git</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/hadoop/">
@@ -982,7 +1011,7 @@
                 <span class="level-item">jvm</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/kafka/">
@@ -1001,12 +1030,20 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/mybatis/">
+            <span class="level-start">
+                <span class="level-item">mybatis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/mysql/">
             <span class="level-start">
                 <span class="level-item">mysql</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/netty/">
@@ -1014,7 +1051,7 @@
                 <span class="level-item">netty</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/network/">
@@ -1054,7 +1091,7 @@
                 <span class="level-item">springboot</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/storm/">
@@ -1078,7 +1115,7 @@
                 <span class="level-item">zookeeper</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/并发/">
@@ -1111,6 +1148,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/线上问题/">
+            <span class="level-start">
+                <span class="level-item">线上问题</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/英语/">
@@ -1156,7 +1201,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 16.25px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 17.5px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.25px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 12.5px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 18.75px;">mysql</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/network/" style="font-size: 11.25px;">network</a> <a href="/tags/pcursor/" style="font-size: 10px;">pcursor</a> <a href="/tags/redis/" style="font-size: 12.5px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 11.25px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 13.75px;">并发</a> <a href="/tags/旅游/" style="font-size: 12.5px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.25px;">生活</a> <a href="/tags/索引/" style="font-size: 11.25px;">索引</a> <a href="/tags/线上问题/" style="font-size: 10px;">线上问题</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -1175,8 +1220,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1188,10 +1233,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1201,10 +1246,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1214,10 +1259,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1227,10 +1272,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1249,9 +1294,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1260,9 +1305,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1309,7 +1420,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1531,7 +1642,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1545,7 +1656,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1580,7 +1691,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1601,21 +1712,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1623,6 +1734,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1650,7 +1768,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1678,7 +1796,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1713,6 +1831,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1734,6 +1859,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1772,8 +1904,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1785,10 +1917,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1798,10 +1930,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1811,10 +1943,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1824,10 +1956,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1846,9 +1978,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1857,9 +1989,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1906,7 +2104,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -2128,7 +2326,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -2142,7 +2340,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2177,7 +2375,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2198,21 +2396,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2220,6 +2418,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2247,7 +2452,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -2275,7 +2480,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -2310,6 +2515,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2331,6 +2543,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2363,7 +2582,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 大菜猫&nbsp;
+                &copy; 2023 大菜猫&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>

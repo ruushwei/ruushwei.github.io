@@ -152,17 +152,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
+                <time class="level-item has-text-grey" datetime="2021-08-01T03:10:43.000Z">2021-08-01</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1160 个字)
+                    4 分钟 读完 (大约 584 个字)
                 </span>
                 
                 
@@ -171,31 +171,16 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/09/redis/单线程还快/">redis单线程还这么快</a>
+                <a class="has-link-black-ter" href="/2021/08/01/design/stock/">库存服务提性能</a>
             
         </h1>
         <div class="content">
-            <h4><span id="wei-shi-me-redis-shi-yong-dan-xian-cheng-mo-xing-hui-da-dao-mei-miao-wan-ji-bie-de-chu-li-neng-li-ni-ke-yi-jiang-qi-gui-jie-wei-san-dian-shi-redis-ju-you-hen-gao-de-tun-tu-liang">为什么Redis使用单线程模型会达到每秒万级别的处理能力呢？可以将其归结为三点使Redis具有很高的吞吐量?</span><a href="#wei-shi-me-redis-shi-yong-dan-xian-cheng-mo-xing-hui-da-dao-mei-miao-wan-ji-bie-de-chu-li-neng-li-ni-ke-yi-jiang-qi-gui-jie-wei-san-dian-shi-redis-ju-you-hen-gao-de-tun-tu-liang" class="header-anchor">#</a></h4><h5><span id="1-chun-nei-cun-fang-wen">1. 纯内存访问</span><a href="#1-chun-nei-cun-fang-wen" class="header-anchor">#</a></h5><p>Redis将所有数据放在内存中，内存的响应时长大约为100纳秒，这是Redis达到每秒万级别访问的重要基础。 </p>
-<p>纯内存数据库，如果只是简单的 key-value，内存不是瓶颈。一般情况下，hash 查找可以达到每秒数百万次的数量级。瓶颈在于网络 IO 上。每次请求需要通过网络把请求发送到 redis 所在的机器，然后等待 redis 返回数据。时间大部分消耗在网络传输中。如果把 redis 和客户端放在同一台机器，网络延迟会更小，一般情况下可以打到 60000 次每秒甚至更高，取决于机器性能。</p>
-<h5><span id="2-i-o-duo-lu-fu-yong-shi-jian-qu-dong-mo-xing">2. I/O多路复用、事件驱动模型</span><a href="#2-i-o-duo-lu-fu-yong-shi-jian-qu-dong-mo-xing" class="header-anchor">#</a></h5><p>旨在解决IO的问题。多路I/O复用模型是非阻塞IO，内部实现采用epoll和自己实现的事件分离框架。</p>
-<p> 其利用select、poll、epoll 可以同时检测多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（epoll 是只轮询那些真正发出了事件的流），并且只依次顺序的处理就绪的流，这种做法就避免了大量的无用操作。</p>
-<p>“多路”指的是多个网络连接，“复用”指的是复用同一个线程。采用多路 I/O 复用技术可以让单个线程高效的处理多个连接请求（尽量减少网络 IO 的时间消耗）。</p>
-<p>总结就是Redis使用epoll作为I/O多路复用技术的实现，再加上Redis自身的事件处理模型将epoll中的连接、读写、关闭都转换为事件，不在网络I/O上浪费过多的时间，如下图所示。 </p>
-<h5><span id="3-dan-xian-cheng-bi-mian-liao-xian-cheng-qie-huan-he-jing-tai-chan-sheng-de-xiao-hao">3. 单线程避免了线程切换和竞态产生的消耗。</span><a href="#3-dan-xian-cheng-bi-mian-liao-xian-cheng-qie-huan-he-jing-tai-chan-sheng-de-xiao-hao" class="header-anchor">#</a></h5><h4><span id="xian-cheng-mo-xing">线程模型</span><a href="#xian-cheng-mo-xing" class="header-anchor">#</a></h4><h5><span id="zhu-xian-cheng">主线程</span><a href="#zhu-xian-cheng" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis.png" alt></p>
-<h4><span id="qi-ta">其它</span><a href="#qi-ta" class="header-anchor">#</a></h4><ol>
-<li><p>Redis会fork得到的子进程，用来处理RDB持久化以及AOF持久化等任务</p>
-</li>
-<li><p>一组异步任务处理线程，即Redis异步化组件——BIO组件</p>
-</li>
-</ol>
-<p>BIO组件目前包括三个线程，分别处理三种类型的任务：<br>1）文件句柄关闭任务<br>2）AOF持久化任务<br>3）空间懒释放  </p>
-<h4><span id="chi-jiu-hua">持久化</span><a href="#chi-jiu-hua" class="header-anchor">#</a></h4><p>Redis 提供了两种持久化策略</p>
-<p>RDB 持久化机制，会在一段时间内生成指定时间点的数据集快照(snapshot)</p>
-<p>AOF 持久化机制，记录 server 端收到的每一条写命令，当 server 重启时会进行重放以此来重建之前的数据集。AOF 文件中的命令全部以 Redis 协议的格式来保存，新命令会被追加(append)到文件的末尾。 Redis 还可以在后台对 AOF 文件进行重写(rewrite) ，使得 AOF 文件的体积不会超出保存数据集状态所需的实际大小。</p>
-<p>如果你仅使用 Redis 作为缓存加速访问，你可以关闭这两个持久化设置</p>
-<p>你也可以同时开启这两个持久化设置，但是在这种情况下，Redis 重启时会使用 AOF 文件来重建数据集，因为 AOF 文件保存的数据往往更加完整</p>
-<h4><span id="dan-xian-cheng-li-bi">单线程利弊</span><a href="#dan-xian-cheng-li-bi" class="header-anchor">#</a></h4><p>单线程模型能带来几个好处：<br>第一，单线程可以简化数据结构和算法的实现。并发数据结构实现不但困难而且开发测试比较麻烦。<br>第二，单线程避免了线程切换和竞态产生的消耗，对于服务端开发来说，锁和线程切换通常是性能杀手。</p>
-<p>但是单线程会有一个问题：<br>对于每个命令的执行时间是有要求的。如果某个命令执行过长，会造成其他命令的阻塞，对于Redis这种高性能的服务来说是致命的，所以Redis是面向快速执行场景的数据库。</p>
+            <h4><span id="ti-xing-neng">提性能</span><a href="#ti-xing-neng" class="header-anchor">#</a></h4><h5><span id="du-you-hua">读优化</span><a href="#du-you-hua" class="header-anchor">#</a></h5><p>多级缓存：让数据靠近计算<br>链路优化：缩短耗时<br>周期库存⽅案：提⾼周期库存查询性能</p>
+<h5><span id="xie-you-hua">写优化</span><a href="#xie-you-hua" class="header-anchor">#</a></h5><p>流量漏⽃：缓存预扣减少数据库的⽆效访问<br>分库分表：提升数据库的整体写⼊能⼒( 窄表设计下单分片物理机可承载4500，云服务器可承载3000，仅供参考，具体以业务测试为准 )<br>并⾏扣减：降低库存扣减的响应时间<br>分库存：解决单行更新能力不足问题，（一般单行更新的QPS在500以内）<br>合并请求：异步批量，将多次扣减累计计数，集中成一次扣减，从而实现了将串行处理变成了批处理。大大减轻更新压力。</p>
+<p>当前峰值TPS超3000，年增⻓50%，未来5年期望⽀撑量级1万+；<br>综合以上分8库，部署2个集群，每个集群4个库</p>
+<p>1、如果某个sku_id的库存扣减过热，单台实例支撑不了（mysql官方测评：一般单行更新的QPS在500以内），可以考虑将一个sku的大库存拆分成N份，放在不同的库中（也就是说所有子库的库存数总和才是一件sku的真实库存），由于前台的访问流量非常大，按照均分原则，每个子库分到的流量应该差不多。上层路由时只需要在sku_id后面拼接一个范围内的随机数，即可找到对应的子库，有效减轻系统压力。</p>
+<p>2、单条sku库存记录更新过热，也可以采用批量提交方式，将多次扣减累计计数，集中成一次扣减，从而实现了将串行处理变成了批处理，也可以大大减轻数据库压力。</p>
+<p>3、引入RocketMQ消息队列，经过前置校验后，如果有剩余库存，则把创建订单的操作封装成消息发送给MQ，订单系统从RocketMQ中以特定的频率消费，创建订单，该方案有一定的延迟性。</p>
 
         </div>
         
@@ -217,17 +202,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/redis/">redis</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2021-08-01T03:10:43.000Z">2021-08-01</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 71 个字)
+                    16 分钟 读完 (大约 2325 个字)
                 </span>
                 
                 
@@ -236,15 +217,170 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/09/redis/与tair选择/">tair &amp; redis 的选择</a>
+                <a class="has-link-black-ter" href="/2021/08/01/interview/kafka/">kafka</a>
             
         </h1>
         <div class="content">
-            <h4><span id="tair-amp-redis-de-xuan-ze">tair &amp; redis 的选择</span><a href="#tair-amp-redis-de-xuan-ze" class="header-anchor">#</a></h4><ol>
-<li>延迟敏感程度, 延迟敏感，说什么也得redis  </li>
-<li>数据量大的话，数据量超过100GB全内存太浪费资源，延迟没有那么敏感，使用tair  </li>
-<li>使用复杂数据结构 redis  </li>
-<li>容忍数据丢失</li>
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#mq-shi-yong-chang-jing">- mq使用场景</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing">- kafka如何保证消息顺序性</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing-bu-diu-xiao-xi">- kafka如何保证消息可靠性（不丢消息）</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-gao-ke-yong">- kafka如何保证高可用</a></li>
+<li><a href="#kafka-zheng-ti-jia-gou">- kafka整体架构</a></li>
+<li><a href="#kafka-fu-wu-duan-jia-gou">- kafka服务端架构</a></li>
+<li><a href="#kafka-ji-ben-te-xing">- kafka 基本特性</a></li>
+<li><a href="#kafka-ru-he-bao-zheng-gao-xing-neng">- kafka 如何保证高性能</a><ul>
+<li><a href="#controller-broker-ji-zhi">- controller broker机制</a></li>
+<li><a href="#rocketmq-kafka">- rocketmq &amp; kafka</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="mq-shi-yong-chang-jing">- mq使用场景</span><a href="#mq-shi-yong-chang-jing" class="header-anchor">#</a></h3><ul>
+<li>异步<ul>
+<li>上游不需要同步拿到结果，执行过程又耗时</li>
+<li>好处：异步可以让服务端的线程不同步阻塞，提高服务端的吞吐量</li>
+<li>eg: 视频制作</li>
+</ul>
+</li>
+<li>解耦<ul>
+<li>多个下游相同依赖</li>
+<li>好处：不与依赖方耦合，不用额外开发</li>
+<li>eg: 下单成功消息，不同的依赖方做不同的事情</li>
+</ul>
+</li>
+<li>削峰<ul>
+<li>请求高峰期</li>
+<li>好处：保护下层存储</li>
+<li>eg: 下单</li>
+</ul>
+</li>
+</ul>
+<h3><span id="kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing">- kafka如何保证消息顺序性</span><a href="#kafka-ru-he-bao-zheng-xiao-xi-shun-xu-xing" class="header-anchor">#</a></h3><p>针对消息有序的业务需求，还分为全局有序和局部有序。</p>
+<ul>
+<li>全局有序：一个Topic下的所有消息都需要按照生产顺序消费。要满足全局有序，需要1个Topic只能对应1个Partition。consumer内部单线程。</li>
+<li>局部有序：一个Topic下的消息，只需要满足同一业务字段的要按照生产顺序消费。例如：Topic消息是订单的流水表，包含订单orderId，业务要求同一个orderId的消息需要按照生产顺序进行消费。<br>  在发消息的时候指定Partition Key，Kafka对其进行Hash计算，根据计算结果决定放入哪个Partition。这样Partition Key相同的消息会放在同一个Partition。consumer内部单线程消费或接亲缘型线程池（内存队列）。此时，Partition的数量仍然可以设置多个，提升Topic的整体吞吐量。</li>
+</ul>
+<h3><span id="kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing-bu-diu-xiao-xi">- kafka如何保证消息可靠性（不丢消息）</span><a href="#kafka-ru-he-bao-zheng-xiao-xi-ke-kao-xing-bu-diu-xiao-xi" class="header-anchor">#</a></h3><ol>
+<li>多副本写入 + 数据持久化，通过后台线程将消息持久化到磁盘</li>
+<li>生产者ack机制，可设置写入副本情况，ack=0 可不写入就成功，ack=1 写入leader副本，ack=all 写入全部副本</li>
+<li>生产者重试机制，出现网络问题可自动重试，可设置重试间隔</li>
+<li>消费者使用手动提交，可保证消费一次</li>
+</ol>
+<h3><span id="kafka-ru-he-bao-zheng-gao-ke-yong">- kafka如何保证高可用</span><a href="#kafka-ru-he-bao-zheng-gao-ke-yong" class="header-anchor">#</a></h3><p>副本机制。<br>Kafka在0.8版本之前是没有HA机制来确保高可用的，当某一个broker挂掉，partition就挂了。即存在单点故障。<br>0.8之后提供了副本机制，副本机制会将 一个broker下某个topic的一个partition放入到另外一个broker里，这个备份的分区和原分区都叫做副本（replica）。在所有的副本里，只能有一个leader，其余的副本都作为follower，同一时间内只有leader负责读写，follower不起任何作用。这样做的原因是为了确保消费者单调读 且 确保能立即读取写入的信息（Read-your-writes）。其他所有的follower会异步的拉去leader消息，拉的快的会进入ISR里，拉的慢得超过replica.lag.time.max.ms 配置的超时值的，会被踢进OSR里，这个过程是动态的，如果一个follower开始没跟上leader的消息写入速度，被踢出了ISR，等到跟上后又会重新进入ISR。当leader挂掉之后，为了保证高可用性，从ISR中获取一个副本，升格为leader。如果ISR全挂了，有两种策略，一是等待ISR第一个恢复的副本，二是开启unclean从OSR中选择一个副本作为leader。为保证高可用 可以选择第二种牺牲一致性的方式。</p>
+<h3><span id="kafka-zheng-ti-jia-gou">- kafka整体架构</span><a href="#kafka-zheng-ti-jia-gou" class="header-anchor">#</a></h3><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/kafka/kafka%E6%9E%B6%E6%9E%84.jpg" alt></p>
+<h3><span id="kafka-fu-wu-duan-jia-gou">- kafka服务端架构</span><a href="#kafka-fu-wu-duan-jia-gou" class="header-anchor">#</a></h3><p>服务端是reactor模式，<strong>selector + threadPool</strong><br>acceptor里有个selector, 每个processor中有一个selector，都是NIO,IO多路复用<br>processor会通过注册/取消 OP_READ _ 事件，保证每个连接上只有一个请求和一个对应的响应，从而实现每个连接请求的顺序性。  </p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/kafka/kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%9E%B6%E6%9E%84.jpeg" alt></p>
+<h3><span id="kafka-ji-ben-te-xing">- kafka 基本特性</span><a href="#kafka-ji-ben-te-xing" class="header-anchor">#</a></h3><ol>
+<li>高吞吐量、低延迟<br>kafka每秒可以处理几十万条消息，它的延迟最低只有几毫秒，每个topic可以分多个partition, consumer group 对partition进行consume操作。</li>
+<li>可扩展性<br>kafka集群支持热扩展</li>
+<li>持久性、可靠性<br>消息被持久化到本地磁盘，并且支持数据备份防止数据丢失</li>
+<li>容错性<br>允许集群中节点失败（若副本数量为n,则允许n-1个节点失败）</li>
+<li>高并发<br>支持数千个客户端同时读写</li>
+</ol>
+<h3><span id="kafka-ru-he-bao-zheng-gao-xing-neng">- kafka 如何保证高性能</span><a href="#kafka-ru-he-bao-zheng-gao-xing-neng" class="header-anchor">#</a></h3><ul>
+<li>顺序读写。Kafka的message是不断追加到本地磁盘文件末尾的，而不是随机的写入，这使得Kafka写入吞吐量得到了显著提升 。</li>
+<li>页缓存。kafka重度依赖页缓存技术，kafka只是将数据写入页缓存（内存）中而不直接操作磁盘，由操作系统决定什么时候把页缓存中数据刷到磁盘上。同时写入页缓存的数据是按照磁盘顺序去写入的，因此刷到磁盘上的速度也较快。当读操作发生时，先从页缓存中查询是否有所需信息，若没有才会调度磁盘。</li>
+<li>零拷贝。这里的零拷贝并非指一次拷贝都没有，而是避免了在内核空间和用户空间之间的拷贝。页缓存 -&gt; socket缓冲区。</li>
+<li>分区分段 + 索引。通过这种分区分段的设计，Kafka的message消息实际上是分布式存储在一个一个小的segment中的，每次文件操作也是直接操作的segment。为了进一步的查询优化，Kafka又默认为分段后的数据文件建立了索引文件，就是文件系统上的.index文件。这种分区分段+索引的设计，不仅提升了数据读取的效率，同时也提高了数据操作的并行度。</li>
+<li>批量压缩。批量的消息可以通过压缩的形式传输并且在日志中也可以保持压缩格式，直到被消费者解压缩，减少网络IO.</li>
+</ul>
+<h4><span id="controller-broker-ji-zhi">- controller broker机制</span><a href="#controller-broker-ji-zhi" class="header-anchor">#</a></h4><ol>
+<li>本身也是一个普通的Broker，Kafka集群中始终只有一个Controller Broker。</li>
+<li>controller broker具体作用： <pre><code>创建、删除主题，增加分区并分配leader分区
+集群Broker管理（新增 Broker、Broker 主动关闭、Broker 故障)
+preferred leader选举
+分区重分配</code></pre></li>
+<li>Broker选举：第一个启动的broker会在zk中创建临时节点/controller，利用zk的强一致性，成为唯一的控制器节点，而其余的broker会监听该节点。随后由controller决定每个broker中副本的master，每当broker挂掉，controller会检测其副本，重新决定出master。当控制器broker断开时，/controller临时节点会删除，其余连接的broker将收到事件通知，抢占式注册为新的controller。</li>
+</ol>
+<h4><span id="rocketmq-amp-kafka">- rocketmq &amp; kafka</span><a href="#rocketmq-amp-kafka" class="header-anchor">#</a></h4><ul>
+<li>性能<br>Kafka单机写入 TPS 号称在百万条/秒；<br>RocketMQ 大约在10万条/秒。<br>结论：追求性能的话，Kafka单机性能更高。</li>
+<li>可靠性<br>RocketMQ支持异步/同步刷盘;异步/同步Replication；<br>Kafka使用异步刷盘方式，异步Replication。<br>结论：RocketMQ所支持的同步方式提升了数据的可靠性。</li>
+<li>实时性<br>均支持pull长轮询，RocketMQ消息实时性更好<br>结论：RocketMQ 胜出。</li>
+<li>支持的队列数<br>Kafka单机超过64个队列/分区，消息发送性能降低严重；<br>RocketMQ 单机支持最高5万个队列，性能稳定<br>结论：长远来看，RocketMQ 胜出，这也是适合业务处理的原因之一</li>
+<li>消息顺序性<br>Kafka 某些配置下，支持消息顺序，但是一台Broker宕机后，就会产生消息乱序；<br>RocketMQ支持严格的消息顺序，在顺序消息场景下，一台Broker宕机后，<br>发送消息会失败，但是不会乱序；<br>结论：RocketMQ 胜出</li>
+<li>消费失败重试机制<br>Kafka消费失败不支持重试<br>RocketMQ消费失败支持定时重试，每次重试间隔时间顺延。</li>
+<li>定时/延时消息<br>Kafka不支持定时消息；<br>RocketMQ支持定时消息</li>
+<li>分布式事务消息<br>Kafka不支持分布式事务消息；<br>RocketMQ支持分布式事务消息</li>
+<li>消息查询机制<br>Kafka不支持消息查询<br>RocketMQ支持根据Message Id查询消息，也支持根据消息内容查询消息</li>
+<li>消息回溯<br>Kafka理论上可以按照Offset来回溯消息<br>RocketMQ支持按照时间来回溯消息，精度毫秒，例如从一天之前的某时某分某秒开始重新消费消息.</li>
+</ul>
+<p>rocketmq功能性和可靠性更强一些。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-01T02:54:24.000Z">2021-08-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/zookeeper/">zookeeper</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1141 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/01/zookeeper/zk_2021/">zk2021</a>
+            
+        </h1>
+        <div class="content">
+            <h4><span id="ding-yi-amp-te-dian">定义&amp;特点</span><a href="#ding-yi-amp-te-dian" class="header-anchor">#</a></h4><p>定义：分布式协调服务。中心化的服务，维护配置信息，命名服务，分布式同步器(锁、屏障、队列等)，分组服务(组成员检测)。<br>抽象一下，即分布式协调服务。自己本身没有太大意义，用来协调分布式应用，类比一种进程间通信方式。</p>
+<p>特点：纯内存结构，吞吐高，单机 1w 写qps，4w读 qps。(参考值，和配置相关)</p>
+<p>总结: 在粗粒度分布式锁，分布式选主，主备高可用切换等不需要高 TPS 支持的场景下有不可替代的作用 </p>
+<h4><span id="shu-ju-mo-xing">数据模型</span><a href="#shu-ju-mo-xing" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/zk/zk_model.png" alt></p>
+<p>树形结构，类文件系统。每个树节点znode，每个节点即是文件，也是文件夹，修改操作只能整体 set，不支持部分修改。</p>
+<p>ephemeral znode. 临时节点，和 session 生命周期一致，可以用来检测机器在线状态。<br>sequence znode. 顺序节点，自动编号，可以用来实现统一命名。(redis incr 也可以做到)<br>watch 机制。znode 新增、删除、修改、子节点变更及时通知 client。</p>
+<h4><span id="fen-bu-shi-shi-xian-fang-shi">分布式实现方式</span><a href="#fen-bu-shi-shi-xian-fang-shi" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/zk/zk_ds.md.png" alt></p>
+<p>zk 使用 replication，统一收口写，读水平扩展。适用于读多写少场景。</p>
+<h4><span id="zk-xuan-zhu">zk选主</span><a href="#zk-xuan-zhu" class="header-anchor">#</a></h4><p>zab协议：ZooKeeper atomic broadcast，zk原子广播协议。论文<br>规则是 majority vote，超过半数认可的 server 成为 leader。FastLeaderElection。<br>大致过程，每台 server 初始广播 (serverEpoch, zxid, serverId)，默认选择自己为 leader。判断逻辑先比较 epoch 最大，再比较 zxid 最大，最后比较 serverId 最大。<br>初始第一次很快是 serverId 最大的成为 leader（没有出现断网断电等异常情况时）</p>
+<h4><span id="zk-zhu-cong-tong-bu">zk主从同步</span><a href="#zk-zhu-cong-tong-bu" class="header-anchor">#</a></h4><p>leader 连接所有的 follower，发送操作指令，2阶段提交，先 proposal 再 commit，超过半数 proposal 就进行 commit。commit 失败怎么办？2阶段提交都有的问题，概率小不做考虑。<br>同样会有主从延迟问题，一致性保证客户端看到的数据视图一致性，变更顺序一致性，并且在有限时间内保证 server 数据达到最新状态。</p>
+<h4><span id="zk-xing-neng-ping-jing">zk性能瓶颈</span><a href="#zk-xing-neng-ping-jing" class="header-anchor">#</a></h4><ul>
+<li><p>单机处理写请求<br>majority vote 要求超过一半的 server 存活，server 数量 = 2*n + 2，n越大容错性越强，可以支持n台机器挂掉情况下服务依然可用。<br>同时，n越大，写扩散越大，写能力会变弱，查询能力会线性增长。单机 5w qps级别. (1w 写qps，4w读 qps)</p>
+</li>
+<li><p>事务日志落盘<br>事务日志保证 client 写成功后数据不会丢失，write ahead，最好配置单独的磁盘。顺序写，所以依然可以有 1w 级别的写 qps。</p>
+</li>
+<li><p>纯内存操作树结构<br>纯内存，容纳数据有限，线上服务器内存，比如32G。不能用于通常的数据存储，主要用于元数据。单节点现在最大 1m，太大会严重影响读写 qps，对于网络压力也很大。</p>
+</li>
+</ul>
+<h4><span id="zk-zai-mysql-ying-yong">zk在mysql应用</span><a href="#zk-zai-mysql-ying-yong" class="header-anchor">#</a></h4><p>mysql 主从库切换怎么做的？<br>直接用的 zk 的能力。数据同步通过 binlog 追加，写操作必须主库完成，一台从库 binlog 完成才返回。<br>从库应用binlog会有时延，所以会有主从延迟。日常10ms到100ms左右。后面的从库延迟更多。</p>
+<h4><span id="zk-shi-fou-gua-he-fu-wu-zhu-ce-fa-xian">zk是否适合服务注册发现</span><a href="#zk-shi-fou-gua-he-fu-wu-zhu-ce-fa-xian" class="header-anchor">#</a></h4><ol>
+<li><p>服务注册发现规模巨大，服务规模 =F{服务 pub 数, 服务 sub 数}，几千个服务，大服务集群机器上w台，比如淘宝交易系统就2w台机器，支撑200w qps。发布过程中会有很大的写入压力和监听扩散。</p>
+</li>
+<li><p>注册中心不需要很强的一致性，也不需要持久的事务日志。短暂的服务列表不一致只是造成部分的负载不均衡，影响不大。另外持久化事务日志保证宕机后快速恢复对于服务发现来说没啥用，只关注实时情况。</p>
+</li>
 </ol>
 
         </div>
@@ -267,88 +403,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/netty/">netty</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分钟 读完 (大约 972 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/07/09/netty/model/">netty模型</a>
-            
-        </h1>
-        <div class="content">
-            <h4><span id="ding-yi">定义</span><a href="#ding-yi" class="header-anchor">#</a></h4><p>netty是一个高性能、异步事情驱动的网络通信框架<br>NIO IO多路复用 、事情驱动模型</p>
-<p>1.设置主从reactor模式<br>2.指定IO类型<br>3.指定handler<br>4.绑定端口</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/640.jpeg" alt></p>
-<h4><span id="netty-you-dian">netty优点</span><a href="#netty-you-dian" class="header-anchor">#</a></h4><ol>
-<li><p>API使用简单，开发门槛低；  </p>
-</li>
-<li><p>功能强大，预置了多种编解码功能，支持多种主流协议；  </p>
-</li>
-<li><p>定制能力强，可以通过ChannelHandler对通信框架进行灵活地扩展；  </p>
-</li>
-<li><p>性能高，通过与其他业界主流的NIO框架对比，Netty的综合性能最优；  </p>
-</li>
-<li><p>成熟、稳定，Netty修复了已经发现的所有JDK NIO BUG，业务开发人员不需要再为NIO的BUG而烦恼；  </p>
-</li>
-<li><p>社区活跃，版本迭代周期短，发现的BUG可以被及时修复，同时，更多的新功能会加入；  </p>
-</li>
-<li><p>经历了大规模的商业应用考验，质量得到验证。在互联网、大数据、网络游戏、企业应用、电信软件等众多行业得到成功商用，证明了它已经完全能够满足不同行业的商业应用了。</p>
-</li>
-</ol>
-<h4><span id="gao-xing-neng-san-yao-su">高性能三要素</span><a href="#gao-xing-neng-san-yao-su" class="header-anchor">#</a></h4><ol>
-<li>reactor模型</li>
-<li>IO多路复用</li>
-<li>协议</li>
-</ol>
-<h4><span id="reactor-mo-xing">reactor模型</span><a href="#reactor-mo-xing" class="header-anchor">#</a></h4><h5><span id="dan-xian-cheng-mo-xing">单线程模型</span><a href="#dan-xian-cheng-mo-xing" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%8D%95.jpg" alt></p>
-<h5><span id="duo-xian-cheng-mo-xing">多线程模型</span><a href="#duo-xian-cheng-mo-xing" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%A4%9A.jpg" alt></p>
-<h5><span id="zhu-cong-xian-cheng-mo-xing">主从线程模型</span><a href="#zhu-cong-xian-cheng-mo-xing" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E4%B8%BB%E4%BB%8E.jpg" alt></p>
-<h4><span id="zu-jian">组件</span><a href="#zu-jian" class="header-anchor">#</a></h4><h5><span id="bootstrap-serverbootstrap">Bootstrap/ServerBootstrap</span><a href="#bootstrap-serverbootstrap" class="header-anchor">#</a></h5><p>顾名思义就是启动类，分别负责启动客户端和服务器端。这个类用来配置相关参数，比如设置EventLoopGroup，IO类型，handler等等，Netty的一切都从这里开始</p>
-<h5><span id="eventloopgroup">EventLoopGroup</span><a href="#eventloopgroup" class="header-anchor">#</a></h5><p>主从多线程Reactor模型，分别有两个线程池：  EventLoopGroupA和EventLoopGroupB。一个用于接收请求，另一个用于处理IO操作。</p>
-<p>一个EventLoopGroup就相当于一个线程池，而每一个EventLoop就是一个线程，当新的Channel被创建时（有新的请求进来），就会在EventLoopGroup里注册一下，同时会分配一个EventLoop给这个Channel，</p>
-<p>从此开始直到这个Channel被销毁，这个Channel只能被它绑定的这个EventLoop执行，这也就是为什么Netty可以不用考虑并发的原因。</p>
-<p>EventLoop是处理各个event的具体线程。除了处理IO读写等event外，EventLoop还需要进行系统任务和定时任务进行执行</p>
-<h5><span id="channel">Channel</span><a href="#channel" class="header-anchor">#</a></h5><p>Netty的Channel接口所提供的的API，大大降低了直接使用Socket类的复杂性</p>
-<h5><span id="channelpipeline-amp-channelhander">ChannelPipeline &amp; ChannelHander</span><a href="#channelpipeline-amp-channelhander" class="header-anchor">#</a></h5><p>Netty采用了一种叫做数据流（data flow）的处理机制，类似于Unix中的管道。即每一个Channel都有一个自己的ChannelPipeline，每一个pipeline里会有多个ChannelHandler。数据会像水流一样依次通过每一个handler被逐一处理。<br>流处理是双向混合的，分为Inbound和Outbound， 分别对应request和response。</p>
-<p>这个handler被分成两类：ChannelOutboundHandler和ChannelInboundHandler。当服务器处理进来的请求时，则只会调用实现了ChannelInboundHandler的handler；当服务器返回信息给客户端时，则只会调用实现了ChannelOutboundHandler的handler</p>
-<h5><span id="encoders-amp-decoders">Encoders &amp; Decoders</span><a href="#encoders-amp-decoders" class="header-anchor">#</a></h5><p>我们在解析处理请求时通常需要对数据格式进行转换，比如把字节变成对象，或者把对象转换为字节。针对这种常见的场景，Netty提供了编码和解码的接口：MessageToByteEncoder和ByteToMessageEncoder。</p>
-<p>其实两个抽象类分别继承了ChannelInboundHandlerAdapter和ChannelOutboundHandlerAdapter，说白了，使用起来和普通的handler没什么区别。自己写的类只要重写decode()或者encode()方法对数据进行处理即可</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
+                <time class="level-item has-text-grey" datetime="2021-08-01T00:54:24.000Z">2021-08-01</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
@@ -358,7 +413,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1531 个字)
+                    12 分钟 读完 (大约 1731 个字)
                 </span>
                 
                 
@@ -367,50 +422,29 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/09/mysql/隔离级别/">innodb事务隔离级别、MVCC</a>
+                <a class="has-link-black-ter" href="/2021/08/01/mysql/mvcc/">MVCC-2021</a>
             
         </h1>
         <div class="content">
-            <h4><span id="ge-chi-ji-bie">隔离级别</span><a href="#ge-chi-ji-bie" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/isola.jpg" alt></p>
-<p>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据  </p>
-<p>提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)  </p>
-<p>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的，InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还存在幻象读  </p>
-<p>串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞</p>
-<h4><span id="mvcc">MVCC</span><a href="#mvcc" class="header-anchor">#</a></h4><p>InnoDB是一个多版本的存储引擎：为了支持事务的一些特性诸如并发和回滚，它保持着被修改行的旧版本信息。这些信息被存储在一个被叫做回滚段(rollback segment)的表空间中。InnoDB在回滚段中用这些信息来执行undo操作，以此支持事务回滚。它也用这些信息来构造行的更早的版本，以此支持一致性读（快照读）。</p>
-<p>在内部，InnoDB为数据库中存储的每一行添加三个隐藏字段。</p>
-<p>DB_TRX_ID：表明插入或者修改这一行的最后一个事务的事务标识符。如何查看行事务ID</p>
-<p>DB_ROLL_PTR：指向回滚段中的一个undo log记录，如果行被修改了，那么这个undo log记录包含的信息必须先于行修改被重新修改。</p>
-<p>DB_ROW_ID：单调递增的行ID。如果InnoDB自动生成了一个聚集索引，那么这个索引包含行ID值，否则DB_ROW_ID列不会出现在任何索引中。 </p>
-<h4><span id="suo-lei-xing">锁类型</span><a href="#suo-lei-xing" class="header-anchor">#</a></h4><p>共享锁（读锁，S锁）：若事务T对数据对象A加上S锁，则事务T可以读A但不能修改A，其他事务只能再对A加S锁，而不能加X锁，直到T释放S锁。  </p>
-<p>排他锁（写锁，X锁）：若事务T对数据对象A加上X锁，则只允许T读取和修改A，其他事务不能再对A加作何类型的锁，直到T释放A上的X锁。  </p>
-<p>意向共享锁（IS锁）：事务T在对表中数据对象加S锁前，首先需要对该表加IS（或更强的IX）锁。  </p>
-<p>意向排他锁（IX锁）：事务T在对表中的数据对象加X锁前，首先需要对该表加IX锁。</p>
-<h5><span id="yi-xiang-suo-bu-chong">意向锁补充</span><a href="#yi-xiang-suo-bu-chong" class="header-anchor">#</a></h5><ul>
-<li>InnoDB 支持多粒度锁，特定场景下，行级锁可以与表级锁共存。  </li>
-<li>意向锁之间互不排斥，但除了 IS 与 S 兼容外，意向锁会与 共享锁 / 排他锁 互斥。  </li>
-<li>IX，IS是表级锁，不会和行级的X，S锁发生冲突。只会和表级的X，S发生冲突。  </li>
-<li>意向锁在保证并发性的前提下，实现了行锁和表锁共存且满足事务隔离性的要求。  </li>
-</ul>
-<h4><span id="2pl-liang-jie-duan-suo">2pl 两阶段锁</span><a href="#2pl-liang-jie-duan-suo" class="header-anchor">#</a></h4><p>两段锁协议，先随便加，最后commit才能一起释放.<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2pl.jpg" alt></p>
-<h4><span id="gap-suo-you-he-yong">GAP锁有何用</span><a href="#gap-suo-you-he-yong" class="header-anchor">#</a></h4><p>其实这个多出来的GAP锁，就是RR隔离级别，相对于RC隔离级别，不会出现幻读的关键。</p>
-<p>确实，GAP锁锁住的位置，也不是记录本身，而是两条记录之间的GAP。</p>
-<p>所谓幻读，就是同一个事务，连续做两次当前读 (例如：select * from t1 where id = 10 for update;)，那么这两次当前读返回的是完全相同的记录 (记录数量一致，记录本身也一致)，第二次的当前读，不会比第一次返回更多的记录 (幻象)。  </p>
-<p>如何保证两次当前读返回一致的记录，那就需要在第一次当前读与第二次当前读之间，其他的事务不会插入新的满足条件的记录并提交。为了实现这个功能，GAP锁应运而生</p>
-<h4><span id="kuai-zhao-du-amp-dang-qian-du">快照读 &amp; 当前读</span><a href="#kuai-zhao-du-amp-dang-qian-du" class="header-anchor">#</a></h4><p>快照读：就是select</p>
-<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> ….;</span><br></pre></td></tr></table></figure>
-
-<p>当前读：特殊的读操作，插入/更新/删除操作，属于当前读，处理的都是当前的数据，需要加锁。  </p>
-<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">lock</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">share</span> <span class="hljs-keyword">mode</span>;</span><br><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">for</span> <span class="hljs-keyword">update</span>;</span><br><span class="line"><span class="hljs-keyword">insert</span>;</span><br><span class="line"><span class="hljs-keyword">update</span> ;</span><br><span class="line"><span class="hljs-keyword">delete</span>;</span><br></pre></td></tr></table></figure>
-
-<h4><span id="liao-tian-tao-lun">聊天讨论</span><a href="#liao-tian-tao-lun" class="header-anchor">#</a></h4><p>全快照、全当前，不幻读， 先快照，再当前，幻读</p>
-<p>「 球球: 其实产生幻读的原因，就是以为读走了mvcc的副本， 」</p>
-<hr>
-<p>读如果也加gap锁，就真的不会幻读了，但代价太大</p>
-<p>「 宏伟: 张三账户余额有10000元；要转账给李四9000元，转给王五5000元；这两次转账肯定有一次因余额不足转账失败；如果在 rr 下，可重复读， 两次update 张三都会成功？ 」</p>
-<hr>
-<p>这个如果两个事务并发，都先读的1w元快照读，然后第1个事务直接update张三减钱， commit， 第2个事务 接着update张三减钱，都会成功，除非<br>1 用数据库乐观锁<br>2 自己搞个分布式锁，将读写操作原子化<br>3 用kafka让同一用户操作串行化</p>
-<p>敏: 交易相关的就不要快照读了, 交易要算钱，select的时候就要锁，不然这条数据之后未必可用</p>
-<h4><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h4><p>RR级别下，通过MVCC, 解决了两个快照读的幻读问题，<br>通过next-key锁，解决了两个当前读的幻读问题，但是快照读后的当前读是会幻读的.</p>
+            <h3><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h3><p>MVCC的核心实现主要基于两部分：多事务并发操作数据与一致性读实现。</p>
+<p>RC的本质：每一条SELECT都可以看到其他已经提交的事务对数据的修改，只要事务提交，其结果都可见，与事务开始的先后顺序无关。<br>RR的本质：第一条SELECT生成ReadView前，已经提交的事务的修改可见。</p>
+<h3><span id="duo-shi-wu-bing-fa-cao-zuo-shu-ju">多事务并发操作数据</span><a href="#duo-shi-wu-bing-fa-cao-zuo-shu-ju" class="header-anchor">#</a></h3><p>多事务并发操作数据核心基于Undo log进行实现，Undo log可以用来做事务的回滚操作，保证事务的原子性。<br>同时可以用来构建数据修改之前的版本，支持多版本读。</p>
+<p>InnoDB中，每一行记录都有两个隐藏列：DATA_TRX_ID和DATA_ROLL_PTR。(若没有主键，则还有一个隐藏主键)<br>DATA_TRX_ID：记录最近更新这条记录的事务ID(6字节)<br>DATA_ROLL_PTR：指向该行回滚段的指针，通过指针找到之前版本，通过链表形式组织(7字节)<br>DB_ROW_ID：行标识（隐藏单增ID），没有主键时主动生成(6字节)<br>当存在多个事务进行并发操作数据时，不同事务对同一行的更新操作产生多个版本，通过回滚指针将这些版本链接成一条Undo Log链。</p>
+<p>操作过程如下：<br>1、将待操作的行加排他锁。<br>2、将该行原本的值拷贝到Undo Log中，DB_TRX_ID和DB_ROLL_PTR保持不变。（形成历史版本）<br>3、修改该行的值，更新该行的DATA_TRX_ID为当前操作事务的事务ID，将DATA_ROLL_PTR指向第二步拷贝到Undo Log链中的旧版本记录。（通过DB_ROLL_PTR可以找到历史记录）<br>4、记录Redo Log，包括Undo Log中的修改。<br>INSERT操作：产生新的记录，其DATA_TRX_ID为当前插入记录的事务ID。<br>DELETE操作：软删除，将DATA_TRX_ID记录下删除该记录的事务ID，真正删除操作在事务提交时完成。</p>
+<h3><span id="yi-zhi-xing-du-shi-xian">一致性读实现</span><a href="#yi-zhi-xing-du-shi-xian" class="header-anchor">#</a></h3><p>在InnoDB中，对于不同的事务隔离级别，一致性读实现均不相同，具体如下：<br>READ UNCOMMITED隔离级别：直接读取版本的最新记录。<br>SERIALIZABLE隔离级别：通过加锁互斥访问数据实现。<br>READ COMMITED和REPEATABLE READ隔离级别：使用版本链实现。(ReadView，可读性视图)<br>对于RC与RR隔离级别，实现一致性读都是通过ReadView，也就是今天的重点，什么是ReadView？</p>
+<p>MVCC ReadView<br>ReadView是事务开启时，当前所有活跃事务（还未提交的事务）的一个集合，ReadView数据结构决定了不同事务隔离级别下，数据的可见性。</p>
+<p>up_limit_id：最先开始的事务，该SQL启动时，当前事务链表中最小的事务id编号，也就是当前系统中创建最早但还未提交的事务<br>low_limit_id：最后开始的事务，该SQL启动时，当前事务链表中最大的事务id编号，也就是最近创建的除自身以外最大事务编号<br>m_ids：当前活跃事务ID列表，所有事务链表中事务的id集合<br>注：ID越小，事务开始的越早；ID越大，事务开始的越晚</p>
+<p>1、下面所说的db_trx_id，是来自于数据行中的db_trx_id字段，并非开启了一个事务分配的ID，分配的事务ID只有操作了数据行，才会更新数据行中的db_trx_id字段<br>2、ReadView是与SQL绑定的，而并不是事务，所以即使在同一个事务中，每次SQL启动时构造的ReadView的up_trx_id和low_trx_id也都是不一样的<br>up_limit_id表示“低水位”，即当时活跃事务列表的最小事务id（最早创建的事务），如果读取出来的数据行上的的db_trx_id小于up_limit_id，则说明这条记录的最后修改在ReadView创建之前，因此这条记录可以被看见。</p>
+<p>low_limit_id表示“高水位”，即当前活跃事务的最大id（最晚创建的事务），如果读取出来的数据行上的的db_trx_id大于low_limit_id，则说明这条记录的最后修改在ReadView创建之后，因此这条记录肯定不可以被看见。</p>
+<p>如果读取出来的数据行上的的db_trx_id在low_limit_id和up_limit_id之间，则查找该数据上的db_trx_id是否在ReadView的m_ids列表中：</p>
+<p>如果存在，则表示这条记录的最后修改是在ReadView创建之时，被另外一个活跃事务所修改，所以这条记录也不可以被看见。<br>如果不存在，则表示这条记录的最后修改在ReadView创建之前，所以可以看到。</p>
+<p>REPEATABLE READ下的ReadView生成<br>每个事务首次执行SELECT语句时，会将当前系统所有活跃事务拷贝到一个列表中生成ReadView。</p>
+<p>每个事务后续的SELECT操作复用其之前生成的ReadView。</p>
+<p>UPDATE,DELETE,INSERT对一致性读snapshot无影响。</p>
+<p>示例：事务A，B同时操作同一行数据</p>
+<p>若事务A的第一个SELECT在事务B提交之前进行，则即使事务B修改记录后先于事务A进行提交，事务A后续的SELECT操作也无法读到事务B修改后的数据。<br>若事务A的第一个SELECT在事务B修改数据并提交事务之后，则事务A能读到事务B的修改。<br>针对RR隔离级别，在第一次创建ReadView后，这个ReadView就会一直持续到事务结束，也就是说在事务执行过程中，数据的可见性不会变，所以在事务内部不会出现不一致的情况。</p>
+<p>READ COMMITED下的ReadView生成<br>每次SELECT执行，都会重新将当前系统中的所有活跃事务拷贝到一个列表中生成ReadView。</p>
+<p>针对RC隔离级别，事务中的每个查询语句都单独构建一个ReadView，所以如果两个查询之间有事务提交了，两个查询读出来的结果就不一样。</p>
 
         </div>
         
@@ -432,17 +466,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2021-07-31T03:10:43.000Z">2021-07-31</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 0 个字)
+                    27 分钟 读完 (大约 4119 个字)
                 </span>
                 
                 
@@ -451,280 +481,168 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/09/designpatterns/strategy/">策略模式</a>
+                <a class="has-link-black-ter" href="/2021/07/31/interview/redis/">redis_2021</a>
             
         </h1>
         <div class="content">
-            
-        </div>
-        
-        
-        
-    </div>
-</div>
+            <div class="toc">
 
+<!-- toc -->
 
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-04T02:54:24.000Z">2019-07-04</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/netty/">netty</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    5 分钟 读完 (大约 738 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/07/04/netty/BIO_NIO_AIO/">BIO NIO AIO 阻塞 非阻塞</a>
-            
-        </h1>
-        <div class="content">
-            <h4><span id="bio-tong-bu-zu-sai-io-mian-xiang-liu-de">BIO:同步阻塞IO（面向流的）</span><a href="#bio-tong-bu-zu-sai-io-mian-xiang-liu-de" class="header-anchor">#</a></h4><p>特点：一个连接建立一个线程，连接如果没有IO请求时，则会浪费线程资源开销，可以通过线程池技术来改善</p>
-<p>适用场景：连接数小，并发数小，架构固定（java1.4之前唯一的IO）</p>
-<h4><span id="nio-tong-bu-fei-zu-sai-mian-xiang-buffer-de">NIO：同步非阻塞（面向Buffer的）</span><a href="#nio-tong-bu-fei-zu-sai-mian-xiang-buffer-de" class="header-anchor">#</a></h4><p>特点：客户的发送的连接请求会注册到多路复用器上，多路复用器轮询到连接存在有效请求时才会启动一个线程来进行处理<br>适用场景：连接数目多，且连接比较短的架构，比如聊天服务器（java1.4开始支持）</p>
-<h4><span id="aio-yi-bu-fei-zu-sai">AIO：异步非阻塞</span><a href="#aio-yi-bu-fei-zu-sai" class="header-anchor">#</a></h4><p>特点：针对客户端连接发出的IO请求，会由OS先完成IO操作后，在通知服务器启动线程进行处理<br>适用场景：连接数目多，连接比较长，比如相册服务器，充分调用OS参与并发操作（java1.7开始支持）</p>
-<h4><span id="tong-bu-yi-bu-guan-zhu-dian-xiao-xi-tong-xin-ji-zhi-io-qing-qiu-fa-song">同步、异步（关注点：消息通信机制、IO请求发送）</span><a href="#tong-bu-yi-bu-guan-zhu-dian-xiao-xi-tong-xin-ji-zhi-io-qing-qiu-fa-song" class="header-anchor">#</a></h4><p>同步：发送一个请求后，会不断的去轮询、等待请求结果返回后再发送下一个请求，可以避免死锁，脏读的发生</p>
-<p>异步：发送一个请求后，不需要等待结果返回也可以发送下一个请求，可以提高效率，保证并发，OS执行完成后会通过回调函数通知应用程序获取结果</p>
-<h4><span id="zu-sai-fei-zu-sai-guan-zhu-dian-cheng-xu-zai-deng-dai-diao-yong-jie-guo-shi-de-zhuang-tai-io-cao-zuo-jie-guo-huo-qu">阻塞、非阻塞（关注点：程序在等待调用结果时的状态、IO操作结果获取）</span><a href="#zu-sai-fei-zu-sai-guan-zhu-dian-cheng-xu-zai-deng-dai-diao-yong-jie-guo-shi-de-zhuang-tai-io-cao-zuo-jie-guo-huo-qu" class="header-anchor">#</a></h4><p>阻塞：程序在等待请求结果的时候，线程会被挂起，调用线程只有在得到结果之后才会返回</p>
-<p>非阻塞：虽然不能立马得到结果，但是该调用不会阻塞当前线程，此线程还可以干其他事</p>
-<h4><span id="nio-io-duo-lu-fu-yong">NIO IO多路复用</span><a href="#nio-io-duo-lu-fu-yong" class="header-anchor">#</a></h4><p>NIO是概念，IO多路复用是一套方案</p>
-<p>当某个连接发送请求到服务器，服务器把这个连接请求当作一个请求“事件”，并把这个“事件”分配给相应的函数处理。我们可以把这个处理函数放到线程中去执行，执行完就把线程归还，这样一个线程就可以异步的处理多个线程</p>
-<p>而阻塞式 I/O 的线程的大部分时间都被浪费在等待请求上了</p>
-<p>对于同步非阻塞，一个线程可以执行多个连接中的请求，而同步阻塞则时一个线程对应一个连接，所以阻塞会很严重, 线程浪费严重</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-06-13T02:54:24.000Z">2019-06-13</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    19 分钟 读完 (大约 2849 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/06/13/dataStructure/tree/">红黑树、AVL树、B树代价分析与比较</a>
-            
-        </h1>
-        <div class="content">
-            <h4><span id="yi-ge-chong-shu-jian-jie">一、各种树简介</span><a href="#yi-ge-chong-shu-jian-jie" class="header-anchor">#</a></h4><h5><span id="hong-hei-shu">红黑树</span><a href="#hong-hei-shu" class="header-anchor">#</a></h5><p>它可以在 O(logn) 时间内完成查找，插入和删除，这里的n是树中元素的数目.</p>
-<p>常考五个性质</p>
-<p>自编顺口溜：有红有黑，头黑尾黑，红后黑，任尾同黑</p>
-<ol>
-<li>结点是红色或黑色</li>
-<li>根结点始终是黑色</li>
-<li>叶子结点（NIL 结点）都是黑色</li>
-<li>红色结点的两个直接孩子结点都是黑色（即从叶子到根的所有路径上不存在两个连续的红色结点）</li>
-<li>从任一结点到每个叶子的所有简单路径都包含相同数目的黑色结点</li>
-</ol>
-<p>保证了红黑树在满足平衡二叉树特征的前提下，还可以做到 从根到叶子的最长路径最多不会超过最短路径的两倍。</p>
-<h5><span id="avl-shu">AVL树</span><a href="#avl-shu" class="header-anchor">#</a></h5><p>AVL树定义:<br>二叉排序树，其中每一个结点的左子树和右子树的高度差不超过1（小于等于1）。   </p>
-<p>二叉树的平衡因子 （Balance Factor） 等于该结点的左子树深度减去右子树深度的值称为平衡因子。平衡因子只可能是－1，0，1。  </p>
-<p>红黑树相对于AVL树来说，牺牲了部分平衡性以换取插入/删除操作时少量的旋转操作，整体来说性能要优于AVL树。</p>
-<p>红黑树和AVL树都是从树的平衡性出发，找到合适的平衡方式，一个通过颜色标识限定，一个通过树高差限定，使树都处于平衡状态。</p>
-<p>AVL树由于实现比较复杂，而且插入和删除性能差，在实际环境下的应用不如红黑树。</p>
-<h5><span id="b-shu">B树</span><a href="#b-shu" class="header-anchor">#</a></h5><p>B树相对于红黑树的区别</p>
-<p>在大规模数据存储的时候，红黑树往往出现由于树的深度过大而造成磁盘IO读写过于频繁，进而导致效率低下的情况。为什么会出现这样的情况，我们知道要获取磁盘上数据，必须先通过磁盘移动臂移动到数据所在的柱面，然后找到指定盘面，接着旋转盘面找到数据所在的磁道，最后对数据进行读写。磁盘IO代价主要花费在查找所需的柱面上，树的深度过大会造成磁盘IO频繁读写。根据磁盘查找存取的次数往往由树的高度所决定，所以，只要我们通过某种较好的树结构减少树的结构尽量减少树的高度，B树可以有多个子女，从几十到上千，可以降低树的高度。</p>
-<p>B树的数据结构就是为内外存的数据交互准备的。<br>外存（如硬盘）是将 所有的信息分割成相等大小的页面，每次硬盘读写的都是一个或多个完整的页面 。如果要处理的硬盘数据量很大，无法一次全部装入内存中，就要对B树进行调整，是的B树的阶数（或结点的元素）与硬盘存储的页面大小相匹配。比如一棵B树的阶为1001（1个结点可以包含1000个元素），高度为2，它可以存储超过10亿（1000X1000X1000）个关键字，我们只要让根结点持久的保留在内存中，那么在这棵树上，寻找某一个关键字至多需要两次硬盘的读取。通过这种方式，在有限内存的情况下，每一次磁盘的访问都可以获得最大数量的数据。</p>
-<h4><span id="er-ge-shu-cao-zuo-dai-jie">二、各树操作代价</span><a href="#er-ge-shu-cao-zuo-dai-jie" class="header-anchor">#</a></h4><p>整个红黑树的查找，插入和删除都是O(logN)的，原因就是整个红黑树的高度是logN，查找从根到叶，走过的路径是树的高度，删除和插入操作是从叶到根的，所以经过的路径都是logN。</p>
-<h5><span id="rbt-de-cao-zuo-dai-jie-fen-xi">RBT 的操作代价分析</span><a href="#rbt-de-cao-zuo-dai-jie-fen-xi" class="header-anchor">#</a></h5><p>(1) 查找代价：由于红黑树的性质(最长路径长度不超过最短路径长度的2倍)，可以说明红黑树虽然不像AVL一样是严格平衡的，但平衡性能还是要比BST要好。其查找代价基本维持在O(logN)左右，但在最差情况下(最长路径是最短路径的2倍少1)，比AVL要略逊色一点。  </p>
-<p>(2) 插入代价：RBT插入结点时，需要旋转操作和变色操作。但由于只需要保证RBT基本平衡就可以了。因此插入结点最多只需要2次旋转，这一点和AVL的插入操作一样。虽然变色操作需要O(logN)，但是变色操作十分简单，代价很小。  </p>
-<p>(3) 删除代价：RBT的删除操作代价要比AVL要好的多，删除一个结点最多只需要3次旋转操作。   </p>
-<p>RBT 效率总结 : </p>
-<p>查找 效率最好情况下时间复杂度为O(logN)，但在最坏情况下比AVL要差一些，但也远远好于BST。<br>插入和删除操作改变树的平衡性的概率要远远小于AVL（RBT不是高度平衡的）。因此需要的旋转操作的可能性要小，而且一旦需要旋转，插入一个结点最多只需要旋转2次，删除最多只需要旋转3次(小于AVL的删除操作所需要的旋转次数)。虽然变色操作的时间复杂度在O(logN)，但是实际上，这种操作由于简单所需要的代价很小。</p>
-<h5><span id="avl-de-cao-zuo-dai-jie-fen-xi">AVL 的操作代价分析</span><a href="#avl-de-cao-zuo-dai-jie-fen-xi" class="header-anchor">#</a></h5><p>(1) 查找代价： AVL是严格平衡的BST（平衡因子不超过1）。那么查找过程与BST一样，只是AVL不会出现最差情况的BST(单支树)。因此查找效率最好，最坏情况都是O(logN)数量级的。  </p>
-<p>(2) 插入代价： AVL必须要保证严格平衡(|bf|&lt;=1)，那么每一次插入数据使得AVL中某些结点的平衡因子超过1就必须进行旋转操作。事实上，AVL的每一次插入结点操作最多只需要旋转1次(单旋转或双旋转)。因此，总体上插入操作的代价仍然在O(logN)级别上(插入结点需要首先查找插入的位置)。  </p>
-<p>(3) 删除代价：AVL删除结点的算法可以参见BST的删除结点，但是删除之后必须检查从删除结点开始到根结点路径上的所有结点的平衡因子。因此删除的代价稍微要大一些。每一次删除操作最多需要O(logN)次旋转。因此，删除操作的时间复杂度为O(logN)+O(logN)=O(2logN)  </p>
-<p>AVL 效率总结 </p>
-<p>查找的时间复杂度维持在O(logN)，不会出现最差情况<br>AVL树在执行每个插入操作时最多需要1次旋转，其时间复杂度在O(logN)左右。</p>
-<p>AVL树在执行删除时代价稍大，执行每个删除操作的时间复杂度需要O(2logN)。</p>
-<h5><span id="b-shu-de-cao-zuo-dai-jie-fen-xi">B树的操作代价分析</span><a href="#b-shu-de-cao-zuo-dai-jie-fen-xi" class="header-anchor">#</a></h5><p>(1) 查找代价： B-Tree作为一个平衡多路查找树(m-叉)。B树的查找分成两种：一种是从一个结点查找另一结点的地址的时候，需要定位磁盘地址(查找地址)，查找代价极高。另一种是将结点中的有序关键字序列放入内存，进行优化查找(可以用折半)，相比查找代价极低。而B树的高度很小，因此在这一背景下，B树比任何二叉结构查找树的效率都要高很多。而且B+树作为B树的变种，其查找效率更高。  </p>
-<p>(2)插入代价： B-Tree的插入会发生结点的分裂操作。当插入操作引起了s个节点的分裂时，磁盘访问的次数为h(读取搜索路径上的节点)＋2s(回写两个分裂出的新节点)＋1（回写新的根节点或插入后没有导致分裂的节点）。因此，所需要的磁盘访问次数是h+2s+1，最多可达到3h+1。因此插入的代价是很大的。  </p>
-<p>(3)删除代价：B-Tree的删除会发生结点合并操作。最坏情况下磁盘访问次数是3h＝（找到包含被删除元素需要h次读访问）+（获取第2至h层的最相邻兄弟需要h-1次读访问）+（在第3至h层的合并需要h-2次写访问）+（对修改过的根节点和第2层的两个节点进行3次写访问）  </p>
-<p>B-Tree效率总结： 由于考虑磁盘储存结构，B树的查找、删除、插入的代价都远远要小于任何二叉结构树(读写磁盘次数的降低)。</p>
-<h4><span id="san-avl-yu-hong-hei-shu-de-dui-bi">三、AVL与红黑树的对比</span><a href="#san-avl-yu-hong-hei-shu-de-dui-bi" class="header-anchor">#</a></h4><p>AVL 和RBT 都是二叉查找树的优化。其性能要远远好于二叉查找树。他们之间都有自己的优势，其应用上也有不同。 </p>
-<p>结构对比： AVL的结构高度平衡，RBT的结构基本平衡。平衡度AVL &gt; RBT.</p>
-<p>查找对比： AVL 查找时间复杂度最好，最坏情况都是O(logN)。  </p>
-<p>RBT 查找时间复杂度最好为O(logN)，最坏情况下比AVL略差。</p>
-<p>插入删除对比： 1. AVL的插入和删除结点很容易造成树结构的不平衡，而RBT的平衡度要求较低。因此在大量数据插入的情况下，RBT需要通过旋转变色操作来重新达到平衡的频度要小于AVL。</p>
-<p>如果需要平衡处理时，RBT比AVL多一种变色操作，而且变色的时间复杂度在O(logN)数量级上。但是由于操作简单，所以在实践中这种变色仍然是非常快速的。</p>
-<p>当插入一个结点都引起了树的不平衡，AVL和RBT都最多需要2次旋转操作。但删除一个结点引起不平衡后，AVL最多需要logN 次旋转操作，而RBT最多只需要3次。因此两者插入一个结点的代价差不多，但删除一个结点的代价RBT要低一些。</p>
-<p>AVL和RBT的插入删除代价主要还是消耗在查找待操作的结点上。因此时间复杂度基本上都是与O(logN) 成正比的。</p>
-<p>总体评价：大量数据实践证明，RBT的总体统计性能要好于平衡二叉树。</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-06-02T02:54:24.000Z">2019-06-02</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    5 分钟 读完 (大约 769 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/06/02/concurrentProgramming/volatile/">volatile可见性、内存屏障</a>
-            
-        </h1>
-        <div class="content">
-            <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>volatile关键字具有许多特性，其中最重要的特性就是保证了用volatile修饰的变量对所有线程的可见性。利用内存屏障使得读写、读读、写写 都不能同时发生, 且不能指令重排。</p>
-<h4 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h4><p>当一个线程修改了变量的值，新的值会立刻同步到主内存当中。而其他线程读取这个变量的时候，也会从主内存中拉取最新的变量值。</p>
-<p>得益于java语言的先行发生原则（happens-before）<br>对于一个volatile变量的写操作先行发生于后面对这个变量的读操作。</p>
-<h4 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h4><p>内存屏障（Memory Barrier）是一种CPU指令。<strong>禁止重排序，控制执行顺序，刷新缓存与获取最新主存数据。</strong></p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/06/02/concurrentProgramming/volatile/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-06-02T02:54:24.000Z">2019-06-02</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    9 分钟 读完 (大约 1325 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/06/02/concurrentProgramming/aqs/">AQS原理解析</a>
-            
-        </h1>
-        <div class="content">
-            <h4><span id="tan-tan-ni-dui-aqs-de-li-jie">谈谈你对AQS的理解</span><a href="#tan-tan-ni-dui-aqs-de-li-jie" class="header-anchor">#</a></h4><p>AQS是JUC(java.util.concurrent)中很多同步组件的构建基础，简单来讲，它内部实现主要是状态变量state和一个FIFO队列来完成，同步队列的头结点是当前获取到同步状态的结点，获取同步状态state失败的线程，会被构造成一个结点（或共享式或独占式）加入到同步队列尾部（采用自旋CAS来保证此操作的线程安全），随后线程会阻塞；释放时唤醒头结点的后继结点，使其加入对同步状态的争夺中。</p>
-<h5><span id="aqs-de-nei-bu-shi-xian">AQS的内部实现</span><a href="#aqs-de-nei-bu-shi-xian" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/1524404680870b808dc51a9.jpeg" alt></p>
 <ul>
-<li>state 资源状态</li>
-<li>exclusiveOwnerThread 持有资源的线程</li>
-<li>CLH 同步等待队列。</li>
+<li><a href="#redis-zhi-chi-de-ji-chu-shu-ju-lei-xing">- redis支持的基础数据类型</a></li>
+<li><a href="#redis-zhi-chi-de-dui-xiang-ji-shi-xian-fang-shi">- redis支持的对象及实现方式</a></li>
+<li><a href="#rediis-wei-shi-me-kuai">- rediis 为什么快</a></li>
+<li><a href="#redis-de-guo-qi-shan-chu-ce-lue">- redis的过期删除策略</a></li>
+<li><a href="#tiao-biao">- 跳表</a></li>
+<li><a href="#redis-de-nei-cun-tao-tai-ji-zhi">- redis的内存淘汰机制</a></li>
+<li><a href="#ru-guo-redis-you-re-dian-key-zen-me-jie-jue">- 如果redis有热点key怎么解决</a></li>
+<li><a href="#redis-huan-cun-ji-chuan-huan-cun-chuan-tou-huan-cun-xue-beng-zen-me-jie-jue">- redis缓存击穿、缓存穿透、缓存雪崩怎么解决</a></li>
+<li><a href="#redis-zhi-xing-yi-tiao-ming-ling-de-guo-cheng">- redis执行一条命令的过程</a></li>
+<li><a href="#select-epoll">- select epoll</a></li>
+<li><a href="#redis-zhu-cong-tong-bu-guo-cheng">- redis主从同步过程</a></li>
+<li><a href="#redis-zhu-cong-gu-zhang-zhuan-yi-failover-sentinel-raft-xie-yi">- redis主从 故障转移 failover sentinel Raft协议</a></li>
+<li><a href="#redis-gao-ke-yong">- redis高可用</a></li>
+<li><a href="#rdb-he-aof">- RDB 和 AOF</a></li>
+<li><a href="#aof-chong-xie-ji-zhi">- AOF重写机制</a></li>
 </ul>
-<p>AQS维护一个共享资源state，内置的同步队列由一个一个的Node结点组成，每个Node结点维护一个prev引用和next引用，分别指向自己的前驱和后继结点。</p>
-<p>AQS维护两个指针，分别指向队列头部head和尾部tail</p>
-<h5><span id="ji-cheng-zi-aqs-de-chang-jian-lei">继承自AQS的常见类</span><a href="#ji-cheng-zi-aqs-de-chang-jian-lei" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG33.jpeg" alt></p>
-<p>CountDownLatch、ReentrantLock、Semaphore等</p>
-<h5><span id="aqs-de-liang-chong-shi-xian-fang-shi">AQS的两种实现方式</span><a href="#aqs-de-liang-chong-shi-xian-fang-shi" class="header-anchor">#</a></h5><p>独占式&amp;共享式, 这样方便使用者实现不同类型的同步组件，独占式如ReentrantLock，共享式如Semaphore，CountDownLatch，组合式的如ReentrantReadWriteLock。</p>
-<p>AQS定义的以下可重写的方法：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">独占式获取同步状态，试着获取，成功返回true，反之为false</span><br><span class="line">protected boolean tryAcquire(int arg) </span><br><span class="line"></span><br><span class="line">独占式释放同步状态，等待中的其他线程此时将有机会获取到同步状态</span><br><span class="line">protected boolean tryRelease(int arg) </span><br><span class="line">  </span><br><span class="line">共享式获取同步状态，返回值大于等于0，代表获取成功；反之获取失败</span><br><span class="line">protected int tryAcquireShared(int arg) </span><br><span class="line"></span><br><span class="line">共享式释放同步状态，成功为true，失败为false</span><br><span class="line">protected boolean tryReleaseShared(int arg) </span><br><span class="line"></span><br><span class="line">是否在独占模式下被线程占用</span><br><span class="line">protected boolean isHeldExclusively()</span><br></pre></td></tr></table></figure>
+<!-- tocstop -->
 
-<p><strong>独占式</strong></p>
-<p>1.tryAcquire方法尝试获取锁，如果成功就返回，如果不成功，走到2.</p>
-<p>2.把当前线程和等待状态信息构造成一个Node节点，并将结点放入同步队列的尾部</p>
-<p>3.该Node结点在队列中尝试获取同步状态，若获取不到，则阻塞结点线程，直到被前驱结点唤醒或者被中断.</p>
-<p>以ReentrantLock为例，state初始化为0，表示未锁定状态。A线程lock()时，会调用tryAcquire()独占该锁并将state+1。此后，其他线程再tryAcquire()时就会失败，直到A线程unlock()到state=0（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，A线程自己是可以重复获取此锁的（state会累加），这就是可重入的概念。但要注意，获取多少次就要释放多么次，这样才能保证state是能回到零态的</p>
-<p>自我实现独占锁示例，待重写方法提供更新state等操作.</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> java.util.concurrent.locks.AbstractQueuedSynchronizer;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyLock</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Sync sync = <span class="hljs-keyword">new</span> Sync();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sync.acquire(<span class="hljs-number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unlock</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sync.release(<span class="hljs-number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isLocked</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> sync.isHeldExclusively();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Sync</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractQueuedSynchronizer</span> </span>&#123;</span><br><span class="line">        <span class="hljs-meta">@Override</span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryAcquire</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            <span class="hljs-comment">//首先判断状态是否等于=0,如果状态==0，就将status设置为1</span></span><br><span class="line">            <span class="hljs-keyword">if</span> (compareAndSetState(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>)) &#123;</span><br><span class="line">                <span class="hljs-comment">//将当前线程赋值给独占模式的onwer</span></span><br><span class="line">                setExclusiveOwnerThread(Thread.currentThread());</span><br><span class="line">                <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-meta">@Override</span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryRelease</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (getState() == <span class="hljs-number">0</span>) &#123;</span><br><span class="line">                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalMonitorStateException();</span><br><span class="line">            &#125;</span><br><span class="line">            setExclusiveOwnerThread(<span class="hljs-keyword">null</span>);</span><br><span class="line">            setState(<span class="hljs-number">0</span>);</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-meta">@Override</span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isHeldExclusively</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> getState() == <span class="hljs-number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
 
-<p><strong>共享式</strong></p>
-<p>CountDownLatch:<br>任务分为N个子线程去执行，state也初始化为N（注意N要与线程个数一致）。这N个子线程是并行执行的，每个子线程执行完后countDown()一次，state会CAS减1。等到所有子线程都执行完后(即state=0)，会unpark()主调用线程，然后主调用线程就会从await()函数返回，继续后余动作。</p>
-<p>Semaphore:<br>AQS通过state值来控制对共享资源访问的线程数，有线程请求同步状态成功state值减1，若超过共享资源数量获取同步状态失败，则将线程封装共享模式的Node结点加入到同步队列等待。有线程执行完任务释放同步状态后，state值会增加1，同步队列中的线程才有机会获得执行权。公平锁与非公平锁不同在于公平锁申请获取同步状态前都会先判断同步队列中释放存在Node，若有则将当前线程封装成Node结点入队，从而保证按FIFO的方式获取同步状态，而非公平锁则可以直接通过竞争获取线程执行权。</p>
-<p>一般来说，自定义同步器要么是独占方法，要么是共享方式，他们也只需实现tryAcquire-tryRelease、tryAcquireShared-tryReleaseShared中的一种即可。但AQS也支持自定义同步器同时实现独占和共享两种方式，如ReentrantReadWriteLock。</p>
+
+<h3><span id="redis-zhi-chi-de-ji-chu-shu-ju-lei-xing">- redis支持的基础数据类型</span><a href="#redis-zhi-chi-de-ji-chu-shu-ju-lei-xing" class="header-anchor">#</a></h3><p>SDS （Simple Dynamic String）是 Redis 最基础的数据结构。直译过来就是”简单的动态字符串“。<br>链表：自定义双向链表：listNode<br>跳跃表：skipList. 链表的一种，是一种利用空间换时间的数据结构。跳表平均支持 O(logN)，最坏O(N)复杂度的查找。<br>压缩链表：为了尽可能节约内存设计出来的双向链表。<br>字典： hash<br>int, intset: 数字集合</p>
+<h3><span id="redis-zhi-chi-de-dui-xiang-ji-shi-xian-fang-shi">- redis支持的对象及实现方式</span><a href="#redis-zhi-chi-de-dui-xiang-ji-shi-xian-fang-shi" class="header-anchor">#</a></h3><p><strong>String</strong></p>
+<p>最常规的get/set操作，value可以是数字和string<br>    一般做一些复杂的计数功能的缓存<br>sds</p>
+<p>string类型控制在10KB以内，hash、list、set、zset元素个数不要超过5000</p>
+<p><strong>hash</strong></p>
+<p>value存放的是结构化的对象<br>比较方便的就是操作其中的某个字段<br>在做单点登录的时候，就是用这种数据结构存储用户信息，以cookieId作为key，设置30分钟为缓存过期时间，能很好的模拟出类似session的效果</p>
+<p>Redis 的 hash 表 使用 ziplist 和 字典 实现的。<br>键值对的键和值都小于 64 个字节, 键值对的数量小于 512。<br>都满足的时候使用 ziplist，否则使用字典。</p>
+<p><strong>list</strong></p>
+<p>使用List的数据结构，可以做简单的消息队列的功能<br>还有一个是，利用lrange命令，做基于redis的分页功能，性能极佳，用户体验好<br>一个场景，很合适—取行情信息。就也是个生产者和消费者的场景。LIST可以很好的完成排队，先进先出的原则。</p>
+<p>底层是一个 ziplist 或者 linkedlist。<br>当列表对象保存的字符串元素的长度都小于64字节。保存的元素数量小于512个。</p>
+<p><strong>set</strong></p>
+<p>set堆放的是一堆不重复值的集合。所以可以做全局去重的功能<br>为什么不用JVM自带的Set进行去重？因为我们的系统一般都是集群部署，使用JVM自带的Set，比较麻烦，难道为了一个做一个全局去重，再起一个公共服务，太麻烦了<br>另外，就是利用交集、并集、差集等操作，可以计算共同喜好，全部的喜好，自己独有的喜好等功能</p>
+<p>Redis 的集合底层是一个 intset 或者 一个字典（hashtable）。<br>这个比较容易理解：<br>当集合都是整数且不超过512个的时候，就使用intset。<br>剩下都是用字典。</p>
+<p><strong>zset (sorted set)</strong></p>
+<p>sorted set多了一个权重参数score,集合中的元素能够按score进行排列。可以做排行榜应用，取TOP N操作。</p>
+<p>Redis 的有序集合使用 ziplist 或者 skiplist 实现的。<br>元素小于 128 个<br>每个元素长度 小于 64 字节。<br>同时满足以上条件使用ziplist，否则使用skiplist。</p>
+<h3><span id="rediis-wei-shi-me-kuai">- rediis 为什么快</span><a href="#rediis-wei-shi-me-kuai" class="header-anchor">#</a></h3><p>官方给出的数字是读写性能可以打到10W/秒  </p>
+<ol>
+<li>Redis所有数据都是放在内存中的</li>
+<li>Redis使用了单线程架构，预防了多线程可能产生的竞争问题</li>
+<li>Redis的IO多路复用，实现Reactor模型</li>
+</ol>
+<h3><span id="redis-de-guo-qi-shan-chu-ce-lue">- redis的过期删除策略</span><a href="#redis-de-guo-qi-shan-chu-ce-lue" class="header-anchor">#</a></h3><p>定时删除,用一个定时器来负责监视key,过期则自动删除。虽然内存及时释放，但是十分消耗CPU资源。在大并发请求下，CPU要将时间应用在处理请求，而不是删除key,因此没有采用这一策略.</p>
+<p>定期删除，redis默认每个100ms检查，是否有过期的key,有过期key则删除。需要说明的是，redis不是每个100ms将所有的key检查一次，而是随机抽取进行检查(如果每隔100ms,全部key进行检查，redis岂不是卡死)。因此，如果只采用定期删除策略，会导致很多key到时间没有删除</p>
+<p>于是，惰性删除派上用场。也就是说在你获取某个key的时候，redis会检查一下，这个key如果设置了过期时间那么是否过期了？如果过期了此时就会删除。</p>
+<h3><span id="tiao-biao">- 跳表</span><a href="#tiao-biao" class="header-anchor">#</a></h3><p><a href="https://blog.csdn.net/qq_34412579/article/details/101731935" target="_blank" rel="noopener">https://blog.csdn.net/qq_34412579/article/details/101731935</a></p>
+<h3><span id="redis-de-nei-cun-tao-tai-ji-zhi">- redis的内存淘汰机制</span><a href="#redis-de-nei-cun-tao-tai-ji-zhi" class="header-anchor">#</a></h3><p>在Redis内存使用达到设定上限时，触发满容淘汰策略释放内存</p>
+<p>Redis 目前提供8种策略：</p>
+<p>volatile-lru：从已设置过期时间的数据集中挑选最近最少使用的数据淘汰 </p>
+<p>volatile-random：从已设置过期时间的数据集中任意选择数据淘汰  </p>
+<p>volatile-lfu：从已设置过期时间的数据集中挑选最不经常使用的数据淘汰  </p>
+<p>volatile-ttl：从已设置过期时间的数据集中挑选将要过期的数据淘汰  </p>
+<p>allkeys-lru：当内存不足以容纳新写入数据时，在键空间中，移除最近最少使用的key（这个是最常用的） </p>
+<p>allkeys-random：从数据集中任意选择数据淘汰 </p>
+<p>allkeys-lfu：当内存不足以容纳新写入数据时，在键空间中，移除最不经常使用的key  </p>
+<p>no-eviction：禁止驱逐数据，也就是说当内存不足以容纳新写入数据时，新写入操作会报错。这个应该没人使用吧！  </p>
+<h3><span id="ru-guo-redis-you-re-dian-key-zen-me-jie-jue">- 如果redis有热点key怎么解决</span><a href="#ru-guo-redis-you-re-dian-key-zen-me-jie-jue" class="header-anchor">#</a></h3><p>本地缓存, 拆分：eg: 按日期拆分、根据业务拆分</p>
+<h3><span id="redis-huan-cun-ji-chuan-huan-cun-chuan-tou-huan-cun-xue-beng-zen-me-jie-jue">- redis缓存击穿、缓存穿透、缓存雪崩怎么解决</span><a href="#redis-huan-cun-ji-chuan-huan-cun-chuan-tou-huan-cun-xue-beng-zen-me-jie-jue" class="header-anchor">#</a></h3><p><strong>缓存穿透</strong></p>
+<p>定义: 访问一个<strong>不存在的key</strong>，缓存不起作用，请求会穿透到DB，流量大时DB会挂掉。</p>
+<p>解决方案：</p>
+<ol>
+<li>缓存空值 （值少时）</li>
+<li>布隆过滤器， 特性: 没有的肯定没有，有的不一定有</li>
+</ol>
+<p><strong>缓存击穿</strong></p>
+<p>定义：<strong>并发性,一个存在的key，在缓存过期的一刻</strong>，同时有<strong>大量的并发请求</strong>，这些请求都会击穿到DB，造成瞬时DB请求量大、压力骤增。</p>
+<p>解决方案：</p>
+<ol>
+<li>分布式锁，在访问key之前，采用分布式锁SETNX（set if not exists）来设置另一个短期key来锁住当前key的访问，访问结束再删除该短期key</li>
+<li>双重缓存，设置不同过期，其实同时解决了key过热 和 缓存击穿问题，如果更新的操作确实很耗时，返回的有损请求比较多，那确实需要双重缓存了，再放一份到本地、分布式缓存的另一个key</li>
+</ol>
+<p><strong>缓存雪崩</strong></p>
+<p>定义：<strong>大量的key</strong>设置了相同的过期时间，或者某台服务器宕机，导致大量缓存在<strong>同一时刻全部失效</strong>，造成瞬时DB请求量大、压力骤增，引起雪崩。</p>
+<p>解决方案：</p>
+<ol>
+<li>提前预防，主从加集群，主从可以一个实例挂了，另一个可以顶上。集群数据分片，即使一个分片上的主从都挂了，打到db的量也不会是全部</li>
+<li>将key的过期时间设置时添加一个随机时间，分散过期时间</li>
+<li>如果是热点key，可以加分布式锁，减少并发量</li>
+<li>二级缓存（本地缓存），减少db压力</li>
+</ol>
+<p>击穿是单个，必定是热点key，雪崩是很多，不一定是热点key，对应的解决方案也有不一样的地方，雪崩有一个设置过期时间加随机数，雪崩用二级缓存比较好使，但击穿就没太大必要</p>
+<h3><span id="redis-zhi-xing-yi-tiao-ming-ling-de-guo-cheng">- redis执行一条命令的过程</span><a href="#redis-zhi-xing-yi-tiao-ming-ling-de-guo-cheng" class="header-anchor">#</a></h3><p>整体：  </p>
+<ol>
+<li>第一步是建立连接阶段，响应了socket的建立，并且创建了client对象；</li>
+<li>第二步是处理阶段，从socket读取数据到输入缓冲区，然后解析并获得命令，执行命令并将返回值存储到输出缓冲区中；</li>
+<li>第三步是数据返回阶段，将返回值从输出缓冲区写到socket中，返回给客户端，最后关闭client</li>
+</ol>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis/22.png" alt></p>
+<p>细节：  </p>
+<ol>
+<li>客户端向服务端发起建立 socket 连接的请求，那么监听套接字将产生 AE_READABLE 事件，触发连接应答处理器执行。处理器会对客户端的连接请求进行应答，然后创建客户端套接字，以及客户端状态，并将客户端套接字的 AE_READABLE 事件与命令请求处理器关联。</li>
+<li>客户端建立连接后，向服务器发送命令，那么客户端套接字将产生 AE_READABLE 事件，触发命令请求处理器执行，处理器读取客户端命令，然后传递给相关程序去执行。</li>
+<li>执行命令获得相应的命令回复，为了将命令回复传递给客户端，服务器将客户端套接字的 AE_WRITEABLE 事件与命令回复处理器关联。当客户端试图读取命令回复时，客户端套接字产生 AE_WRITEABLE 事件，触发命令回复处理器将命令回复全部写入到套接字中</li>
+</ol>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis/33.png" alt></p>
+<p>个人理解：  </p>
+<ol>
+<li>所有事件都是注册在一个aeEventLoop上，aeEventLoop里面是事件数组  </li>
+<li>事件监听的是socket的文件描述符，socket分server和client，连接事件监听serversocket, 建立client之后注册读事件监听clientsocket, 执行完之后注册写事件监听clientsocket  </li>
+<li>每个client有个输入输出缓冲区方便数据就绪<br>关键点就是他娘的用了IO多路复用，提升执行效率  </li>
+</ol>
+<h3><span id="select-epoll">- select epoll</span><a href="#select-epoll" class="header-anchor">#</a></h3><p>select 是轮询所有的文件描述符<br>epoll 是走回调，能支持的数量更多，效率更高</p>
+<h3><span id="redis-zhu-cong-tong-bu-guo-cheng">- redis主从同步过程</span><a href="#redis-zhu-cong-tong-bu-guo-cheng" class="header-anchor">#</a></h3><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis/11.png" alt></p>
+<p>对于master</p>
+<ol>
+<li>首先slave向master发起sync同步命令，这一步在slave启动后触发，master被动的将新的salve加入到自己的主备复制集群。</li>
+<li>master在收到sync后开启BGSAVE命令，BGSAVE是Redis的一种全量模式的持久化机制</li>
+<li>BGSAVE完成后，master将快照信息发给salve。</li>
+<li>发送期间，master收到来自客户端新的写命令，除了正常的相应之外，都存入一份back-log队列</li>
+<li>快照信息发送完成后，master继续发送backlog命令</li>
+<li>backlog发送完成后，后续的写操作同时发送给salve，保持实时的异步复制</li>
+</ol>
+<p>对于slave</p>
+<ol>
+<li>发送完sync命令后，继续对外提供服务。</li>
+<li>开始接收master的快照信息，此时，slave将现有数据清空，并将master快照写入内存</li>
+<li>接收backlog内容并执行，也就是回放，期间对外提供读请求</li>
+<li>继续接收后续来自master的命令副本，并继续回放，保持数据和master数据一致。</li>
+</ol>
+<p>如果有多个slave节点并发发送sync命令给master，企图建立主备关系，只要第二个salve的sync命令发生在master完成BGSAVE之前，第二个salve将收到和第一个salve相同的快照和后续backlog，否则第二个salve的sync将触发master的第二次BGSAVE</p>
+<p>断点续传 (部分重同步)<br>Redis支持PSYNC用于替代SYNC，做到基于断点续传的主备同步协议，master和slave两端通过维护一个offset记录当前已经同步过的命令，slave断开期间，master的客户端命令保存在缓存中，salve重连之后，告知master断开时的最新offset，master则将缓存中大于offset的数据发送给slave。</p>
+<h3><span id="redis-zhu-cong-gu-zhang-zhuan-yi-failover-sentinel-raft-xie-yi">- redis主从 故障转移 failover sentinel Raft协议</span><a href="#redis-zhu-cong-gu-zhang-zhuan-yi-failover-sentinel-raft-xie-yi" class="header-anchor">#</a></h3><p>failover决策<br>当一台master宕机后，要发起failover流程。其中只有一个sentinel节点可以作为failover的发起者，让他作为leader主导选举。<br>Redis的sentinel leader选举机制采用类似raft协议实现这个选举算法。</p>
+<ol>
+<li>sentinelState的epoch变量类似于raft协议中的term（选举回合）</li>
+<li>每一个确认了master“客观不可用”的sentinel节点都会向周围广播自己的参选请求</li>
+<li>每一个收到参选请求的sentinel节点如果还没人向他发送过参选请求，它就将本回合的意向置为第一个参选sentinel并回复他，如果本回合内回复过意向，那么拒绝所有参选请求，并将已有意向回复给参选的的sentinel</li>
+<li>每个发送参选请求的sentinel节点，如果收到了超过一半的意向同意某个的sentinel参选（可能是本人），那么将成为leader，如果回合内进行了长时间还没有选出leader，那么进行下一个回合。</li>
+</ol>
+<p>leader sentinel确定了之后，从所有的slave中依据一定的规则选一个新的master，并告知其他slave连接这个新的master。<br>新master的选举规则</p>
+<ol>
+<li>过滤不健康（主观下线，断线），5秒内没有回复过sentinel节点ping相应，与主节点失联超过<br>down-after-millisecond*10 时间的</li>
+<li>选择slave-priority最高的从节点列表，如果存在返回，否则继续</li>
+<li>选择复制偏移量最大的从节点，</li>
+<li>选择runid最小的从节点</li>
+</ol>
+<p>如果多个回合还没有选出leader sentinel，怎么办？<br>选举过程非常快，一般谁先判断出主观下线谁就是leader</p>
+<h3><span id="redis-gao-ke-yong">- redis高可用</span><a href="#redis-gao-ke-yong" class="header-anchor">#</a></h3><p>高可用（主从、哨兵、集群）</p>
+<h3><span id="rdb-he-aof">- RDB 和 AOF</span><a href="#rdb-he-aof" class="header-anchor">#</a></h3><p>RDB 将数据库的快照（snapshot）以二进制的方式保存到磁盘中。<br>AOF 则以协议文本的方式，将所有对数据库进行过写入的命令（及其参数）记录到 AOF 文件，以此达到记录数据库状态的目的。</p>
+<h3><span id="aof-chong-xie-ji-zhi">- AOF重写机制</span><a href="#aof-chong-xie-ji-zhi" class="header-anchor">#</a></h3><p>what:  创建一个新的 AOF 文件来代替原有的 AOF 文件， 新 AOF 文件和原有 AOF 文件保存的数据库状态完全一样， 但新 AOF 文件的体积小于等于原有 AOF 文件的体积。<br>why: 有些被频繁操作的键， 对它们所调用的命令可能有成百上千、甚至上万条， 如果这样被频繁操作的键有很多的话， AOF 文件的体积就会急速膨胀， 对 Redis 、甚至整个系统的造成影响<br>how:<br>AOF 重写并不需要对原有的 AOF 文件进行任何写入和读取， 它针对的是数据库中键的当前值。</p>
+<p>重写使用子进程<br>子进程进行 AOF 重写期间，主进程可以继续处理命令请求。<br>子进程带有主进程的数据副本，使用子进程而不是线程，可以在避免锁的情况下，保证数据的安全性。</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis/aof%E9%87%8D%E5%86%99.svg" alt></p>
+<p>主进程工作</p>
+<ol>
+<li>处理命令请求。</li>
+<li>将写命令追加到现有的 AOF 文件中。</li>
+<li>将写命令追加到 AOF 重写缓存中。</li>
+</ol>
+<p>当子进程完成 AOF 重写之后， 它会向父进程发送一个完成信号， 父进程在接到完成信号之后， 会调用一个信号处理函数， 并完成以下工作：</p>
+<ol>
+<li>将 AOF 重写缓存中的内容全部写入到新 AOF 文件中。</li>
+<li>对新的 AOF 文件进行改名，覆盖原有的 AOF 文件。</li>
+</ol>
 
         </div>
         
@@ -746,17 +664,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-31T02:54:24.000Z">2019-05-31</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1215 个字)
+                    9 分钟 读完 (大约 1356 个字)
                 </span>
                 
                 
@@ -765,21 +679,744 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/31/concurrenthashmap/concurrenthashmap/">hashtable and concurrenthashmap1.7、1.8</a>
+                <a class="has-link-black-ter" href="/2021/07/29/interview/other/">其他</a>
             
         </h1>
         <div class="content">
-            <p>hashtable&amp;concurrenthashmap1.7&amp;1.8 总结</p>
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie">- tcp如何保证可靠传输，tcp、udp区别</a></li>
+<li><a href="#wei-shi-me-yao-san-ci-wo-shou-si-ci-hui-shou">- 为什么要三次握手，四次挥手</a></li>
+<li><a href="#si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl">- 四次挥手的closewait, timewait分别在哪，为什么timewait要等待2msl</a></li>
+<li><a href="#she-ji-mo-shi-liu-da-yuan-ze">- 设计模式六大原则</a></li>
+<li><a href="#xian-shang-xu-yao-guan-zhu-na-xie-ji-qi-can-shu">- 线上需要关注哪些机器参数</a></li>
+<li><a href="#you-na-xie-chu-li-xian-shang-wen-ti-de-jing-yan">- 有哪些处理线上问题的经验</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie">- tcp如何保证可靠传输，tcp、udp区别</span><a href="#tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie" class="header-anchor">#</a></h3><p>tcp与udp区别</p>
+<ol>
+<li>是否建立连接， udp不建立连接，tcp三次握手   </li>
+<li>是否可靠，udp不需要确认， tcp会有确认、重传、窗口、拥塞等机制   </li>
+<li>应用场景， udp一般用于即时通信，qq，直播； tcp用于文件传输，收发邮件、登录等  </li>
+</ol>
+<h3><span id="wei-shi-me-yao-san-ci-wo-shou-si-ci-hui-shou">- 为什么要三次握手，四次挥手</span><a href="#wei-shi-me-yao-san-ci-wo-shou-si-ci-hui-shou" class="header-anchor">#</a></h3><p>为什么要三次握手<br>    确认双发收发功能都正常   </p>
+<p>为什么要四次挥手<br>    确认双方都没有数据再发送</p>
+<h3><span id="si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl">- 四次挥手的closewait, timewait分别在哪，为什么timewait要等待2msl</span><a href="#si-ci-hui-shou-de-closewait-timewait-fen-bie-zai-na-wei-shi-me-timewait-yao-deng-dai-2msl" class="header-anchor">#</a></h3><p>2MSL是两倍的MSL(Maximum Segment Lifetime)，MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间</p>
+<p>如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接</p>
+<p>TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK</p>
+<h3><span id="she-ji-mo-shi-liu-da-yuan-ze">- 设计模式六大原则</span><a href="#she-ji-mo-shi-liu-da-yuan-ze" class="header-anchor">#</a></h3><p>其中设计模式的SOLID原则(Principles)如下： </p>
+<p>单一职责原则（Single Responsibility）<br>开闭原则（Open Closed）<br>里氏代换原则（Liskov Substitution）<br>接口隔离原原则（Interface Segregation）<br>依赖倒置原则（Dependency Inversion）   </p>
+<h3><span id="xian-shang-xu-yao-guan-zhu-na-xie-ji-qi-can-shu">- 线上需要关注哪些机器参数</span><a href="#xian-shang-xu-yao-guan-zhu-na-xie-ji-qi-can-shu" class="header-anchor">#</a></h3><p>指标                      阈值</p>
+<p>cpu.iowait   所有进程因为等待IO完成而被阻塞，导致CPU idle所花的时间的百分比</p>
+<p>disk.io.util   如果这个指标较高，代表io遇到瓶颈</p>
+<p>cpu.busy                           60</p>
+<p>cpu.load                 1以下比较好，1.5 会引起程序响应时间变慢，应触发报警</p>
+<p>mem.swapused   一般情况下使用swap，代表物理内存已不足，当系统没有足够物理内存来应付所有请求的时候就会用到 swap 设备。使用 swap 的代价非常大，如果系统没有物理内存可用，就会频繁 swapping，如果 swap 设备和程序正要访问的数据在同一个文件系统上，那会碰到严重的 IO 问题，最终导致整个系统迟缓。</p>
+<p>cms gc后的老年代大小 </p>
+<p>jvm.fullgc.count                 5</p>
+<p>jvm.yonggc.count             70</p>
+<p>jvm.yonggc.meantime(一分钟内的每次年轻代gc的平均时间)            500</p>
+<h3><span id="you-na-xie-chu-li-xian-shang-wen-ti-de-jing-yan">- 有哪些处理线上问题的经验</span><a href="#you-na-xie-chu-li-xian-shang-wen-ti-de-jing-yan" class="header-anchor">#</a></h3><p>实际是在考雪崩，限流，降级等措施</p>
+<p>xxx ES导致雪崩，bc端未分离，b端下游超时引发的血案<br>事件: 调用ES持续大量超时，服务bc端都在调用，b端超时时间设置长，占用了很多线程资源，影响C端服务响应，造成C端上游雪崩，影响二十度个服务<br>(调ES超时的原因？查询请求的返回响应太大了)<br>事中: 无熔断降级错误，现上线加熔断ES降级，<br>(降级措施是？返回有损服务，创建活动失败)<br>事后: bc端分离，对下游添加熔断降级，根本上还是要让es调用查询粒度更小一点，减少es调用的返回量</p>
+<p>xxx 慢查询引发的血案1<br>事件：下单的时候先去删除用户未支付订单并归还库存，但未支付订单表竟然没有给orderid添加索引，导致delete操作锁全表，在当天有大量未支付订单，导致下单接口越来越慢，最终把订单db中的连接数占满，db的整体不可用。</p>
+<p>分析原因: DB的客户端在超时的时候会断开连接，但DB服务器还是在执行该操作，或阻塞着，客户端新的调用再申请新的连接，直到把DB的连接池打满，DB完全阻塞在这个查询上，导致不可用。</p>
+<p>事前： 1. 学习数据库知识，尤其是索引和锁相关 2. 定时检查服务的索引是否覆盖全  3. 提前做好限流熔断等降级措施<br>事中： 1. 限流降级， 2. 问题排查，数据库压力没有增加很多，但数据库响应缓慢，应该分析出是慢查询的原因，当很多的慢sql出来时<br>事后： 1. 对服务整体重新排查    </p>
+<p>xxx 慢查询引发问题，慢sql导致mq积压<br>事件: 新表去更新库存，但索引创建的时候没覆盖全场景，后续开发有sql未走到索引，某个周六出现MQ积压告警，看监控发现是慢sql更新，有条update语句未使用到索引，导致更新时锁全表<br>事中: 临时增加索引<br>事后: 检查了新表所有设计的sql没有未使用索引的情况。<br>（慢查询是有可能占用过多的DB资源，把整个DB打垮）（是有可能出现卖超的）</p>
+
         </div>
         
         
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/31/concurrenthashmap/concurrenthashmap/#more">阅读更多</a>
-                </div>
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    1 小时 读完 (大约 9653 个字)
+                </span>
+                
+                
             </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/07/29/interview/juc/">java并发</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#java-bing-fa-rong-qi-you-na-xie">- Java并发容器有哪些</a></li>
+<li><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</a></li>
+<li><a href="#zu-sai-dui-lie-yuan-li">- 阻塞队列原理</a></li>
+<li><a href="#tan-tan-dui-concurrenthashmap-de-liao-jie">- 谈谈对ConcurrentHashMap的了解</a></li>
+<li><a href="#tan-tan-dui-java-nei-cun-mo-xing-de-liao-jie">- 谈谈对Java内存模型的了解</a></li>
+<li><a href="#volatile-yuan-li">- volatile原理</a></li>
+<li><a href="#java-de-le-guan-suo-cas-suo-yuan-li">- java的乐观锁CAS锁原理</a></li>
+<li><a href="#sychronized-shi-yong-ji-yuan-li">- sychronized使用及原理</a></li>
+<li><a href="#suo-sheng-ji">- 锁升级</a></li>
+<li><a href="#sychronized-que-dian">- sychronized缺点</a></li>
+<li><a href="#sychronized-reentranlock-de-qu-bie">- sychronized reentranlock 的区别</a></li>
+<li><a href="#sychronized-he-valotile-de-qu-bie">- sychronized 和 valotile 的区别</a></li>
+<li><a href="#ruo-yin-yong">- 弱引用</a></li>
+<li><a href="#threadlocal-yuan-li">- ThreadLocal原理</a></li>
+<li><a href="#aqs-tong-bu-qi-yuan-li-tryacquire-de-guo-cheng">- AQS同步器原理？tryAcquire的过程？</a></li>
+<li><a href="#countdownlatch-semaphore-cyclicbarrier-han-yi-ji-shi-xian-yuan-li">- CountDownLatch、Semaphore、CyclicBarrier含义及实现原理</a><ul>
+<li><a href="#java-yi-bu">java异步</a></li>
+</ul>
+</li>
+<li><a href="#callable-future-futuretask-completablefuture-fen-bie-shi-shi-me">- Callable、Future、FutureTask、CompletableFuture分别是什么</a><ul>
+<li><a href="#xian-cheng-chi">线程池</a></li>
+</ul>
+</li>
+<li><a href="#xian-cheng-chi-de-chuang-jian-shi-yong-you-na-xie-can-shu">- 线程池的创建使用、有哪些参数</a></li>
+<li><a href="#xian-cheng-chi-de-yuan-li">- 线程池的原理</a></li>
+<li><a href="#zen-me-pei-zhi-can-shu">- 怎么配置参数</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="java-bing-fa-rong-qi-you-na-xie">- Java并发容器有哪些</span><a href="#java-bing-fa-rong-qi-you-na-xie" class="header-anchor">#</a></h3><p>concurrentHashmap:   线程安全的HashMap, Node数组+链表 + 红黑树<br>copyonwriteArrayList:   线程安全的List，在读多写少的场合性能非常好<br>concurrentLinkedQueue:   高效的并发队列，使用链表实现。<br>可以看做一个线程安全的 LinkedList<br>BlockingQueue(接口)<br>1 ArrayBlockingQueue:  有界队列实现类 底层Object数组<br>2 LinkedBlockingQueue: 单向链表<br>3 PriorityBlockingQueue: 支持优先级的无界阻塞队列 </p>
+<h3><span id="arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li">- ArrayBlockingQueue和LinkedBlockingQueue的实现原理</span><a href="#arrayblockingqueue-he-linkedblockingqueue-de-shi-xian-yuan-li" class="header-anchor">#</a></h3><p><strong>ArrayBlockingQueue是object数组实现的线程安全的有界阻塞队列</strong><br>1.数组实现：使用数组实现循环队列<br>2.有界：内部为数组实现，一旦创建完成，数组的长度不能再改变<br>3.线程安全：使用了 ReentrantLock 和 两个 condition(notEmpty, notFull) 来保证线程安全<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
+<p><strong>LinkedBlockingQueue是一个单向链表实现的阻塞队列</strong><br>1.链表实现： head是链表的表头， last是链表的表尾。取出数据时，都是从表头head处取出，出队； 新增数据时，都是从表尾last处插入，入队。<br>2.可有界可无界：可以在创建时指定容量大小，防止队列过度膨胀。如果未指定队列容量，默认容量大小为Integer.MAX_VALUE<br>3.线程安全：使用了 两个 ReentrantLock 和 两个 condition，putLock是插入锁，takeLock是取出锁；notEmpty是“非空条件”，notFull是“未满条件”。通过它们对链表进行并发控制<br>4.阻塞队列：先进先出。当取出元素的时候，若队列为空，wait直到队列非空（notEmpty）；当存储元素的时候，若队列满，wait直到队列有空闲（notFull）</p>
+<p><strong>PriorityBlockingQueue</strong><br>PriorityBlockingQueue(具有优先级的无限阻塞队列). 是一个支持优先级的无界阻塞队列，内部结构是数组实现的二叉堆<br>线程安全的排序。其数据结构是二叉堆(分为最大堆和最小堆)<br>二叉堆本质是一颗二叉树：<br>二叉堆是一种特殊的堆，二叉堆是完全二叉树或者是近似完全二叉树<br>如果节点在数组中的位置是i(i是节点在数组中的下标), 则i节点对应的子节点在数组中的位置分别是 2i + 1 和 2i +2， 同时i的父节点的位置为 (i-1)/2（i从0 开始）<br>通过一次上浮可以把符合条件的元素放到堆顶，反复进行上浮操作，可以将整个堆进行有序化。下沉操作可以把替代堆顶后的元素放到该放的位置，同时堆顶元素是符合条件的元素（前提是二叉堆已经是有序的）</p>
+<p><strong>SynchronousQueue</strong><br>SynchronousQueue (SynchronousQueue是一个不存储元素的阻塞队列。每一个put操作必须等待一个take操作，否则不能继续添加元素), 每一个线程的入队操作必须等待另一个线程相应的出队（take）操作，相反，每一个线程的出队操作必须等待另一个线程相应的入队操作。</p>
+<p>Executors.newCachedThreadPool() 使用的SynchronousQueue， 实际就不想往队列里放元素，就是想有多少任务就生成多少线程去做。线程拉满，不做任务堆积。 但newCachedThreadPool(). maxThreadSize 是Integer.MAX_VALUE, 容易内存溢出。</p>
+<p><strong>白话</strong><br>ArrayBlockingQueue和LinkedBlockingQueue都是线程安全的阻塞队列。 ArrayBlockingQueue底层是数组实现，是有界的队列，线程安全是使用一个 ReentrantLock 和 两个 condition实现的。 LinkedBlockingQueue底层是单向链表实现，是可有界可无界的队列，线程安全是使用两个 ReentrantLock 和 两个 condition实现的。</p>
+<p>为什么ArrayBlockingQueue是一个ReentrantLock，LinkedBlockingQueue是两个？<br>ArrayBlockingQueue在插入、取出的时候，都会对index做变更，有并发问题，需要同步处理。<br>LinkedBlockingQueue从队头取出，从队尾插入，链表结构所以两种操作可并行。所以用两个lock, 提升并发能力，还用了一个AtomicInteger count; // 记录总数</p>
+<h3><span id="zu-sai-dui-lie-yuan-li">- 阻塞队列原理</span><a href="#zu-sai-dui-lie-yuan-li" class="header-anchor">#</a></h3><p>核心思想就是，何时阻塞：空不让你取，满不让你加。<br>进行操作的方法，在操作前，都必须加锁。<br>主要就是一个 ReentrantLock，和两个由它创建的 Condition：notFull、notEmpty。<br>然后，在take、put、enqueue、dequeue 四个方法里面对这两个信号条件进行控制。</p>
+<h3><span id="tan-tan-dui-concurrenthashmap-de-liao-jie">- 谈谈对ConcurrentHashMap的了解</span><a href="#tan-tan-dui-concurrenthashmap-de-liao-jie" class="header-anchor">#</a></h3><p>1.7   结构： 分段的数组+链表;<br>      并发：分段锁，锁一段数组 segment，默认有16个segment, 并发度只有默认是16<br>      线程安全: segment上锁，继承ReentrantLock可重入锁</p>
+<p>1.8   结构： Node数组+链表 + 红黑树;<br>      并发： 并发控制使用 synchronized 和 CAS<br>      线程安全: CAS和synchronized来保证并发安全, synchronized只锁定当前链表或红黑二叉树的首节点, 只要hash不冲突，就不会产生并发，效率又提升N倍</p>
+<p>get是怎么做的</p>
+<ol>
+<li>hash。 hashcode高低16位异或得到hash值，(h ^ h &gt;&gt;&gt; 16) &amp; 2147483647;</li>
+<li>桶位节点就是要找节点，直接返回该节点</li>
+<li>如果节点hash值小于0，说明是已迁移的节点或者红黑树bin，调用node.find(), TreeBin 和 ForwardingNode 都继承Node重写find方法</li>
+<li>剩下情况就是链表，遍历判断是否节点存在</li>
+</ol>
+<p>注：ForwordingNode的hash值为-1，红黑树的根结点的hash值为-2。 TreeBin 和 ForwardingNode 都继承Node重写find方法</p>
+<p>put是怎么做的</p>
+<ol>
+<li>hash。 hashcode高低16位异或得到hash值，(h ^ h &gt;&gt;&gt; 16) &amp; 2147483647;</li>
+<li>桶位为空，cas设置新node，U.compareAndSetObject</li>
+<li>如果hash值为-1，则helpTransfer，else 加synchronized锁住头结点，判断是树，调用添加到树中方法，如果是链表，添加到尾端。</li>
+<li>判断是否到了8个，链表变树； 判断size是否到了阈值，触发扩容。size总数增加cas (U.compareAndSetLong)</li>
+</ol>
+<p>resize是怎么做的</p>
+<ol>
+<li>newTable, 大小是旧表的2倍</li>
+<li>头结点加锁，不允许其他线程更改，但可get，</li>
+<li>判断桶中各节点位置，复制一模一样的节点到新表（非直接移过去，还要get），到新表可能在旧桶位也可能在新桶位</li>
+<li>分配结束之后将头结点设置为fwd节点（指向新表）</li>
+</ol>
+<p>白话：线程安全的map。1.7版本是使用分段锁实现的线程安全，segment上加锁，在构建的时候可以设置大小，默认是16，就是并发度默认只有16. 1.8版本的线程安全是用synchronized+cas实现的，使用synchronized锁住链表或红黑树的头结点，使用cas来进行size++和首个节点入桶。1.8的并发度是随着桶位增加而增加的，所以并发效率会随扩容提升很多倍。</p>
+<h3><span id="tan-tan-dui-java-nei-cun-mo-xing-de-liao-jie">- 谈谈对Java内存模型的了解</span><a href="#tan-tan-dui-java-nei-cun-mo-xing-de-liao-jie" class="header-anchor">#</a></h3><p>总结：<br>jmm定义了线程间通信的方式，jmm使用共享内存的方式通信，jmm规范多线程下的执行顺序和多线程下共享变量的可见性问题，规定了一套happens-before规则。</p>
+<p>jmm是为了解决线程间通信问题，线程间通信通常有两种解决方法，共享内存或通知机制， jmm使用了共享内存的方式。<br>jmm定义了一套happens-before规则来规范多线程下的执行顺序和多线程下变量的可见性问题，规则底层是通过禁止部分编译器和处理器的指令重排序实现。<br>happens-before有八个，分别是：<br>程序顺序规则：一个线程中的每个操作，发生在该线程中任意后续操作之前<br>监视器锁规则：对一个锁的解锁，发生在随后对这个锁的加锁之前<br>volatile变量规则：对一个volatile域的写，发生在任意后续对这个volatile域的读之前<br>传递性：如果A发生在B之前，B发生在C之前，那么A一定发生在C之前<br>线程启动规则：Thread对象的start()方法先行发生于此线程的每个一个动作；<br>线程中断规则：对线程interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生；<br>线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回值手段检测到线程已经终止执行；<br>对象终结规则：一个对象的初始化完成先行发生于他的finalize()方法的开始； </p>
+<h3><span id="volatile-yuan-li">- volatile原理</span><a href="#volatile-yuan-li" class="header-anchor">#</a></h3><ol>
+<li>volatile的特征<br>A、禁止指令重排（有例外）<br>B、可见性</li>
+<li>Volatile的内存语义<br>当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存。<br>当读一个volatile变量时，JMM会把线程对应的本地内存置为无效，线程接下来将从主内存中读取共享变量</li>
+<li>Volatile的重排序<br>两个volatile变量操作不能够进行重排序；</li>
+</ol>
+<p>白话：volatile有两个特性，可见性和禁止指令重排序。可见性，当一个线程更新volatile变量后，这个变量会立即写入到主内存中，其他线程读取时会从主内存中读取最新的值。禁止指令重排序，两个对volatile变量的操作不能被重排序，底层是通过内存屏障实现的。</p>
+<h3><span id="java-de-le-guan-suo-cas-suo-yuan-li">- java的乐观锁CAS锁原理</span><a href="#java-de-le-guan-suo-cas-suo-yuan-li" class="header-anchor">#</a></h3><p>CAS英文全称Compare and Swap，直白翻译过来即比较并交换，是一种无锁算法，在不使用锁即没有线程阻塞下实现多线程之间的变量同步，基于处理器的读-改-写原子指令来操作数据，可以保证数据在并发操作下的一致性。</p>
+<p>CAS包含三个操作数：内存位置V，预期值A，写入的新值B。在执行数据操作时，当且仅当V的值等于A时，CAS才会通过原子操作方式用新值B来更新V的值（无论操作是否成功都会返回）。</p>
+<p>CAS的含义是：我认为V的值应该为A，如果是，那么将V的值更新为B，否则不修改并告诉V的值实际为多少</p>
+<p>CAS是怎么获取到预期值的?  通过unsafe类获取到的</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public final int getAndAddInt(Object var1, long var2, int var4) &#123;</span><br><span class="line">   int var5;</span><br><span class="line">   do &#123;</span><br><span class="line">      var5 = this.getIntVolatile(var1, var2);</span><br><span class="line">   &#125; while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));</span><br><span class="line"></span><br><span class="line">   return var5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>CAS修改的值为什么要是volatile? 可见性</p>
+<p>在compareAndSet的操作中，JNI借助CPU指令完成的，属于原子操作，保证多个线程在执行过程中看到同一个变量的修改值<br>unsafe：操作内存内存空间<br>valueOffset：value在内存中的偏移量（把存储单元的实际地址与其所在段的段地址之间的距离称为段内偏移），这里我们可以简单认为是内存地址，在类加载的时候，通过unsafe获取到value的偏移量。<br>value： 顾名思义代表存储值，被volatile修饰，保证在线程间的可见性   </p>
+<p>CAS问题：<br>1.ABA问题。CAS需要在操作值的时候检查内存值是否发生变化，没有发生变化才会更新内存值。但是如果内存值原来是A，后来变成了B，然后又变成了A，那么CAS进行检查时会发现值没有发生变化，但是实际上是有变化的。ABA问题的解决思路就是在变量前面添加版本号，每次变量更新的时候都把版本号加一，这样变化过程就从“A－B－A”变成了“1A－2B－3A”。<br>JDK从1.5开始提供了AtomicStampedReference类来解决ABA问题，具体操作封装在compareAndSet()中。compareAndSet()首先检查当前引用和当前标志与预期引用和预期标志是否相等，如果都相等，则以原子方式将引用值和标志的值设置为给定的更新值。<br>2.循环时间长开销大。CAS操作如果长时间不成功，会导致其一直自旋，给CPU带来非常大的开销。<br>3.只能保证一个共享变量的原子操作。对一个共享变量执行操作时，CAS能够保证原子操作，但是对多个共享变量操作时，CAS是无法保证操作的原子性的。<br>Java从1.5开始JDK提供了AtomicReference类来保证引用对象之间的原子性，可以把多个变量放在一个对象里来进行CAS操作。   </p>
+<p>白话：CAS是Compare and Swap，比较并交换，是一种乐观锁实现线程安全的方式，更加轻量。底层是通过cpu的原子指令实现的比较并替换。使用的时候参数有内存位置，预期值，写入的新值，当通过内存位置拿到的值和预期值相等时，就用新值进行替换，整个操作是原子的，cpu指令保证。</p>
+<h3><span id="sychronized-shi-yong-ji-yuan-li">- sychronized使用及原理</span><a href="#sychronized-shi-yong-ji-yuan-li" class="header-anchor">#</a></h3><ul>
+<li>修饰实例方法：作用于当前对象实例加锁，进入同步代码前要获得 当前对象实例的锁</li>
+<li>修饰静态方法: 也就是给当前类加锁，会作用于类的所有对象实例 ，进入同步代码前要获得 当前 class 的锁。</li>
+<li>修饰代码块: 对应的锁则是，传入的synchoronzed的对象实例。</li>
+</ul>
+<p>synchronized原理<br>对象分为3部分：对象头，对象数据，填充内容。<br>对象头又分为：Mark Word，类型指针、数组长度。<br>synchronized的锁依赖java对象头, 通过对象头中的mark word 和 monitor实现锁机制。<br>mark word主要会记录对象关于锁的信息（偏向锁、轻量锁、重量锁）。Monitor是依赖于底层的操作系统的Mutex Lock（互斥锁）来实现的线程同步。</p>
+<p>其中有两个队列 _EntryList和 _WaitSet，它们是用来保存ObjectMonitor对象列表， _owner指向持有ObjectMonitor对象的线程。<br>当多个线程访问同步代码时，线程会进入_EntryList区，当线程获取对象的monitor后(对于线程获得锁的优先级，还有待考究)进入 _Owner区并且将 _owner指向获得锁的线程(monitor对象被线程持有)， _count++，其他线程则继续在 _EntryList区等待。若线程调用wait方法，则该线程进入 _WaitSet区等待被唤醒。线程执行完后释放monitor锁并且对ObjectMonitor中的值进行复位。</p>
+<p>上面说到synchronized使用的锁都放在对象头里，大概指的就是Mark Word中指向互斥量的指针指向的monitor对象内存地址了。<br>由以上可知为什么Java中每一个对象都可以作为锁对象了。</p>
+<p>白话：<br>sychronized可以使用在实例方法、静态方法和代码块上。<br>synchronized依赖java对象头中的mark word和monitor实现线程同步。mark word会记录对象关于锁的信息（偏向锁、轻量锁、重量锁）。Monitor依赖于底层的操作系统的Mutex Lock（互斥锁）实现的线程同步。<br>synchronized有多种锁类型，偏向锁、轻量锁、重量锁。<br>偏向锁，通过对比Mark Word里存储的锁偏向的线程ID解决加锁问题，最多执行一次CAS操作。<br>升级：当一个线程正持有偏向锁，被另外的线程所访问获取锁失败，偏向锁就会升级为轻量级锁。<br>轻量级锁，线程通过线程栈帧与对象mark word之间的多次CAS操作和自旋，尝试获取轻量级锁。<br>升级：若当前只有一个等待线程，则该线程通过自旋进行等待。但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有第三个来访时，轻量级锁升级为重量级锁。<br>重量级锁：是将除了拥有锁的线程以外的线程都阻塞。依赖操作系统的metex lock, 存在用户态和内核态切换，消耗较大</p>
+<h3><span id="suo-sheng-ji">- 锁升级</span><a href="#suo-sheng-ji" class="header-anchor">#</a></h3><p><strong>偏向锁</strong>通过对比Mark Word里存储的锁偏向的线程ID解决加锁问题，避免执行CAS操作。<br>升级时机：当持有偏向锁的时候，被另外的线程所访问获取锁失败，偏向锁就会升级为轻量级锁。<br><strong>轻量级锁</strong>是通过用CAS操作和自旋来解决加锁问题，避免线程阻塞和唤醒而影响性能。轻量级锁的获取及释放依赖多次CAS原子指令，而偏向锁只需要在置换ThreadID的时候依赖一次CAS原子指令即可。</p>
+<ul>
+<li>先在栈帧中建立一个名为锁记录（Lock Record）的空间，用于存储锁对象目前的Mark Word的拷贝</li>
+</ul>
+<ul>
+<li>拷贝对象头中的Mark Word复制到锁记录中。拷贝成功后，虚拟机将使用CAS操作尝试将对象的Mark Word更新为指向Lock Record的指针，并将Lock Record里的owner指针指向对象的Mark Word。</li>
+<li>如果这个更新动作成功了，那么这个线程就拥有了该对象的锁，并且对象Mark Word的锁标志位设置为“00”，表示此对象处于轻量级锁定状态。<br>升级时机：若当前只有一个等待线程，则该线程通过自旋进行等待。但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有第三个来访时，轻量级锁升级为重量级锁。</li>
+<li><em>重量级锁*</em>是将除了拥有锁的线程以外的线程都阻塞。依赖操作系统的metex lock, 存在用户态和内核态切换，消耗较大。</li>
+</ul>
+<h3><span id="sychronized-que-dian">- sychronized缺点</span><a href="#sychronized-que-dian" class="header-anchor">#</a></h3><ol>
+<li>效率低:锁的释放情况少,试图获得锁时不能设定超时,不能中断一个正在试图获得所得线程。</li>
+<li>使用synchroinzed修饰一个代码块时，如果一个线程获取了对应的锁，并执行改代码块，其他线程只能一直等待。等待获取锁的线程释放锁，但是获取锁的线程执行释放锁只有2种方式（要么是执行完该代码块，正常释放。要么是.线程执行发生异常，JVM自动释放）一旦这个锁被别人获取，如果我还想获取，那么我只能选择等待或阻塞，只得到别的线程释放，如果别人永远不释放锁，那我只能永远等待下去。不能设定超时等待，无法做到响应中断。</li>
+<li>不够灵活（多个线程只是做读写操作，线程直接就发生冲突。）</li>
+<li>非公平。使用synchroinzd，非公平锁使一些线程处于饥饿状态，对于一些线程，可能长期无法抢占到锁。对于某些特定的业务，必须使用公平锁，这时synchronized无法满足要求</li>
+<li>无法知道是否成功获取到锁</li>
+</ol>
+<p>白话:</p>
+<ol>
+<li>无有限等待。没有tryLock(带时间参数)</li>
+<li>不可中断。没有lockInterruptibly(调用后一直阻塞到获得锁 但是接受中断信号)</li>
+<li>读写锁不分离。没有读写锁，读读固定互斥，影响并发</li>
+<li>不支持公平锁。</li>
+<li>获取锁无返回值。无法知道线程当前有没有成功获得到锁，没有tryLock的返回值</li>
+<li>无多路通知机制。lock.condition</li>
+</ol>
+<h3><span id="sychronized-reentranlock-de-qu-bie">- sychronized reentranlock 的区别</span><a href="#sychronized-reentranlock-de-qu-bie" class="header-anchor">#</a></h3><ol>
+<li>有限等待：需要有一种机制可以不让等待的线程一直无期限地等待下去（比如只等待一定的时间或者能够响应中断），这个是synchronized无法办到，Lock可以办到，由tryLock(带时间参数)实现；</li>
+<li>可中断：使用synchronized时，等待的线程会一直阻塞，一直等待下去，不能够响应中断，而Lock锁机制可以让等待锁的线程响应中断，由lockInterruptibly()实现；</li>
+<li>有返回值：需要一种机制可以知道线程有没有成功获得到锁，这个是synchronized无法办到，Lock可以办到，由tryLock()方式实现；</li>
+<li>公平锁：synchronized中的锁是非公平锁，ReentrantLock默认情况下也是非公平锁，但可以通过构造方法ReentrantLock(true)来要求使用公平锁（底层由Condition的等待队列实现）。</li>
+<li>读写分离，提高多个线程读操作并发效率：需要一种机制来使得多个线程都只是进行读操作时，线程之间不会发生冲突，这个是synchronized无法办到，Lock可以办到。</li>
+<li>可实现选择性多路通知（锁可以绑定多个条件）</li>
+</ol>
+<h3><span id="sychronized-he-valotile-de-qu-bie">- sychronized 和 valotile 的区别</span><a href="#sychronized-he-valotile-de-qu-bie" class="header-anchor">#</a></h3><ol>
+<li>作用范围。volatile更轻量，性能更好，但volatile只能用于变量而synchronized关键字可以修饰方法以及代码块  </li>
+<li>是否阻塞。多线程访问volatile关键字不会发生阻塞，而synchronized关键字可能会发生阻塞  </li>
+<li>是否保证原子性。volatile关键字能保证数据的可见性，但不能保证数据的原子性 （eg： i++）.synchronized关键字两者都能保证</li>
+<li>是否保证同步。volatile关键字主要用于解决变量在多个线程之间的可见性，而 synchronized关键字解决的是多个线程之间访问资源的同步性</li>
+</ol>
+<h3><span id="ruo-yin-yong">- 弱引用</span><a href="#ruo-yin-yong" class="header-anchor">#</a></h3><p>强引用<br>任何被强引用指向的对象都不能被垃圾回收器回收。<br>软引用<br>如果有软引用指向这些对象，则只有在内存空间不足时才回收这些对象（回收发生在OutOfMemoryError之前）。<br>弱引用<br>如果一个对象只有弱引用指向它，垃圾回收器会立即回收该对象，这是一种急切回收方式。<br>虚引用<br>虚引等同于没有引用，拥有虚引用的对象可以在任何时候被垃圾回收器回收。</p>
+<p>弱引用的出现就是为了垃圾回收服务的。它引用一个对象，但是并不阻止该对象被回收。<br>如果使用一个强引用的话，只要该引用存在，那么被引用的对象是不能被回收的。<br>弱引用则没有这个问题。在垃圾回收器运行的时候，如果一个对象的所有引用都是弱引用的话，该对象会被回收</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%BC%BA%E8%BD%AF%E5%BC%B1%E8%99%9A.png" alt></p>
+<h3><span id="threadlocal-yuan-li">- ThreadLocal原理</span><a href="#threadlocal-yuan-li" class="header-anchor">#</a></h3><p>用多线程多份数据，来避免线程不安全</p>
+<p>每个Thread 维护一个 ThreadLocalMap 映射表，这个映射表的 key是 ThreadLocal 实例本身，value 是真正需要存储的 Object。也就是说 ThreadLocal 本身并不存储值，它只是作为一个 key 来让线程从 ThreadLocalMap 获取 value。</p>
+<p>由于每一条线程均含有各自私有的ThreadLocalMap容器，这些容器相互独立互不影响，因此不会存在线程安全性问题，从而也无需使用同步机制来保证多条线程访问容器的互斥性。</p>
+<p>ThreadLocalMap 是使用 ThreadLocal 的弱引用作为 Key的，弱引用的对象在 GC 时会被回收。<br>Entry 继承 WeekReference&lt;ThreadLocal&lt;?&gt;&gt;，也就是说，一个Entry对象是由ThreadLocal对象和一个Object（ThreadLocal关联的对象）组成。   </p>
+<p>为什么选择弱引用？<br>为了应对非常大和长时间的用途，哈希表使用弱引用的 key<br>由于ThreadLocalMap的生命周期跟Thread一样长，如果都没有手动删除对应key，都会导致内存泄漏，但是使用弱引用可以多一层保障：弱引用ThreadLocal key不会内存泄漏，对应的value在下一次ThreadLocalMap调用set,get,remove的时候会被清除</p>
+<p>内存泄漏问题<br>在ThreadLocalMap中，只有key是弱引用，value仍然是一个强引用。当某一条线程中的ThreadLocal使用完毕，没有强引用指向它的时候，这个key指向的对象就会被垃圾收集器回收，从而这个key就变成了null；然而，此时value和value指向的对象之间仍然是强引用关系，只要这种关系不解除，value指向的对象永远不会被垃圾收集器回收，从而导致内存泄漏！</p>
+<p>解决办法：<br>ThreadLocal提供了这个问题的解决方案，<br>其实，ThreadLocalMap的设计中已经考虑到这种情况，也加上了一些防护措施：在ThreadLocal的get(),set(),remove()的时候都会清除线程ThreadLocalMap里所有key为null的value。<br>但是这些被动的预防措施并不能保证不会内存泄漏：<br>使用static的ThreadLocal，延长了ThreadLocal的生命周期，可能导致的内存泄漏。<br>分配使用了ThreadLocal又不再调用get(),set(),remove()方法，那么就会导致内存泄漏。</p>
+<p>ThreadLocal最佳实践<br>综合上面的分析，我们可以理解ThreadLocal内存泄漏的前因后果，那么怎么避免内存泄漏呢？<br>每次使用完ThreadLocal，都调用它的remove()方法，清除数据。<br>在使用线程池的情况下，没有及时清理ThreadLocal，不仅是内存泄漏的问题，更严重的是可能导致业务逻辑出现问题。所以，使用ThreadLocal就跟加锁完要解锁一样，用完就清理。</p>
+<h3><span id="aqs-tong-bu-qi-yuan-li-tryacquire-de-guo-cheng">- AQS同步器原理？tryAcquire的过程？</span><a href="#aqs-tong-bu-qi-yuan-li-tryacquire-de-guo-cheng" class="header-anchor">#</a></h3><p>**AQS使用一个volatile的int类型的成员变量来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作。AQS通过CAS完成对state值的修改</p>
+<p>核心思想是，如果被请求的共享资源空闲，将当前请求资源的线程设置为有效的工作线程，将共享资源设置为锁定状态；如果共享资源被占用，将暂时获取不到锁的线程加入到队列中, 需要一定的阻塞等待唤醒机制机制来保证锁分配。这个机制主要用的是CLH队列实现的**</p>
+<p>AQS是通过将每条请求共享资源的线程封装成一个节点来实现锁的分配。通过简单的几行代码就能实现同步功能，这就是AQS的强大之处。</p>
+<p>自定义同步器实现的相关方法也只是为了通过修改State字段来实现多线程的独占模式或者共享模式。自定义同步器需要实现以下方法（ReentrantLock需要实现的方法如下，并不是全部）：</p>
+<p>ReentrantLock这类自定义同步器自己实现了获取锁和释放锁的方式，而其余的等待队列的处理、线程中断等功能，异常与性能处理，还有并发优化等细节工作，都是由AQS统一提供，这也是AQS的强大所在。对同步器这类应用层来说，AQS屏蔽了底层的，同步器只需要设计自己的加锁和解锁逻辑即可</p>
+<p>一般来说，自定义同步器要么是独占方式，要么是共享方式，它们也只需实现tryAcquire-tryRelease、tryAcquireShared-tryReleaseShared中的一种即可。AQS也支持自定义同步器同时实现独占和共享两种方式，如ReentrantReadWriteLock。ReentrantLock是独占锁，所以实现了tryAcquire-tryRelease。</p>
+<p>独占与共享最大不同就在各自的tryacquire里，对于独占来说只有true或false，只有一个线程得以执行任务；而对于共享锁的tryAcquireShared来说，线程数没达到限制都可以直接执行。<br>但本质上都是对AQS同步状态的修改，一个是0与1之间，另一个允许更多而已</p>
+<p>应用：<br>1.ReentrantLock<br>使用AQS保存锁重复持有的次数。当一个线程获取锁时，ReentrantLock记录当前获得锁的线程标识，用于检测是否重复获取，以及错误线程试图解锁操作时异常情况的处理。<br>2.Semaphore<br>使用AQS同步状态来保存信号量的当前计数。tryRelease会增加计数，acquireShared会减少计数。<br>3.CountDownLatch<br>使用AQS同步状态来表示计数。计数为0时，所有的Acquire操作（CountDownLatch的await方法）才可以通过</p>
+<p>白话：AQS是jdk提供的一个同步器，可以很方便的生成自定义同步器。AQS内部使用一个volatile的state来表示同步状态，通过一个FIFO队列来做多线程获取资源的排队操作，AQS通过CAS来做state变量的修改。实现AQS只要实现其中判断获取锁和释放锁的方法即可，AQS内部会去做队列入队出队等复杂逻辑处理。使用AQS实现的同步器有ReentrantLock，Semaphore，CountDownLatch。</p>
+<h3><span id="countdownlatch-semaphore-cyclicbarrier-han-yi-ji-shi-xian-yuan-li">- CountDownLatch、Semaphore、CyclicBarrier含义及实现原理</span><a href="#countdownlatch-semaphore-cyclicbarrier-han-yi-ji-shi-xian-yuan-li" class="header-anchor">#</a></h3><p>CountDownLatch<br>一个或多个线程等待其他线程完成一些列操作<br>CountDownLatch是一个同步辅助类，当CountDownLatch类中的计数器减少为0之前所有调用await方法的线程都会被阻塞，如果计数器减少为0，则所有线程被唤醒继续运行。</p>
+<p>典型应用场景</p>
+<p>开始执行前等待n个线程完成各自任务：例如有一个任务想要往下执行，但必须要等到其他任务执行完毕后才可以继续往下执行。假如这个想要继续往下执行的任务调用一个CountDownLatch对象的await()方法，其他的任务执行完自己的任务后调用同一个CountDownLatch对象上的countDown()方法，这个调用await()方法的任务将一直阻塞等待，直到这个CountDownLatch对象的计数值减到0为止。</p>
+<p>CyclicBarrier<br>多个线程相互等待，直到到达同一个同步点，再继续一起执行。CyclicBarrier适用于多个线程有固定的多步需要执行，线程间互相等待，当都执行完了，在一起执行下一步。</p>
+<p>CyclicBarrier和CountDownLatch的异同<br>CountDownLatch 是一次性的，CyclicBarrier 是可循环利用的<br>CountDownLatch 参与的线程的职责是不一样的，有的在倒计时，有的在等待倒计时结束。<br>CyclicBarrier 参与的线程职责是一样的。</p>
+<p>个人理解：</p>
+<ol>
+<li>CountDownLatch 是当前线程等着别人做好再开始做。像做饭一样，买好菜。<br>CountDownLatch内部是AQS做的同步，共享模式，共享释放，只有减到0才能获得<br>countdownlatch<br>await的时候，判断当前state是否为0，为0可以获取共享锁，非0则加入阻塞。<br>countdown的时候，将state -1 ,  并判断是否减到0， 减到0就唤醒阻塞的线程。</li>
+<li>Semaphore 是多个线程去获取，有的话就有，没有就等着。 像买房摇号。<br>Semaphore 内部是AQS做的同步，非0就可获得，0就不行了</li>
+<li>CyclicBarrier 是各个线程都达到某个预设点的时候， 可以执行一段逻辑，然后打开所有线程的限制。 像赛马.<br>CyclicBarrier 底层是依赖Reentrantlock保证同步 和 一个condition 来阻塞和放开早到达的多个线程，其实也是AQS</li>
+</ol>
+<h2><span id="java-yi-bu">java异步</span><a href="#java-yi-bu" class="header-anchor">#</a></h2><h3><span id="callable-future-futuretask-completablefuture-fen-bie-shi-shi-me">- Callable、Future、FutureTask、CompletableFuture分别是什么</span><a href="#callable-future-futuretask-completablefuture-fen-bie-shi-shi-me" class="header-anchor">#</a></h3><p>Callable是一个接口，提供一个回调方法，可以放到executorService中</p>
+<p>Future接口提供了三种功能：<br>1）判断任务是否完成；<br>2）能够中断任务；<br>3）能够获取任务执行结果。   </p>
+<p>FutureTask<br>可以看出RunnableFuture继承了Runnable接口和Future接口，而FutureTask实现了RunnableFuture接口，那就可以得出FutureTask即可以作为一个Runnable线程执行，又可以作为Future得到Callable返回值。<br>FutureTask是Future的唯一实现类</p>
+<p>listenableFuture<br>ListenableFuture和JDK原生Future最大的区别是前者做到了一个可以监听结果的Future<br>void addListener(Runnable listener, Executor executor);</p>
+<p>CompletableFuture<br>在JDK8中开始引入的，这个在一定程度上与ListenableFuture非常类似。比如说ListenableFuture的listener监听回调，在这个类中，相当于thenRun或者whneComplete操作原语</p>
+<h2><span id="xian-cheng-chi">线程池</span><a href="#xian-cheng-chi" class="header-anchor">#</a></h2><h3><span id="xian-cheng-chi-de-chuang-jian-shi-yong-you-na-xie-can-shu">- 线程池的创建使用、有哪些参数</span><a href="#xian-cheng-chi-de-chuang-jian-shi-yong-you-na-xie-can-shu" class="header-anchor">#</a></h3><p>为什么要用线程池？<br>    1. 降低资源消耗。 通过重复利用已创建的线程降低线程创建和销毁造成的消耗 （重复利用）<br>    2. 提高响应速度。 当任务到达时，任务可以不需要的等到线程创建就能立即执行 （提前开始任务）<br>    3. 提高线程的可管理性。 线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控  （控制线程数量）    </p>
+<p>如何创建线程池<br>    1. Executors - 不允许<br>        CachedThreadPool 和 ScheduledThreadPool ： 允许创建的线程数量为 Integer.MAX_VALUE ，可能会创建大量线程，从而导致OOM<br>        FixedThreadPool 和 SingleThreadExecutor ： 允许请求的队列长度为 Integer.MAX_VALUE ，可能堆积大量的请求，从而导致OOM<br>    2. ThreadPoolExcutor<br>        参数： 核心线程数， 最大线程数，非核心线程空闲存活时间，阻塞队列，拒绝策略，有必要的话还有ThreadFactory线程工厂.<br>        好处：<br>      - corePoolSize, maximumPoolSize 弹性控制线程数量，可伸缩，可扩容可释放<br>      - keepAliveTime, TimeUnit.SECONDS 设置后在回收前可让其他任务使用，减少重新创建线程的开销<br>      - BlockingQueue, 设置队列大小，起到缓冲的作用<br>      - rejectHandler  </p>
+<h3><span id="xian-cheng-chi-de-yuan-li">- 线程池的原理</span><a href="#xian-cheng-chi-de-yuan-li" class="header-anchor">#</a></h3><ol>
+<li><p>先讲构造参数<br>corePoolSize： 线程池核心线程数最大值<br>maximumPoolSize： 线程池最大线程数大小<br>keepAliveTime： 线程池中非核心线程空 闲的存活时间大小<br>unit： 线程空闲存活时间单位<br>workQueue： 存放任务的阻塞队列<br>threadFactory： 用于设置创建线程的工厂，可以给创建的线程设置有意义的名字，可方便排查问题。<br>handler：  线城池的饱和策略事件，主要有四种类型。  </p>
+</li>
+<li><p>再描述提交任务后的执行过程     </p>
+<ul>
+<li>提交一个任务，线程池里存活的核心线程数小于线程数corePoolSize时，线程池会创建一个核心线程去处理提交的任务。</li>
+<li>如果线程池核心线程数已满，即线程数已经等于corePoolSize，一个新提交的任务，会被放进任务队列workQueue排队等待执行。</li>
+<li>当线程池里面存活的线程数已经等于corePoolSize了,并且任务队列workQueue也满，判断线程数是否达到maximumPoolSize，即最大线程数是否已满，如果没到达，创建一个非核心线程执行提交的任务。</li>
+<li>如果当前的线程数达到了maximumPoolSize，还有新的任务过来的话，直接采用拒绝策略处理。</li>
+</ul>
+</li>
+<li><p>四种拒绝策略</p>
+</li>
+</ol>
+<p>AbortPolicy(抛出一个异常，默认的)<br>DiscardPolicy(直接丢弃任务)<br>DiscardOldestPolicy（丢弃队列里最老的任务，将当前这个任务继续提交给线程池）<br>CallerRunsPolicy（交给线程池调用所在的线程进行处理)  </p>
+<p>如何自定义拒绝策略：实现RejectedExecutionHandler接口，实现rejectedExecution方法<br>public interface RejectedExecutionHandler {<br>    void rejectedExecution(Runnable r,<br>    ThreadPoolExecutor executor);<br>}</p>
+<h3><span id="zen-me-pei-zhi-can-shu">- 怎么配置参数</span><a href="#zen-me-pei-zhi-can-shu" class="header-anchor">#</a></h3><p>线程数：  </p>
+<p>如果是CPU密集型应用，则线程池大小设置为N+1</p>
+<p>如果是IO密集型应用，则线程池大小设置为2N+1</p>
+<p>系统负载： 一个进程或线程正在被cpu执行或等待被cpu执行，则系统负载+1， 单核cpu负载小于1表示cpu可以在线程不等待的情况下处理完</p>
+<p>IO密集：通常指网络IO</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    18 分钟 读完 (大约 2707 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/07/29/interview/mysql/">mysql</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#shi-me-qing-kuang-xia-suo-yin-shi-xiao">- 什么情况下索引失效</a></li>
+<li><a href="#innodb-zhi-chi-de-suo-yin-lei-xing">- InnoDB 支持的索引类型</a></li>
+<li><a href="#innodb-suo">- innodb 锁</a></li>
+<li><a href="#ping-shi-zen-me-chuang-jian-suo-yin-de">- 平时怎么创建索引的</a></li>
+<li><a href="#b-shu-he-b-shu-de-qu-bie-he-hong-hei-shu-de-qu-bie">- B+树和 B 树的区别，和红黑树的区别</a></li>
+<li><a href="#ru-he-you-hua-sql">- 如何优化sql</a></li>
+<li><a href="#shi-me-shi-fu-gai-suo-yin">- 什么是覆盖索引</a></li>
+<li><a href="#wei-shi-me-jin-liang-bu-yao-yong-select">- 为什么尽量不要用select *？</a></li>
+<li><a href="#bai-wan-ji-shu-ju-fen-ye-cha-xun-you-hua">- 百万级数据分页查询优化</a><ul>
+<li><a href="#mysql-ge-chi-ji-bie">mysql隔离级别</a></li>
+</ul>
+</li>
+<li><a href="#mvcc-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du">- MVCC, 什么是快照读，什么是当前读</a></li>
+<li><a href="#shi-me-shi-dang-qian-du">- 什么是当前读</a></li>
+<li><a href="#mysql-shu-ju-ku-shi-wu-ge-chi-ji-bie-fen-bie-jie-jue-shi-me-wen-ti-next-key-suo-yuan-li-ru-he-jie-jue-huan-du">- mysql数据库事务隔离级别，分別解決什么问题，next-key锁原理、如何解决幻读？</a></li>
+<li><a href="#rr-rc-qu-bie">- RR RC区别</a><ul>
+<li><a href="#mysql-qi-ta">mysql其他</a></li>
+</ul>
+</li>
+<li><a href="#fen-ku-fen-biao">- 分库分表</a></li>
+<li><a href="#mysql-de-le-guan-suo-bei-guan-suo-shi-xian">- mysql的乐观锁、悲观锁实现</a></li>
+<li><a href="#zhu-cong-yan-chi-zen-me-ban">- 主从延迟怎么办</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+
+<h3><span id="shi-me-qing-kuang-xia-suo-yin-shi-xiao">- 什么情况下索引失效</span><a href="#shi-me-qing-kuang-xia-suo-yin-shi-xiao" class="header-anchor">#</a></h3><ol>
+<li>不符合联合最左匹配<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/v2-7f20eb4512b782ac973c60b0d15cb3fc_hd.jpg" alt></li>
+<li>like前导模糊查询 （可以通过 REVERSE()函数来创建一个函数索引解决）</li>
+<li>字段类型不匹配</li>
+<li>索引字段施加函数</li>
+<li>or的多个字段都要索引（只要有一个没有索引，就无法使用索引）</li>
+<li>!= , &lt;&gt; is null, is not null, not in都会使索引失效</li>
+<li>索引情况不好（索引列数据区分度太小，例如性别列），范围太大，扫表.</li>
+</ol>
+<h3><span id="innodb-zhi-chi-de-suo-yin-lei-xing">- InnoDB 支持的索引类型</span><a href="#innodb-zhi-chi-de-suo-yin-lei-xing" class="header-anchor">#</a></h3><ol>
+<li>B+树索引：  </li>
+<li>全文索引：就是倒排索引<br>仅能再char、varchar、text类型的列上面创建全文索引<br>但是面对高级的搜索还是略显简陋，且性能问题也是担忧。  </li>
+<li>哈希索引：<br>哈希索引在InnoDB中只是一种系统自动优化的功能<br>Hash 索引仅仅能满足”=”,”IN”和”&lt;&gt;”查询，不能使用范围查询。<br>Hash 索引无法被用来避免数据的排序操作。<br>在MySQL运行的过程中，如果InnoDB发现，有很多SQL存在这类很长的寻路，并且有很多SQL会命中相同的页面(page)，InnoDB会在自己的内存缓冲区(Buffer)里，开辟一块区域，建立自适应哈希所有AHI，以加速查询。InnoDB的自使用哈希索引，更像“索引的索引”  </li>
+</ol>
+<h3><span id="innodb-suo">- innodb 锁</span><a href="#innodb-suo" class="header-anchor">#</a></h3><p><a href="/2021/09/02/mysql/innodb锁/" title="innodb 锁">innodb 锁</a></p>
+<h3><span id="ping-shi-zen-me-chuang-jian-suo-yin-de">- 平时怎么创建索引的</span><a href="#ping-shi-zen-me-chuang-jian-suo-yin-de" class="header-anchor">#</a></h3><ol>
+<li><p>选择区分度高的列做索引</p>
+</li>
+<li><p>根据查询场景、查询语句的查询条件设计索引</p>
+</li>
+<li><p>如果要为多列去创建索引，遵循最左匹配原则使用联合索引去创建</p>
+</li>
+<li><p>在长字符类型的字段上使用前缀索引，减少空间占用</p>
+</li>
+<li><p>扩展索引的时候尽量做追加，不是新建</p>
+</li>
+</ol>
+<h3><span id="b-shu-he-b-shu-de-qu-bie-he-hong-hei-shu-de-qu-bie">- B+树和 B 树的区别，和红黑树的区别</span><a href="#b-shu-he-b-shu-de-qu-bie-he-hong-hei-shu-de-qu-bie" class="header-anchor">#</a></h3><p>为什么不用B树?:<br>因为B树的所有节点都是包含键和值的,这就导致了每个几点可以存储的内容就变少了,出度就少了,树的高度会增高,查询的 时候磁盘I/O会增多,影响性能。由于B+Tree内节点去掉了data域,因此可以拥有更大的出度,拥有更好的性能。</p>
+<p>和红黑树:<br>B+树跟红黑树不用比，B+树的高很低，红黑树比不了。</p>
+<h3><span id="ru-he-you-hua-sql">- 如何优化sql</span><a href="#ru-he-you-hua-sql" class="header-anchor">#</a></h3><ol>
+<li>让sql使用索引，如果查看sql使用索引情况，explain查看执行计划<br>通过explain命令可以得到下面这些信息: 表的读取顺序，数据读取操作的操作类型哪些索引可以使用哪些索引被实际使用，表之间的引用，每张表有多少行被优化器查询等信息。 rows是核心指标，绝大部分rows小的语句执行一定很快。<br>Extra字段几种需要优化的情况<br>Using filesort 需要优化，MYSQL需要进行额外的步骤来对返回的行排序。<br>Using temporary需要优化，发生这种情况一般都是需要进行优化的。mysql需要创建一张临时表用来处理此类查询<br>Using where 表示 MySQL 服务器从存储引擎收到行后再进行“后过滤”</li>
+<li>如果让sql使用到索引（符合建索引的几个原则）<ul>
+<li>最左前缀匹配原则</li>
+<li>选择区分度高的列作为索引，区分度的公式是count(distinct col)/count(*)</li>
+<li>索引列不能参与计算，保持列“干净”， 原因很简单，b+树中存的都是数据表中的字段值</li>
+<li>尽量的扩展索引，不要新建索引</li>
+<li>=和in可以乱序</li>
+</ul>
+</li>
+</ol>
+<h3><span id="shi-me-shi-fu-gai-suo-yin">- 什么是覆盖索引</span><a href="#shi-me-shi-fu-gai-suo-yin" class="header-anchor">#</a></h3><p>覆盖索引就是把要查询出的列和索引是对应的，不做回表操作</p>
+<h3><span id="wei-shi-me-jin-liang-bu-yao-yong-select">- 为什么尽量不要用select *？</span><a href="#wei-shi-me-jin-liang-bu-yao-yong-select" class="header-anchor">#</a></h3><ol>
+<li>返回了太多不需要的数据</li>
+<li>无法覆盖索引（select * 走的是聚簇索引），需要回表</li>
+<li>一个好的应用程序设计应当能够在 sql 中有准确的定义，从而减少歧义或者不必要的更改</li>
+</ol>
+<h3><span id="bai-wan-ji-shu-ju-fen-ye-cha-xun-you-hua">- 百万级数据分页查询优化</span><a href="#bai-wan-ji-shu-ju-fen-ye-cha-xun-you-hua" class="header-anchor">#</a></h3><ol>
+<li><p>纯扫表：记录主键游标，记录上次最大主键Id，从该Id处开始扫</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from t where id &gt; max_id limit 100;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不记录游标只根据主键扫库, 不带where条件, 主键覆盖索引 + 子查询</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from t where id in (select id from usertb limit 7000000,100);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>带where条件，联合覆盖索引  key(type, id) + 子查询</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from t where id in (select id from usertb where type=1 limit 7000000,100);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>带where和orderby条件，联合覆盖索引key(a, b) + 子查询</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from t where id in (select id from usertb where a=1 order by b limit 7000000,100);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>尽量保证不要出现大的offset，加一些条件过滤一，不应该使用limit跳过已查询到的数据，offset做无用功。实际工程中，要避免出现大页码的情况，尽量引导用户做条件过滤。</p>
+</li>
+</ol>
+<h2><span id="mysql-ge-chi-ji-bie">mysql隔离级别</span><a href="#mysql-ge-chi-ji-bie" class="header-anchor">#</a></h2><h3><span id="mvcc-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du">- MVCC, 什么是快照读，什么是当前读</span><a href="#mvcc-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du" class="header-anchor">#</a></h3><p>快照读: 即普通SELECT语句，既然是快照读，故 SELECT 的时候，会生成一个快照。</p>
+<p>生成快照的时机：事务中第一次调用SELECT语句的时候才会生成快照，在此之前事务中执行的update、insert、delete操作都不会生成快照。   </p>
+<p>不同事务隔离级别下，快照读的区别：    </p>
+<p>READ COMMITTED 隔离级别下，每次读取都会重新生成一个快照，所以每次快照都是最新的，也因此事务中每次SELECT也可以看到其它已commit事务所作的更改；</p>
+<p>REPEATED READ 隔离级别下，快照会在事务中第一次SELECT语句执行时生成，只有在本事务中对数据进行更改才会更新快照，因此，只有第一次SELECT之前其它已提交事务所作的更改你可以看到，但是如果已执行了SELECT，那么其它事务commit数据，你SELECT是看不到的。</p>
+<p>RC的本质：每一条SELECT都可以看到其他已经提交的事务对数据的修改，只要事务提交，其结果都可见，与事务开始的先后顺序无关。<br>RR的本质：第一条SELECT生成ReadView前，已经提交的事务的修改可见。</p>
+<h3><span id="shi-me-shi-dang-qian-du">- 什么是当前读</span><a href="#shi-me-shi-dang-qian-du" class="header-anchor">#</a></h3><p><a href="https://mp.weixin.qq.com/s/w1DwsDDSxKfmFxcLOgG3Dw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/w1DwsDDSxKfmFxcLOgG3Dw</a></p>
+<h3><span id="mysql-shu-ju-ku-shi-wu-ge-chi-ji-bie-fen-bie-jie-jue-shi-me-wen-ti-next-key-suo-yuan-li-ru-he-jie-jue-huan-du">- mysql数据库事务隔离级别，分別解決什么问题，next-key锁原理、如何解决幻读？</span><a href="#mysql-shu-ju-ku-shi-wu-ge-chi-ji-bie-fen-bie-jie-jue-shi-me-wen-ti-next-key-suo-yuan-li-ru-he-jie-jue-huan-du" class="header-anchor">#</a></h3><p>READ-UNCOMMITTED(未提交读): 可能会导致脏读、幻读或不可重复读<br>READ-COMMITTED(提交读): 可以阻止脏读，但是幻读或不可重复读仍有可能发生<br>REPEATABLE-READ(可重复读，mysql默认隔离级别): 可以阻止脏读和不可重复读，幻读通过mvcc解决了快照读，next-key锁解决了当前读<br>SERIALIZABLE(串行化读): 该级别可以防止脏读、不可重复读以及幻读</p>
+<h3><span id="rr-rc-qu-bie">- RR RC区别</span><a href="#rr-rc-qu-bie" class="header-anchor">#</a></h3><p>区别就在于rr解决了不可重复读和幻读，怎么解决的，通过MVCC和next-key锁.    </p>
+<p>不可重复读：rc级别下的mvcc总是读取数据行的最新快照，而rr级别下的mvcc，会在事务第一次select的时候，为数据行生成一个快照，后面每次都读这个快照，除非自己更新，所以rr下是可重复读，别的事务提交也无法影响你的事务。   </p>
+<p>幻读：快照读下rr级别不会出现幻读，因为rr级别的mvcc读的是事务第一次读取时的快照；在当前读下rr级别使用了next-key锁（临键锁），临键锁包括行锁+间隙锁， 来避免两个当前读时有其它事务插入数据，所以当前读使用next-key锁解决的幻读。 最后备注下：如果是先快照读再当前读，影响行数不一致是否属于幻读，是有争议的但大多认为并不是幻读。   </p>
+<p>RC的本质：每一条SELECT都可以看到其他已经提交的事务对数据的修改，只要事务提交，其结果都可见，与事务开始的先后顺序无关。<br>RR的本质：第一条SELECT生成ReadView前，已经提交的事务的修改可见。</p>
+<h2><span id="mysql-qi-ta">mysql其他</span><a href="#mysql-qi-ta" class="header-anchor">#</a></h2><h3><span id="fen-ku-fen-biao">- 分库分表</span><a href="#fen-ku-fen-biao" class="header-anchor">#</a></h3><p>根据userid取模做的分库分表</p>
+<p>两个场景，业务解耦垂直拆分，读写性能瓶颈做水平拆分。</p>
+<ol>
+<li>垂直切分</li>
+</ol>
+<p>业务维度切分，解耦</p>
+<ol start="2">
+<li>水平切分</li>
+</ol>
+<p>读写性能遇到瓶颈，分库分表</p>
+<h3><span id="mysql-de-le-guan-suo-bei-guan-suo-shi-xian">- mysql的乐观锁、悲观锁实现</span><a href="#mysql-de-le-guan-suo-bei-guan-suo-shi-xian" class="header-anchor">#</a></h3><p>MySQL乐观锁的实现完全是逻辑的，也就是自己去实现。 比如给每条数据附带版本号或者timestamp。更新引起数据的版本号改变，两次select判断版本号是否一致可以判断是否发生改变</p>
+<p>MySQL悲观锁的实现需要借助于MySQL的锁机制。<br>行锁<br>常见的增删改（INSERT、DELETE、UPDATE）语句会自动对操作的数据行加写锁，查询的时候也可以明确指定锁的类型，SELECT … LOCK IN SHARE MODE 语句加的是读锁，SELECT … FOR UPDATE 语句加的是写锁<br>行锁的实现方式<br>1) Record lock  锁记录<br>2) Gap lock  锁两个记录之间的 GAP，防止记录插入<br>3) Next-key lock  锁一条记录及其之前的间隙</p>
+<h3><span id="zhu-cong-yan-chi-zen-me-ban">- 主从延迟怎么办</span><a href="#zhu-cong-yan-chi-zen-me-ban" class="header-anchor">#</a></h3><p>主从延迟的原因：<br>主库写入数据并且生成binlog文件， 从库异步读取更新   </p>
+<p>解决方案：<br>一、更新操作，做SQL优化，减少批量更新操作<br>二、查询场景，   </p>
+<ol>
+<li>强制读主，对主库压力大，谨慎使用    </li>
+<li>延迟读从, 将要更新的key先放到一个本地延迟队列中，做延迟处理。</li>
+<li>聚合表, 如果是1:1的两张数据，可以先订阅更新到一张聚合表，再订阅聚合表的binlog</li>
+<li>订阅全部从库的binlog, todo</li>
+</ol>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    22 分钟 读完 (大约 3312 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/07/29/interview/jvm/">jvm</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#java-nei-cun-qu-yu">- Java内存区域</a></li>
+<li><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</a></li>
+<li><a href="#gc-dui-xiang-cun-huo-pan-ding-suan-fa">- gc对象存活判定算法</a></li>
+<li><a href="#gc-la-ji-shou-ji-qi-ji-qi-you-que-dian">- gc垃圾收集器及其优缺点</a></li>
+<li><a href="#biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he">- 标记算法和复制算法的区別，用在什么场合</a></li>
+<li><a href="#cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian">- cms垃圾收集器的回收步骤及其优缺点？</a></li>
+<li><a href="#g1-hui-shou-qi-de-te-dian">- G1回收器的特点</a></li>
+<li><a href="#g1-zhi-xing-bu-zou">- G1执行步骤</a></li>
+<li><a href="#nei-cun-xie-lou-yu-nei-cun-yi-chu-de-qu-bie">- 内存泄漏与内存溢出的区别</a></li>
+<li><a href="#you-ji-chong-gc-fail">- 有几种gc fail？</a></li>
+<li><a href="#shi-me-qing-kuang-hui-hong-fa-fullgc">- 什么情况会触发fullgc？</a></li>
+<li><a href="#zhan-nei-cun-yi-chu">- 栈内存溢出</a></li>
+<li><a href="#xi-tong-nei-cun-duo-da-liu-gei-cao-zuo-xi-tong-2g-gou-ma">- 系统内存多大，留给操作系统2G，够吗？</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="java-nei-cun-qu-yu">- Java内存区域</span><a href="#java-nei-cun-qu-yu" class="header-anchor">#</a></h3><p> <strong>线程私有的</strong> </p>
+<p>程序计数器<br>存放当前线程所执行的字节码的行号指示器。如果线程执行的是一个Java程序，计数器记录正在执行的虚拟机字节码指令地址；正在执行的是native方法，则计数器的值为空</p>
+<p>Java虚拟机栈</p>
+<p>描述Java方法执行的内存模型，每个方法执行的同时都会创建一个栈帧来存储局部变量表（编译期可知的各种基本数据类型，对象引用【reference类型】，内存空间的分配是在编译期完成的，方法运行期间不会改变局部变量表的大小）、操作数栈、动态链接、方法出口等。</p>
+<p>本地方法栈</p>
+<p>为虚拟机使用到的native方法服务</p>
+<p><strong>线程公有的</strong> </p>
+<p>Java堆（GC堆）</p>
+<p>存放对象实例，所有的对象实例和数组都在堆上分配。程序运行时分支可能不一样，只有运行期间才能知道创建哪些对象，这部分内存的分配和回收是动态的</p>
+<p>metaspace</p>
+<p>存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码</p>
+<p>直接内存</p>
+<p>不是虚拟机运行时数据区的一部分，也不是Java虚拟机规范中定义的内存。NIO使用Native函数库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作，避免了Java堆和Native堆来回复制数据。直接内存的回收是在虚拟机进行full gc的时候顺带进行的，并不会自己触发垃圾回收</p>
+<h3><span id="tan-tan-java-de-lei-jia-zai-ji-zhi">- 谈谈java的类加载机制</span><a href="#tan-tan-java-de-lei-jia-zai-ji-zhi" class="header-anchor">#</a></h3><ol>
+<li><p>过程   </p>
+<ul>
+<li>加载<br>  通过全类名获取定义此类的二进制字节流<br>  将字节流所代表的静态存储结构转换为方法区的运行时数据结构<br>  在内存中生成一个代表该类的 Class 对象,作为方法区这些数据的访问入口   </li>
+<li>连接<br>  验证<br>文件格式、元数据、字节码、符号引用验证   </li>
+<li>准备<br>  正式为类变量分配内存并设置类变量初始值的阶段，设置数据类型默认的零值   </li>
+<li>解析<br>  解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程   </li>
+<li>初始化<br>  真正执行类中定义的 Java 程序代码<br>初始化阶段是执行类构造器 <clinit> ()方法的过程   </clinit></li>
+</ul>
+</li>
+<li><p>双亲委派模式<br>Java的类加载使用双亲委派模式，即一个类加载器在加载类时，先把这个请求委托给自己的父类加载器去执行，如果父类加载器还存在父类加载器，就继续向上委托，直到顶层的启动类加载器。如果父类加载器能够完成类加载，就成功返回，如果父类加载器无法完成加载，那么子加载器才会尝试自己去加载。这种双亲委派模式的好处，一个可以避免类的重复加载，另外也避免了java的核心API被篡改。</p>
+<p> BootstrapClassLoader<br> ExtensionClassLoader<br> AppClassLoader(应用程序类加载器)</p>
+</li>
+</ol>
+<h3><span id="gc-dui-xiang-cun-huo-pan-ding-suan-fa">- gc对象存活判定算法</span><a href="#gc-dui-xiang-cun-huo-pan-ding-suan-fa" class="header-anchor">#</a></h3><p>1.1引用计数算法</p>
+<p>给对象添加一个引用计数器，当有地方引用它时加1，当引用失效时计数减1，任何时刻计数器为0时的对象都不会再被引用。</p>
+<p>缺点：存在两个对象不会被继续访问，但是两者循环调用的情况，由于存在循环调用导致两个对象都不会被回收。</p>
+<p>1.2可达性分析算法</p>
+<p>通过一系列被称作gc roots对象作为起点，从这些起点向下搜索，搜索所走过的路径成为引用链，当一个对象到gc roots没有任何引用链时证明此对象不可用。</p>
+<p>Java中gc roots的对象包括：</p>
+<p>虚拟机栈中引用的对象<br>native方法中引用的对象<br>类静态属性、常量中引用的对象  </p>
+<p>对于一个 Java 程序而言，对象都位于堆内存块中，存活的那些对象都被根节点引用着，即根节点 GC Roots 是一些引用类型，自然不在堆里，那它们位于哪呢？它们能放在哪呢？<br>答案是放在栈里，包括：<br>Local variables 本地变量<br>Static variables 静态变量<br>JNI References JNI引用等    </p>
+<h3><span id="gc-la-ji-shou-ji-qi-ji-qi-you-que-dian">- gc垃圾收集器及其优缺点</span><a href="#gc-la-ji-shou-ji-qi-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p>垃圾回收器种类:Serial、ParNew、Parallel Scavenge、Serial Old、Parallel Old、CMS(ConCurrent Mark Sweep)、G1(Garbage First)</p>
+<h3><span id="biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he">- 标记算法和复制算法的区別，用在什么场合</span><a href="#biao-ji-suan-fa-he-fu-zhi-suan-fa-de-qu-bie-yong-zai-shi-me-chang-he" class="header-anchor">#</a></h3><p>CMS 标记清除、Serial Old，Parallel old 标记整理：适用于存活对象比较多的场景<br>Serial、ParNew、PS 收集器 复制算法：用在那种不可达对象比较多的场合  </p>
+<h3><span id="cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian">- cms垃圾收集器的回收步骤及其优缺点？</span><a href="#cms-la-ji-shou-ji-qi-de-hui-shou-bu-zou-ji-qi-you-que-dian" class="header-anchor">#</a></h3><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/cms%E5%9B%9E%E6%94%B6.jpg" alt title="cms">  </p>
+<p>cms回收器的标记过程:</p>
+<p>CMS以获取最短回收停顿时间为目标的收集器,使用“标记-清除”算法,分为以下6个步骤</p>
+<p>1.STW initial mark:第一次暂停,初始化标记,从root标记old space存活对象(the set of objects reachable from roots (application code))</p>
+<p>2.Concurrent marking:运行时标记,从上一步得到的集合出发,遍历old space,标记存活对象 (all live objects that are transitively reachable from previous set)</p>
+<p>3.Concurrent precleaning:并发的标记前一阶段被修改的对象(card table)</p>
+<p>4.STW remark:第二次暂停,检查,标记,检查脏页的对象,标记前一阶段被修改的对象 (revisiting any objects that were modified during the concurrent marking phase)</p>
+<p>5.Concurrent sweeping:运行过程中清理,扫描old space,释放不可到达对象占用的空间</p>
+<p>6.Concurrent reset:此次CMS结束后,重设CMS状态等待下次CMS的触发 </p>
+<p>或者4个大步骤:<br>1,initial mark 2,concurrent mark 3,remark 4,concurrent sweep</p>
+<p>CMS缺点：cpu敏感，浮动垃圾，空间碎片</p>
+<p>1.CMS收集器对cpu资源非常敏感，在并发阶段对染不会导致用户线程停顿，但是会因为占用一部分线程导致应用程序变慢，总吞吐量会降低。CMS默认启动的收集线程数=(CPU数量+3)/4，在cpu数比较少的情况下，对性能影响较大。</p>
+<p>2.CMS收集器无法处理浮动垃圾，可能会出现“Concurrent Mode Failure”失败而导致另一次Full GC，原因是CMS的并发清除阶段用户线程还是在运行，所以还会有新的垃圾不断产生，这些垃圾CMS只能在下次GC时再清理掉，这部分垃圾被称为“浮动垃圾”。所以CMS不能像其他收集器那样在老年代几乎完全被填满了在开始收集，需要预留一部分空间。JDK1.6中CMS将这个阈值提高到了92%，要是CMS运行期间预留的内存不足，会出现一次“Concurrent Mode Failure”，这是虚拟机启动备用方案，临时启用Serial Old收集器充满新进行老年代垃圾收集，所以这个阈值不宜设置的过高</p>
+<p>3.CMS基于标记-清除算法，这意味着垃圾收集结束后会有大量的空间碎片，空间碎片过多会造成老年代有很大空间空余但是无法存放大对象的情况。通过参数UseCMSCompactAtFullCollection(默认开启)开关参数来开启内存碎片的合并整理。</p>
+<h3><span id="g1-hui-shou-qi-de-te-dian">- G1回收器的特点</span><a href="#g1-hui-shou-qi-de-te-dian" class="header-anchor">#</a></h3><p>G1的出现就是为了替换jdk1.5种出现的CMS,这一点已经在jdk9的时候实现了，jdk9默认使用了G1回收器，移除了所有CMS相关的内容。G1和CMS相比，有几个特点：  </p>
+<ol>
+<li>G1把内存划分为多个独立的区域Region </li>
+<li>G1仍然保留分代思想,保留了新生代和老年代,但他们不再是物理隔离,而是一部分Region的集合</li>
+<li>G1能够充分利用多CPU、多核环境硬件优势，尽量缩短STW</li>
+<li>G1整体采用标记整理算法,局部是采用复制算法,不会产生内存碎片</li>
+<li>控制回收垃圾的时间：这个是G1的优势，可以控制回收垃圾的时间，还可以建立停顿的时间模型，选择一组合适的Regions作为回收目标，达到实时收集的目的。控制G1回收垃圾的时间  -XX:MaxGCPauseMillis=200 （默认200ms）</li>
+<li>G1跟踪各个Region里面垃圾的价值大小,会维护一个优先列表,每次根据允许的时间来回收价值最大的区域,从而保证在有限事件内高效的收集垃圾</li>
+<li>大对象的处理: 在CMS内存中，如果一个对象过大，进入S1、S2区域的时候大于改分配的区域，对象会直接进入老年代。G1处理大对象时会判断对象是否大于一个Region大小的50%，如果大于50%就会横跨多个Region进行存放</li>
+</ol>
+<h3><span id="g1-zhi-xing-bu-zou">- G1执行步骤</span><a href="#g1-zhi-xing-bu-zou" class="header-anchor">#</a></h3><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/G1%E6%94%B6%E9%9B%86.jpg" alt title="G1">  </p>
+<ol>
+<li>初始标记阶段：暂停应用程序，标记可由根直接引用的对象。</li>
+<li>并发标记阶段：与应用程序并发进行，扫描 1 中标记的对象所引用的对象。</li>
+<li>最终标记阶段：暂停应用程序，扫描 2 中没有标记的对象。本步骤结束后，堆内所有存活对象都会被标记。</li>
+<li>筛选回收（首先对各个Regin的回收价值和成本进行排序，根据用户所期待的GC停顿时间指定回收计划，回收一部分Region）</li>
+</ol>
+<h3><span id="nei-cun-xie-lou-yu-nei-cun-yi-chu-de-qu-bie">- 内存泄漏与内存溢出的区别</span><a href="#nei-cun-xie-lou-yu-nei-cun-yi-chu-de-qu-bie" class="header-anchor">#</a></h3><ul>
+<li>溢出： OOM，除了 PC 剩下的区域都会发生 OOM，是由于内存不够，或者是代码中错误的分配太多对象导致的。</li>
+<li>泄漏：是指 内存分配后没有回收，导致内存占有一直增加，最后会导致溢出。</li>
+</ul>
+<h3><span id="you-ji-chong-gc-fail">- 有几种gc fail？</span><a href="#you-ji-chong-gc-fail" class="header-anchor">#</a></h3><p>Allocation Failure    新生代没有足够的空间分配对象  Young GC    </p>
+<p>GCLocker Initiated GC    如果线程执行在JNI临界区时，刚好需要进行GC，此时GC locker将会阻止GC的发生，同时阻止其他线程进入JNI临界区，直到最后一个线程退出临界区时触发一次GC。      GCLocker Initiated GC</p>
+<p>Promotion Failure    老年代没有足够的连续空间分配给晋升的对象（即使总可用内存足够大） </p>
+<p>Concurrent Mode Failure    CMS GC运行期间，老年代预留的空间不足以分配给新的对象     </p>
+<h3><span id="shi-me-qing-kuang-hui-hong-fa-fullgc">- 什么情况会触发fullgc？</span><a href="#shi-me-qing-kuang-hui-hong-fa-fullgc" class="header-anchor">#</a></h3><p>1.metaspace空间不足</p>
+<p>2.Promotion Failure    老年代没有足够的连续空间分配给晋升的对象（即使总可用内存足够大） </p>
+<p>3.Concurrent Mode Failure    CMS GC运行期间，老年代预留的空间不足以分配给新的对象    </p>
+<p>4.System.gc</p>
+<p>5.jmap -histo:live [pid]</p>
+<h3><span id="zhan-nei-cun-yi-chu">- 栈内存溢出</span><a href="#zhan-nei-cun-yi-chu" class="header-anchor">#</a></h3><p>对虚拟机栈这个区域规定了两种异常状况：</p>
+<p>（1）如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError 异常；<br>（2）如果虚拟机栈可以动态扩展（当前大部分的 Java 虚拟机都可动态扩展，只不过 Java 虚拟机规范中也允许固定长度的虚拟机栈），当扩展时无法申请到足够的内存时会抛出 OutOfMemoryError 异常。<br>（3）与虚拟机栈一样，本地方法栈区域也会抛出 StackOverflowError 和OutOfMemoryError 异常。</p>
+<h3><span id="xi-tong-nei-cun-duo-da-liu-gei-cao-zuo-xi-tong-2g-gou-ma">- 系统内存多大，留给操作系统2G，够吗？</span><a href="#xi-tong-nei-cun-duo-da-liu-gei-cao-zuo-xi-tong-2g-gou-ma" class="header-anchor">#</a></h3><p>16G内存 虚拟机 推荐配置12G堆， 更大的堆容易引起SWAP，SWAP使用过多会造成宕机</p>
+<p>各分区的大小对GC的性能影响很大。如何将各分区调整到合适的大小，分析活跃数据的大小是很好的切入点。</p>
+<p>活跃数据的大小是指，应用程序稳定运行时长期存活对象在堆中占用的空间大小，也就是Full GC后堆中老年代占用空间的大小</p>
+<p>例如，根据GC日志获得老年代的活跃数据大小为300M，</p>
+<p>总堆：1200MB = 300MB × 4 新生代：450MB = 300MB × 1.5 老年代： 750MB = 1200MB - 450MB</p>
+<p><a href="https://tech.meituan.com/2017/12/29/jvm-optimize.html" target="_blank" rel="noopener">https://tech.meituan.com/2017/12/29/jvm-optimize.html</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    22 分钟 读完 (大约 3280 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/07/29/interview/spring/">spring</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#tan-tan-dui-springioc-de-liao-jie">- 谈谈对springIoc的了解</a></li>
+<li><a href="#tan-tan-dui-springaop-de-liao-jie">- 谈谈对springAop的了解</a></li>
+<li><a href="#dong-tai-dai-li-he-jing-tai-dai-li-de-qu-bie">- 动态代理和静态代理的区别</a></li>
+<li><a href="#java-fan-she-de-yuan-li">- Java反射的原理</a></li>
+<li><a href="#spring-zhong-de-she-ji-mo-shi">- spring中的设计模式</a><ul>
+<li><a href="#jian-dan-gong-han-mo-shi">简单工厂模式</a></li>
+<li><a href="#gong-han-fang-fa-mo-shi">工厂方法模式</a></li>
+<li><a href="#dan-li-mo-shi">单例模式</a></li>
+<li><a href="#dai-li-she-ji-mo-shi">代理设计模式</a></li>
+<li><a href="#gua-pei-qi-mo-shi">适配器模式</a></li>
+<li><a href="#mo-ban-fang-fa-mo-shi">模板方法模式</a></li>
+</ul>
+</li>
+<li><a href="#spring-aspect-advice-pointcut-li-jie">- spring aspect advice pointcut理解</a><ul>
+<li><a href="#springboot-qi-dong-jian-yao-liu-cheng">Springboot启动简要流程</a></li>
+<li><a href="#springboot-qi-dong-zong-jie">Springboot启动总结</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="tan-tan-dui-springioc-de-liao-jie">- 谈谈对springIoc的了解</span><a href="#tan-tan-dui-springioc-de-liao-jie" class="header-anchor">#</a></h3><p>   <a href="https://www.zhihu.com/question/313785621" title="知乎" target="_blank" rel="noopener">如何完美阐述你对IOC的理解？</a></p>
+<p>   // 最底层map: Map&lt;String, Object&gt; singletonObjects = new ConcurrentHashMap(256);  </p>
+<p>   个人理解：<br>   1.控制反转是一种设计思想，将对象生命周期和依赖的控制由对象转给了ioc容器，对象由主动创建其它对象变为被动由ioc容器注入<br>   2.springioc容器控制了对象的创建、销毁及整个生命周期，，可以动态注入依赖的对象<br>   3.将对象与对象间解耦，对象不再直接创建依赖其它对象，都依赖springioc容器  </p>
+<p>   扩展：<a href="../2019/09/10/spring/springioc初始化" title="springIoc的初始化过程">springIoc的初始化过程</a></p>
+<p>它负责业务对象的构建管理和业务对象间的依赖绑定。</p>
+<h3><span id="tan-tan-dui-springaop-de-liao-jie">- 谈谈对springAop的了解</span><a href="#tan-tan-dui-springaop-de-liao-jie" class="header-anchor">#</a></h3><p>   AOP为面向切面编程，底层是通过动态代理实现，实质上就是将相同逻辑的重复代码横向抽取出来, 拦截对象方法，对方法进行改造、增强！比如在 <strong>方法执行前</strong>、<strong>方法返回后</strong>、<strong>方法前后</strong>、<strong>方法抛出异常后</strong> 等地方进行一定的增强处理，应用场景： 事务、日志、权限、监控打点</p>
+<p>   基于动态代理来实现，在容器启动的时候生成代理实例。默认地，如果使用接口的，用 JDK 提供的动态代理实现，如果没有接口，使用 CGLIB 实现</p>
+<p>   优点：每个关注点现在都集中于一处，而不是分散到多处代码中；服务模块更简洁，服务模块只需关注核心代码  </p>
+<p>   @Pointcut(切点)：用于定义哪些方法需要被增强或者说需要被拦截<br>   @Before、@After、@Around、@AfterReturning、@AfterThrowing（增强）: 添加到切点指定位置的一段逻辑代码</p>
+<p>   注：@AfterReturning 比 @After 的方法参数多被代理方法的返回值</p>
+<p>   参考：<br>   <a href="https://javadoop.com/post/spring-aop-intro" title="知乎" target="_blank" rel="noopener">Spring AOP 使用介绍，从前世到今生</a><br>   <a href="https://juejin.im/post/5b06bf2df265da0de2574ee1" title="掘金" target="_blank" rel="noopener">Spring AOP就是这么简单啦</a> </p>
+<h3><span id="dong-tai-dai-li-he-jing-tai-dai-li-de-qu-bie">- 动态代理和静态代理的区别</span><a href="#dong-tai-dai-li-he-jing-tai-dai-li-de-qu-bie" class="header-anchor">#</a></h3><p>静态代理在运行之前就已经存在代理类的字节码文件了（.class文件），而动态代理是在运行时通过反射技术来实现的</p>
+<p><strong>静态代理，如果不同接口的类想使用代理模式来实现相同的功能，将要实现多个代理类</strong>，但在<strong>动态代理中，只需要一个代理类就好了</strong>。</p>
+<p>只有实现了某个接口的类可以使用Java动态代理机制，对于没有实现接口的类，就不能使用该机制。使用cglib。</p>
+<p>静态代理：代理类与委托类实现同一接口，并且在代理类中需要硬编码接口</p>
+<p>JDK动态代理：代理类与委托类实现同一接口，主要是通过代理类实现InvocationHandler并重写invoke方法来进行动态代理的，在invoke方法中将对方法进行增强处理</p>
+<p>CGLIB动态代理：代理类将委托类作为自己的父类并为其中的非final委托方法创建两个方法，一个是与委托方法签名相同的方法，它在方法中会通过super调用委托方法；另一个是代理类独有的方法。在代理方法中，它会判断是否存在实现了MethodInterceptor接口的对象，若存在则将调用intercept方法对委托方法进行代理</p>
+<h3><span id="java-fan-she-de-yuan-li">- Java反射的原理</span><a href="#java-fan-she-de-yuan-li" class="header-anchor">#</a></h3><p>反射就是在运行时才知道要操作的类是什么，并且可以在运行时获取类的完整构造，并调用对应的方法    </p>
+<p>Java反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能就称为反射机制。</p>
+<p>通俗一点反射就是把Java类中的各种成分映射成一个个的Java对象。</p>
+<p>操作步骤:    </p>
+<ol>
+<li>获取类的 Class 对象实例</li>
+<li>根据 Class 对象实例获取 Constructor 对象</li>
+<li>使用 Constructor 对象的 newInstance 方法获取反射类对象</li>
+<li>获取方法的 Method 对象</li>
+<li>利用 invoke 方法调用方法</li>
+</ol>
+<p>为什么类可以动态的生成？<br>这就涉及到Java虚拟机的类加载机制了，推荐翻看《深入理解Java虚拟机》7.3节 类加载的过程。<br>Java虚拟机类加载过程主要分为五个阶段：加载、验证、准备、解析、初始化。其中加载阶段需要完成以下3件事情：</p>
+<p>通过一个类的全限定名来获取定义此类的二进制字节流<br>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构<br>在内存中生成一个代表这个类的 java.lang.Class 对象，作为方法区这个类的各种数据访问入口</p>
+<p>关于第1点，获取类的二进制字节流（class字节码）就有很多途径<br>动态代理就是想办法，根据接口或目标对象，计算出代理类的字节码，然后再加载到JVM中使用。但是如何计算？如何生成？情况也许比想象的复杂得多，我们需要借助现有的方案</p>
+<p>通常使用反射，是想灵活的获取或操作obj的属性或方法信息，而不和具体的某个类耦合。这个时候，只要拿到类的Class对象，就可以获取对象的属性，和执行方法，或者new一个instance。eg: excel导出，<t> 泛型属性解析。</t></p>
+<h3><span id="spring-zhong-de-she-ji-mo-shi">- spring中的设计模式</span><a href="#spring-zhong-de-she-ji-mo-shi" class="header-anchor">#</a></h3><h4><span id="jian-dan-gong-han-mo-shi">简单工厂模式</span><a href="#jian-dan-gong-han-mo-shi" class="header-anchor">#</a></h4><p>简单工厂模式的实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类。<br>spring中的BeanFactory就是简单工厂模式的体现，根据传入一个唯一的标识来获得bean对象，但是否是在传入参数后创建还是传入参数前创建这个要根据具体情况来定。</p>
+<h4><span id="gong-han-fang-fa-mo-shi">工厂方法模式</span><a href="#gong-han-fang-fa-mo-shi" class="header-anchor">#</a></h4><p>工厂方法将创建产品的代码与实际使用产品的代码分离， 从而能在不影响其他代码的情况下扩展产品创建部分代码。<br>例如， 如果需要向应用中添加一种新产品， 你只需要开发新的创建者子类， 然后重写其工厂方法即可。</p>
+<p>一般情况下,应用程序有自己的工厂对象来创建bean.如果将应用程序自己的工厂对象交给Spring管理, 那么Spring管理的就不是普通的bean,而是工厂Bean。<br>理解：通过扩展工厂子类的方式，调用其工厂方法创建新对象。</p>
+<h4><span id="dan-li-mo-shi">单例模式</span><a href="#dan-li-mo-shi" class="header-anchor">#</a></h4><p>保证一个类仅有一个实例，并提供一个访问它的全局访问点。<br>spring中的单例模式完成了后半句话，即提供了全局的访问点BeanFactory。但没有从构造器级别去控制单例，这是因为spring管理的是是任意的java对象。 </p>
+<p>Spring下默认的bean均为singleton，可以通过singleton=“true|false” 或者 scope=”?”来指定。</p>
+<h4><span id="dai-li-she-ji-mo-shi">代理设计模式</span><a href="#dai-li-she-ji-mo-shi" class="header-anchor">#</a></h4><p>Spring AOP 功能的实现。</p>
+<h4><span id="gua-pei-qi-mo-shi">适配器模式</span><a href="#gua-pei-qi-mo-shi" class="header-anchor">#</a></h4><p>springaop中的advice，需要适配成 MethodInterceptor 接口，才能组成一条拦截器链，做依次的织入。<br>不同的Advice需要通过 不同适配器（XXXAdviceInterceptor） 适配成一个个 MethodInterceptor。使用适配器模式，持有advice实例，实现MethodInterceptor 接口。</p>
+<p>我们知道 Spring AOP 的实现是基于代理模式，但是 Spring AOP 的增强或通知(Advice)使用到了适配器模式，与之相关的接口是AdvisorAdapter 。Advice 常用的类型有：BeforeAdvice（目标方法调用前,前置通知）、AfterAdvice（目标方法调用后,后置通知）、AfterReturningAdvice(目标方法执行结束后，return之前)等等。<br>每个类型Advice（通知）都有对应的拦截器:MethodBeforeAdviceInterceptor、AfterReturningAdviceAdapter、AfterReturningAdviceInterceptor。<br>Spring预定义的通知要通过对应的适配器，适配成 MethodInterceptor接口(方法拦截器)类型的对象（如：MethodBeforeAdviceInterceptor 负责适配 MethodBeforeAdvice）。</p>
+<p>参考文档：<a href="https://www.jianshu.com/p/57d3d1beeb62" target="_blank" rel="noopener">https://www.jianshu.com/p/57d3d1beeb62</a></p>
+<h4><span id="mo-ban-fang-fa-mo-shi">模板方法模式</span><a href="#mo-ban-fang-fa-mo-shi" class="header-anchor">#</a></h4><p>JDBCTemplate使用了模板方法 + 回调模式。把直接执行statment的操作延迟到子类实现，通过回调函数的方式传递进来，父类实现对连接和异常的处理等操作。<br>execute中接收一个 StatementCallback 的回调函数，子类只要传递自己处理statment获取结果的回调函数即可，不需要再写过多的重复代码。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@FunctionalInterface</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">StatementCallback</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;</span><br><span class="line">   <span class="hljs-meta">@Nullable</span></span><br><span class="line">   <span class="hljs-function">T <span class="hljs-title">doInStatement</span><span class="hljs-params">(Statement var1)</span> <span class="hljs-keyword">throws</span> SQLException, DataAccessException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>execute实现（调用回调函数StatementCallback#doInStatement）</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Nullable</span></span><br><span class="line"><span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function">T <span class="hljs-title">execute</span><span class="hljs-params">(StatementCallback&lt;T&gt; action)</span> <span class="hljs-keyword">throws</span> DataAccessException </span>&#123;</span><br><span class="line">   <span class="hljs-comment">//参数检查</span></span><br><span class="line">   Assert.notNull(action, <span class="hljs-string">"Callback object must not be null"</span>);</span><br><span class="line">   <span class="hljs-comment">//获取连接</span></span><br><span class="line">   Connection con = DataSourceUtils.getConnection(<span class="hljs-keyword">this</span>.obtainDataSource());</span><br><span class="line">   Statement stmt = <span class="hljs-keyword">null</span>;</span><br><span class="line">   Object var11;</span><br><span class="line">   <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">      <span class="hljs-comment">//创建一个Statement</span></span><br><span class="line">      stmt = con.createStatement();</span><br><span class="line">      <span class="hljs-comment">//设置查询超时时间，最大行等参数（就是一开始那些成员变量）</span></span><br><span class="line">      <span class="hljs-keyword">this</span>.applyStatementSettings(stmt);</span><br><span class="line">      <span class="hljs-comment">//执行回调方法获取结果集</span></span><br><span class="line">      T result = action.doInStatement(stmt);</span><br><span class="line">      <span class="hljs-comment">//处理警告</span></span><br><span class="line">      <span class="hljs-keyword">this</span>.handleWarnings(stmt);</span><br><span class="line">      var11 = result;</span><br><span class="line">   &#125; <span class="hljs-keyword">catch</span> (SQLException var9) &#123;</span><br><span class="line">      <span class="hljs-comment">//出现错误优雅退出</span></span><br><span class="line">      String sql = getSql(action);</span><br><span class="line">      JdbcUtils.closeStatement(stmt);</span><br><span class="line">      stmt = <span class="hljs-keyword">null</span>;</span><br><span class="line">      DataSourceUtils.releaseConnection(con, <span class="hljs-keyword">this</span>.getDataSource());</span><br><span class="line">      con = <span class="hljs-keyword">null</span>;</span><br><span class="line">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">this</span>.translateException(<span class="hljs-string">"StatementCallback"</span>, sql, var9);</span><br><span class="line">   &#125; <span class="hljs-keyword">finally</span> &#123;</span><br><span class="line">      JdbcUtils.closeStatement(stmt);</span><br><span class="line">      DataSourceUtils.releaseConnection(con, <span class="hljs-keyword">this</span>.getDataSource());</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="hljs-keyword">return</span> var11;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>update方法详解（使用lambda函数传递更新的实现操作）</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">int</span> <span class="hljs-title">update</span><span class="hljs-params">(PreparedStatementCreator psc, @Nullable PreparedStatementSetter pss)</span> <span class="hljs-keyword">throws</span> DataAccessException </span>&#123;</span><br><span class="line">   <span class="hljs-keyword">this</span>.logger.debug(<span class="hljs-string">"Executing prepared SQL update"</span>);</span><br><span class="line">   <span class="hljs-keyword">return</span> updateCount((Integer)<span class="hljs-keyword">this</span>.execute(psc, (ps) -&gt; &#123;</span><br><span class="line">      Integer var4;</span><br><span class="line">      <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (pss != <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">               pss.setValues(ps);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">int</span> rows = ps.executeUpdate();</span><br><span class="line">            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.logger.isTraceEnabled()) &#123;</span><br><span class="line">               <span class="hljs-keyword">this</span>.logger.trace(<span class="hljs-string">"SQL update affected "</span> + rows + <span class="hljs-string">" rows"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            var4 = rows;</span><br><span class="line">      &#125; <span class="hljs-keyword">finally</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (pss <span class="hljs-keyword">instanceof</span> ParameterDisposer) &#123;</span><br><span class="line">               ((ParameterDisposer)pss).cleanupParameters();</span><br><span class="line">            &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="hljs-keyword">return</span> var4;</span><br><span class="line">   &#125;));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>JDBCTemplate使用了很多回调。为什么要用回调（Callback)?<br>如果父类有多个抽象方法，子类需要全部实现这样特别麻烦，而有时候某个子类只需要定制父类中的某一个方法该怎么办呢？这个时候就要用到Callback回调了就可以完美解决这个问题，可以发现JDBCTemplate并没有完全拘泥于模板方法，非常灵活。我们在实际开发中也可以借鉴这种方法。</p>
+<p>参考文档：<a href="https://juejin.cn/post/6844903847966703624#heading-5" target="_blank" rel="noopener">https://juejin.cn/post/6844903847966703624#heading-5</a></p>
+<h3><span id="spring-aspect-advice-pointcut-li-jie">- spring aspect advice pointcut理解</span><a href="#spring-aspect-advice-pointcut-li-jie" class="header-anchor">#</a></h3><p>1、adivisor是一种特殊的Aspect，Advisor代表spring中的Aspect<br>2、区别：advisor只持有一个Pointcut和一个advice，而aspect可以多个pointcut和多个advice</p>
+<ul>
+<li>方/切 面（Aspect）：一个关注点的模块化，这个关注点实现可能另外横切多个对象。事务管理是J2EE应用中一个很好的横切关注点例子。方面用Spring的Advisor或拦截器实现。 </li>
+<li>连接点/织入点（Joinpoint）：程序执行过程中明确的点，如方法的调用或特定的异常被抛出。 </li>
+<li>通知（Advice）：在特定的连接点，AOP框架执行的动作。各种类型的通知包括“around”、“before”和“throws”通知。 </li>
+<li>切入点（Pointcut）：指定一个通知将被引发的一系列连接点的集合。AOP框架必须允许开发者指定切入点，例如，使用正则表达式。</li>
+</ul>
+<h4><span id="springboot-qi-dong-jian-yao-liu-cheng">Springboot启动简要流程</span><a href="#springboot-qi-dong-jian-yao-liu-cheng" class="header-anchor">#</a></h4><ol>
+<li>SpringApplication 初始化，收集所有ApplicationContextInitializer和ApplicationListener。</li>
+<li>SpringApplication run<br>调用started事件<br>创建并准备Environment（PropertySource、Profile）<br>调用environmentPrepared事件<br>创建ApplicationContext，遍历调用ApplicationContextInitializer的initialize方法<br>调用contextPrepared 事件<br>创建并配置BeanDefinitionLoader<br>调用contextLoaded 事件<br>applicationContext的refresh()方法, 完成ioc容器初始化<br>调用started事件<br>callRunners（ApplicationRunners，CommandLineRunners）<br>调用running事件</li>
+</ol>
+<h4><span id="springboot-qi-dong-zong-jie">Springboot启动总结</span><a href="#springboot-qi-dong-zong-jie" class="header-anchor">#</a></h4><p>Springboot的启动，主要创建了配置环境(environment)、事件监听(listeners)、应用上下文(applicationContext)，并基于以上条件，在容器中开始实例化我们需要的Bean<br>自动装配核心：@EnableAutoConfiguration中的AutoConfigurationImportSelector中的SpringFactoriesLoader 提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key，获取对应的一组@Configuration类。并在后续加载到ioc容器。</p>
+
+        </div>
+        
         
         
     </div>
@@ -812,7 +1449,7 @@
             
             <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/6/">6</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
             
         </ul>
     </nav>
@@ -862,7 +1499,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        57
+                        92
                     </p>
                 </div>
             </div>
@@ -872,7 +1509,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        25
+                        27
                     </p>
                 </div>
             </div>
@@ -882,7 +1519,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        36
                     </p>
                 </div>
             </div>
@@ -985,7 +1622,7 @@
                 <span class="level-item">design</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/git/">
@@ -993,7 +1630,7 @@
                 <span class="level-item">git</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/hadoop/">
@@ -1017,7 +1654,7 @@
                 <span class="level-item">jvm</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/kafka/">
@@ -1036,12 +1673,20 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/mybatis/">
+            <span class="level-start">
+                <span class="level-item">mybatis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/mysql/">
             <span class="level-start">
                 <span class="level-item">mysql</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/netty/">
@@ -1049,7 +1694,7 @@
                 <span class="level-item">netty</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/network/">
@@ -1089,7 +1734,7 @@
                 <span class="level-item">springboot</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/storm/">
@@ -1113,7 +1758,7 @@
                 <span class="level-item">zookeeper</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/并发/">
@@ -1146,6 +1791,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/线上问题/">
+            <span class="level-start">
+                <span class="level-item">线上问题</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/英语/">
@@ -1191,7 +1844,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 16.25px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 17.5px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.25px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 12.5px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 18.75px;">mysql</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/network/" style="font-size: 11.25px;">network</a> <a href="/tags/pcursor/" style="font-size: 10px;">pcursor</a> <a href="/tags/redis/" style="font-size: 12.5px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 11.25px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 13.75px;">并发</a> <a href="/tags/旅游/" style="font-size: 12.5px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.25px;">生活</a> <a href="/tags/索引/" style="font-size: 11.25px;">索引</a> <a href="/tags/线上问题/" style="font-size: 10px;">线上问题</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -1210,8 +1863,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1223,10 +1876,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1236,10 +1889,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1249,10 +1902,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1262,10 +1915,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1284,9 +1937,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1295,9 +1948,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1344,7 +2063,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1566,7 +2285,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1580,7 +2299,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1615,7 +2334,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1636,21 +2355,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1658,6 +2377,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1685,7 +2411,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1713,7 +2439,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1748,6 +2474,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1769,6 +2502,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1807,8 +2547,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1820,10 +2560,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1833,10 +2573,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1846,10 +2586,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1859,10 +2599,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1881,9 +2621,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1892,9 +2632,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1941,7 +2747,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -2163,7 +2969,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -2177,7 +2983,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2212,7 +3018,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2233,21 +3039,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2255,6 +3061,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2282,7 +3095,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -2310,7 +3123,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -2345,6 +3158,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2366,6 +3186,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2398,7 +3225,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 大菜猫&nbsp;
+                &copy; 2023 大菜猫&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>

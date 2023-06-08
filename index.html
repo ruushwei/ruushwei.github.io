@@ -152,7 +152,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time>
+                <time class="level-item has-text-grey" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
@@ -162,7 +162,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 977 个字)
+                    4 分钟 读完 (大约 608 个字)
                 </span>
                 
                 
@@ -171,49 +171,25 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/07/09/mysql/事务隔离级别2/">innodb事务隔离级别</a>
+                <a class="has-link-black-ter" href="/2023/06/08/mysql/undo/">undo-redo-binlog的用处</a>
             
         </h1>
         <div class="content">
-            <div class="toc">
-
-<!-- toc -->
-
+            <p>总结：<br>binlog 一致性。用于主从复制和数据恢复<br>redolog 持久性。log用于保证持久化，恢复在内存更新后，还没来得及刷到磁盘的数据<br>undolog 原子性。用于实现回滚和mvcc多版本并发控制</p>
+<h3><span id="binlog-luo-ji-ri-zhi">binlog（逻辑日志）</span><a href="#binlog-luo-ji-ri-zhi" class="header-anchor">#</a></h3><p>一致性<br>定义：记录数据表结构和数据变更的二进制文件</p>
+<h3><span id="redolog-wu-li-ri-zhi">redolog（物理日志）</span><a href="#redolog-wu-li-ri-zhi" class="header-anchor">#</a></h3><p>持久性<br>mysql不能每更新一条数据，就持久化到磁盘，因为会带来严重性能问题。所以是先更新到缓存，再特定时机下，再刷新到磁盘，为了防止内存数据丢失，会使用redolog作为事务日志，在内存更新完成后，写入redolog buffer，然后数据会写入到redolog file磁盘</p>
+<p>redolog buffer写入磁盘的模式：</p>
 <ul>
-<li><a href="#yi-ding-yi">一、定义</a></li>
-<li><a href="#er-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du">二、什么是快照读，什么是当前读</a></li>
-<li><a href="#san-rr-ji-bie-xia-mvcc-jie-jue-bu-ke-chong-fu-du-he-kuai-zhao-du-zhi-jian-de-huan-du">三、rr级别下mvcc解决不可重复读和快照读之间的幻读</a></li>
-<li><a href="#si-rr-ji-bie-xia-next-key-suo-jie-jue-dang-qian-du-zhi-jian-de-huan-du">四、rr级别下next-key锁解决当前读之间的幻读</a></li>
-<li><a href="#wu-rr-he-rc-qu-bie">五、rr和rc区别</a></li>
-<li><a href="#liu-todo-xue-xi">六、todo学习</a></li>
-<li><a href="#can-kao-wen-zhang">参考文章</a></li>
+<li>0（延迟写）每秒刷新写入磁盘，若系统崩溃，出现1s数据丢失</li>
+<li>1（实时写）每次提交都会写入磁盘， 不会有数据丢失，但io性能差</li>
+<li>2（实时写，延迟刷新）每次提交到os buffer, 然后每秒将os buffer日志写到磁盘</li>
 </ul>
-<!-- tocstop -->
-
-</div>
-
-<h3><span id="yi-ding-yi">一、定义</span><a href="#yi-ding-yi" class="header-anchor">#</a></h3><p>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据<br>提交读(Read Committed)：只能读取到已经提交的数据. 可以阻止脏读，但是可能发生幻读或不可重复读<br>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的. 可以阻止脏读和不可重复读，幻读通过mvcc解决了快照读，next-key锁解决了当前读. mysql默认隔离级别.<br>串行读(Serializable)：读加共享锁，写加排他锁，读写互斥.   </p>
-<p>可重复读指的是同一行在同一个事务下无论怎么读取都是同一个结果(除非自己把它改了).</p>
-<p>幻读指的是在同一事务下，连续执行两次同样的SQL语句第二次的SQL语句可能返回之前不存在的行；</p>
-<h3><span id="er-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du">二、什么是快照读，什么是当前读</span><a href="#er-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du" class="header-anchor">#</a></h3><p>快照读：就是select</p>
-<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> ….;</span><br></pre></td></tr></table></figure>
-
-<p>当前读：特殊的读操作，插入/更新/删除操作，属于当前读，处理的都是当前的数据，需要加锁。</p>
-<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">lock</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">share</span> <span class="hljs-keyword">mode</span>;</span><br><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">for</span> <span class="hljs-keyword">update</span>;</span><br><span class="line"><span class="hljs-keyword">insert</span>;</span><br><span class="line"><span class="hljs-keyword">update</span> ;</span><br><span class="line"><span class="hljs-keyword">delete</span>;</span><br></pre></td></tr></table></figure>
-
-<p>事务的隔离级别实际上都是定义了当前读的级别，MySQL为了减少锁处理（包括等待其它锁）的时间，提升并发能力，引入了快照读的概念，使得select不用加锁。而update、insert这些“当前读”，就需要另外的模块来解决了</p>
-<h3><span id="san-rr-ji-bie-xia-mvcc-jie-jue-bu-ke-chong-fu-du-he-kuai-zhao-du-zhi-jian-de-huan-du">三、rr级别下mvcc解决不可重复读和快照读之间的幻读</span><a href="#san-rr-ji-bie-xia-mvcc-jie-jue-bu-ke-chong-fu-du-he-kuai-zhao-du-zhi-jian-de-huan-du" class="header-anchor">#</a></h3><p>一致非锁定读，也可以称为快照读，即普通SELECT语句，既然是快照读，故 SELECT 的时候，会生成一个快照。</p>
-<p>生成快照的时机：事务中第一次调用SELECT语句的时候才会生成快照，在此之前事务中执行的update、insert、delete操作都不会生成快照</p>
-<p>REPEATED READ 隔离级别下，快照会在事务中第一次SELECT语句执行时生成，只有在本事务中对数据进行更改才会更新快照，因此，只有第一次SELECT之前其它已提交事务所作的更改你可以看到，但是如果已执行了SELECT，那么其它事务commit数据，你SELECT是看不到的。</p>
-<h3><span id="si-rr-ji-bie-xia-next-key-suo-jie-jue-dang-qian-du-zhi-jian-de-huan-du">四、rr级别下next-key锁解决当前读之间的幻读</span><a href="#si-rr-ji-bie-xia-next-key-suo-jie-jue-dang-qian-du-zhi-jian-de-huan-du" class="header-anchor">#</a></h3><p>在当前读下rr级别使用了next-key锁（临键锁），临键锁包括行锁+间隙锁， 来避免两个当前读时有其它事务插入数据，所以当前读使用next-key锁解决的幻读。</p>
-<p>最后备注下：如果是先快照读再当前读，影响行数不一致是否属于幻读，是有争议的但大多认为并不是幻读。</p>
-<h3><span id="wu-rr-he-rc-qu-bie">五、rr和rc区别</span><a href="#wu-rr-he-rc-qu-bie" class="header-anchor">#</a></h3><p>rc级别下的mvcc总是读取数据行的最新快照，而rr级别下的mvcc，会在事务第一次select的时候，为数据行生成一个快照，后面每次都读这个快照，除非自己更新</p>
-<p>如果问，rr为什么是默认的隔离级别，就说rr相比rc来说没有不可重复读和幻读问题. 后面再深入研究</p>
-<h3><span id="liu-todo-xue-xi">六、todo学习</span><a href="#liu-todo-xue-xi" class="header-anchor">#</a></h3><ol>
-<li>rr为什么是默认的隔离级别   </li>
-<li>mvcc在rc隔离级别下，读最新的快照，为什么不直接读行记录呢，rc级别是怎么解决脏读的</li>
-</ol>
-<h3><span id="can-kao-wen-zhang">参考文章</span><a href="#can-kao-wen-zhang" class="header-anchor">#</a></h3><p><a href="https://tech.meituan.com/2014/08/20/innodb-lock.html" target="_blank" rel="noopener">https://tech.meituan.com/2014/08/20/innodb-lock.html</a></p>
+<p>注：redolog的大小是固定的，可能被覆盖</p>
+<h3><span id="undolog-luo-ji-ri-zhi">undolog（逻辑日志）</span><a href="#undolog-luo-ji-ri-zhi" class="header-anchor">#</a></h3><p>原子性<br>undolog存储数据的逻辑变化日志，<br>参考：<a href="https://blog.csdn.net/Huangjiazhen711/article/details/127900821" target="_blank" rel="noopener">https://blog.csdn.net/Huangjiazhen711/article/details/127900821</a></p>
+<p>多版本并发控制mvcc，<br>MVCC在mysql中的实现依赖的是undo log与read view<br>undo log记录某行数据的多个版本的数据；read view用来判断当前版本数据的可见性。<br>read view可以用来判断可以看到哪些事务。根据他保存的创建时活跃事务id列表，创建时的最大事务id，创建时的最小事务id。</p>
+<p>RC在每次语句执行，都会重新创建一份ReadView<br>RR下，事务开始创建ReadView，一直到事务结束</p>
+<p>undo log的删除。当该undolog没有出现在其他事务的readview时，说明事务已提交，且没有其他事务依赖，innodb后台的清除purge线程会遍历删除undolog。聚簇索引中deleted标识为1的也会被删除。均为异步操作。</p>
+<p>注：事务隔离性是通过mvcc+排他锁实现的</p>
 
         </div>
         
@@ -235,17 +211,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time>
+                <time class="level-item has-text-grey" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/git/">git</a>
+                <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 471 个字)
+                    7 分钟 读完 (大约 1100 个字)
                 </span>
                 
                 
@@ -254,40 +230,34 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2020/02/02/interview/kuaishou/">快手面经</a>
+                <a class="has-link-black-ter" href="/2021/09/23/springboot/springboot启动流程/">springboot启动流程</a>
             
         </h1>
         <div class="content">
-            <p>时间：2020.01 经验 2.5</p>
-<p>一面： </p>
-<p>自我介绍 </p>
-<p>springaop的理解、动态代理 </p>
-<p>concurrenthashmap的线程安全</p>
-<p>AQS的原理，怎么保证线程安全</p>
-<p>CAS的原理</p>
-<p>mysql的事务隔离级别</p>
-<p>volatile的原理、内存屏障使用</p>
-<p>怎么创建索引</p>
-<p>gc算法、垃圾收集器、常用，怎么解决gc问题</p>
-<p>算法：无放回等概率的随机抽取，1-1亿，int数组即可</p>
-<p>二面： </p>
-<p>自我介绍</p>
-<p>每个项目介绍、难点、扩展点，比如本地缓存实现原理、未来容量增加、库存秒杀写并发量很大，分库存核销不均解决等</p>
-<p>设计一个问卷系统、弹出问卷中包含题目，选项等，设计数据库表、缓存、接口 </p>
-<p>算法：输入n用二维数组内1的形状为等腰三角形 </p>
-<p>你觉得研发最重要的是什么。答：代码质量和线上质量两部分</p>
-<p>三面（leader）：</p>
-<p>为什么想换工作 </p>
-<p>新工作考虑哪些因素</p>
-<p>介绍一个项目中的设计或架构</p>
-<p>项目中这样设计有哪些优点缺点</p>
-<p>工作中怎么判断需求的好坏。答:从需求价值、产品水平、产品以往经历</p>
-<p>怎么在开发迭代中做项目优化的闭环。答:判断需求是否属于自身领域，逻辑是否合理，实现是否满足，实现是否很难，很难的原因是什么，是代码逻辑有问题还是架构设计不合理</p>
-<p>四面（hr）：</p>
-<p>为什么想换工作</p>
-<p>你的老板对你的评价是怎么样的</p>
-<p>你自己觉得优缺点是什么样的</p>
-<p>你在工作中有遇到什么困难吗，怎么解决的</p>
+            <p>springboot 启动原理<br>参考文档：<a href="https://mp.weixin.qq.com/s/1yHtaoSqqIJItIXByvV5QA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/1yHtaoSqqIJItIXByvV5QA</a></p>
+<h4><span id="springbootapplication-zhu-jie-yu-enableautoconfiguration-yu-autoconfigurationimportselector-class-yu-springfactoriesloader">@SpringBootApplication注解与@EnableAutoConfiguration与AutoConfigurationImportSelector.class 与 SpringFactoriesLoader</span><a href="#springbootapplication-zhu-jie-yu-enableautoconfiguration-yu-autoconfigurationimportselector-class-yu-springfactoriesloader" class="header-anchor">#</a></h4><p>@SpringBootApplication = @Configuration+ @EnableAutoConfiguration+ @ComponentScan</p>
+<h5><span id="configuration">@Configuration</span><a href="#configuration" class="header-anchor">#</a></h5><p>JavaConfig形式的Spring Ioc容器的配置类，等同于xml方式的 <beans></beans></p>
+<h5><span id="componentscan">@ComponentScan:</span><a href="#componentscan" class="header-anchor">#</a></h5><p>自动扫描并加载符合条件的组件（比如@Component和@Repository等）或者bean定义，最终将这些bean定义加载到IoC容器中。</p>
+<h5><span id="enableautoconfiguration">@EnableAutoConfiguration</span><a href="#enableautoconfiguration" class="header-anchor">#</a></h5><p>借助@Import的支持，收集和注册特定场景相关的bean定义。<br>@AutoConfigurationPackage + @Import(AutoConfigurationImportSelector.class)</p>
+<p>AutoConfigurationPackage将 添加该注解的类所在的package 作为 自动配置package 进行管理。</p>
+<p>@Import(EnableAutoConfigurationImportSelector.class)，借助EnableAutoConfigurationImportSelector，@EnableAutoConfiguration可以帮助SpringBoot应用将所有符合条件的@Configuration配置都加载到当前SpringBoot创建并使用的IoC容器。借助于Spring框架原有的一个工具类：SpringFactoriesLoader的支持。实现智能的自动配置。</p>
+<p>SpringFactoriesLoader：<br>SpringFactoriesLoader属于Spring框架私有的一种扩展方案，其主要功能就是从指定的配置文件META-INF/spring.factories加载配置。<br>配合@EnableAutoConfiguration使用的话，它更多是提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key，获取对应的一组@Configuration类。</p>
+<p>so:<br>@EnableAutoConfiguration自动配置的魔法骑士就变成了：从classpath中搜寻所有的META-INF/spring.factories配置文件，并将其中org.springframework.boot.autoconfigure.EnableutoConfiguration对应的配置项通过反射（Java Refletion）实例化为对应的标注了@Configuration的JavaConfig形式的IoC容器配置类，然后汇总为一个并加载到IoC容器。</p>
+<h4><span id="springboot-qi-dong-zhi-xing-xiang-xi-liu-cheng">Springboot启动执行详细流程</span><a href="#springboot-qi-dong-zhi-xing-xiang-xi-liu-cheng" class="header-anchor">#</a></h4><ol>
+<li><p>SpringApplication初始化<br>A.根据classpath里面是否存在某个特征类（org.springframework.web.context.ConfigurableWebApplicationContext）来决定是否应该创建一个为Web应用使用的ApplicationContext类型。<br>B.使用SpringFactoriesLoader在应用的classpath中查找并加载所有可用的ApplicationContextInitializer。<br>C.使用SpringFactoriesLoader在应用的classpath中查找并加载所有可用的ApplicationListener。<br>D.推断并设置main方法的定义类。</p>
+</li>
+<li><p>SpringApplication run()<br>A.加载所有SpringApplicationRunListener。调用它们的started()方法<br><code>SpringApplicationRunListeners listeners = getRunListeners(args);</code>         listeners.starting(bootstrapContext, this.mainApplicationClass);<br>B. 创建并配置当前Spring Boot应用将要使用的Environment（包括配置要使用的PropertySource以及Profile）。<br><code>ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);</code>             configureIgnoreBeanInfo(environment);<br>C.遍历调用所有SpringApplicationRunListener的environmentPrepared()的方法，告诉他们：“当前SpringBoot应用使用的Environment准备好了咯！”<br>D. 如果SpringApplication的showBanner属性被设置为true，则打印banner<br>E. 根据用户是否明确设置了applicationContextClass类型以及初始化阶段的推断结果，决定该为当前SpringBoot应用创建什么类型的ApplicationContext并创建完成<br><code>context = createApplicationContext();
+F. 将之前准备好的Environment设置给创建好的ApplicationContext使用, 将遍历调用ApplicationContextInitializer的initialize（applicationContext）方法来对已经创建好的ApplicationContext进行进一步的处理</code> context.setEnvironment(environment);<br><code>postProcessApplicationContext(context);</code>         applyInitializers(context);<br>G. 遍历调用所有SpringApplicationRunListener的contextPrepared()方法。<br><code>listeners.contextPrepared(context);
+H. 注册特殊定义bean（springApplicationArguments、springBootBanner）, 添加LazyInitializationBeanFactoryPostProcessor，创建并初始化BeanDefinitionLoader（主要做的工作就是注册bean）
+I.  遍历调用所有SpringApplicationRunListener的contextLoaded()方法。</code> listeners.contextLoaded(context);<br>J. 调用ApplicationContext的refresh()方法，完成IoC容器可用的最后一道工序.<br><code>applicationContext.refresh();
+K.执行ApplicationRunners，CommandLineRunners</code> callRunners(context, applicationArguments);<br>L.遍历执行SpringApplicationRunListener的started()方法</p>
+</li>
+</ol>
+<h4><span id="springboot-qi-dong-jian-yao-liu-cheng">Springboot启动简要流程</span><a href="#springboot-qi-dong-jian-yao-liu-cheng" class="header-anchor">#</a></h4><ol>
+<li>SpringApplication 初始化，收集所有ApplicationContextInitializer和ApplicationListener。</li>
+<li>SpringApplication run<br> 调用started事件<br> 创建并准备Environment（PropertySource、Profile）<br> 调用environmentPrepared事件<br> 创建ApplicationContext，遍历调用ApplicationContextInitializer的initialize方法<br> 调用contextPrepared 事件<br> 创建并配置BeanDefinitionLoader<br> 调用contextLoaded 事件<br> applicationContext的refresh()方法, 完成ioc容器初始化<br> 调用started事件<br> callRunners（ApplicationRunners，CommandLineRunners）<br> 调用running事件</li>
+</ol>
+<h4><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h4><p>Springboot的启动，主要创建了配置环境(environment)、事件监听(listeners)、应用上下文(applicationContext)，并基于以上条件，在容器中开始实例化我们需要的Bean<br>自动装配核心：@EnableAutoConfiguration中的AutoConfigurationImportSelector中的SpringFactoriesLoader 提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key，获取对应的一组@Configuration类。并在后续加载到ioc容器。</p>
 
         </div>
         
@@ -309,7 +279,203 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time>
+                <time class="level-item has-text-grey" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 分钟 读完 (大约 1830 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/09/02/mysql/innodb锁/">Innodb 锁</a>
+            
+        </h1>
+        <div class="content">
+            <h4><span id="innodb-zhi-chi-na-xie-suo">Innodb支持哪些锁</span><a href="#innodb-zhi-chi-na-xie-suo" class="header-anchor">#</a></h4><p>按兼容性分为 共享锁（Shared Locks，S锁）、排他锁（Exclusive Locks，X锁）<br>按锁范围分为：表级锁、行级锁<br>表锁：表共享读锁（Table Read Lock）、表排他写锁（Table Write Lock)、意向共享锁（intention shared lock, IS锁）、意向排他锁（intention exclusive lock, IX锁）<br>行锁：记录锁（Record Locks）、间隙锁（Gap Locks）、临键锁（Next-Key Locks）、插入意向锁（Insert Intention Locks）</p>
+<h4><span id="gong-xiang-suo-s-pai-ta-suo-x">共享锁（S）、排他锁（X）</span><a href="#gong-xiang-suo-s-pai-ta-suo-x" class="header-anchor">#</a></h4><p>锁的模式，每种锁都有shared和exclusive两种模式。<br>特性：X锁与其他X,S锁不兼容，S与S锁兼容</p>
+<h4><span id="suo-ding-du">锁定读</span><a href="#suo-ding-du" class="header-anchor">#</a></h4><p>SELECT … FOR SHARE 和 SELECT … FOR UPDATE<br>这两种锁定读在搜索时所遇到的每一条索引记录(index record)上设置共享锁或排它锁。</p>
+<h4><span id="yi-xiang-suo-is-ix">意向锁（IS、IX）</span><a href="#yi-xiang-suo-is-ix" class="header-anchor">#</a></h4><p>意向锁，协调行锁和表锁之间的关系的，实现了“表锁是否冲突”的快速判断。协调表的读写锁和行的读写锁（不同粒度锁）之间关系。<br>场景：获取行的S锁，需要先获取表的IS锁；获取行的X锁，需要先获取表的IX锁。<br>注：与意向锁冲突的不是行的X锁，是表的X锁！<br>IX 与表的 X 和 S 冲突，意思当前表有行锁X锁，不能上表的X或S锁。<br>IS 与表的 X 冲突，意思当前表有行锁S锁，不能上表的X锁。<br>why意向锁：“表锁是否冲突”的快速判断。否则需要遍历表去判断行锁的存在，才能判断冲突。</p>
+<h4><span id="suo-yin-ji-lu-suo-record-locks">索引记录锁(Record Locks)</span><a href="#suo-yin-ji-lu-suo-record-locks" class="header-anchor">#</a></h4><p>行锁，锁定的是索引记录。所谓的“锁定某个行”或“在某个行上设置锁”。就是在某个索引的特定索引记录（或称索引条目、索引项、索引入口）上设置锁。有shared或exclusive两种模式</p>
+<h4><span id="jian-xi-suo-gap-locks">间隙锁(Gap Locks)</span><a href="#jian-xi-suo-gap-locks" class="header-anchor">#</a></h4><p>锁定尚未存在的记录，即索引记录之间的间隙。有shard或exclusive两种模式，但，两种模式没有任何区别，二者等价。<br>gap lock 之间可以共存 !  两个事务可以共同持有。gap只阻塞插入意向锁。<br>why gap lock: 唯一目的就是阻止其他事务向gap中插入数据行。解决 phantom row问题。<br>gap lock与 插入意向锁冲突。rc 没有gap lock， rr使用gap与插入意向锁的冲突解决幻读。</p>
+<h4><span id="xia-yi-ge-jian-suo-next-key-locks">下一个键锁(Next-Key Locks)</span><a href="#xia-yi-ge-jian-suo-next-key-locks" class="header-anchor">#</a></h4><p>next-key lock 是 (索引记录上的索引记录锁) + (该索引记录<strong>前面</strong>的间隙上的锁) 二者的合体，它锁定索引记录以及该索引记录<strong>前面</strong>的间隙。有shard或exclusive两种模式。<br>next-key lock 带的 gap lock固定锁记录前面的间隙！</p>
+<h4><span id="cha-ru-yi-xiang-suo-insert-intention-locks">插入意向锁(Insert Intention Locks)</span><a href="#cha-ru-yi-xiang-suo-insert-intention-locks" class="header-anchor">#</a></h4><p>特殊的gap lock。<br>插入行之前，INSERT操作会首先在索引记录之间的间隙上设置insert intention lock，该锁的范围是(插入值, 向下的一个索引值)。有shard或exclusive两种模式，但，两种模式没有任何区别，二者等价。<br>插入意向锁 会和 gap锁冲突！<br>插入意向锁 本身多个不会冲突！插入意向锁也不会阻塞gap锁，只有先gap, 再insert Intention Lock 会阻塞。<br>why插入意向锁: 隔离级别为RR时正是利用插入意向锁与gap锁的冲突，来解决幻读问题。</p>
+<h4><span id="bu-tong-suo-yin-jia-suo-qing-kuang">不同索引加锁情况</span><a href="#bu-tong-suo-yin-jia-suo-qing-kuang" class="header-anchor">#</a></h4><ol>
+<li>聚簇索引<br> 索引命中：对这个 id 聚簇索引加 X 锁<br> 索引未命中：对 id 这个聚簇索引加 GAP 锁，GAP的范围是两个索引的间隙<br> 范围条件： 对范围区间内命中的id聚簇索引加Next-Key 锁，即左开右闭的GAP锁+X锁。eg: UPDATE student SET age = 100 WHERE id &lt; 3</li>
+<li>唯一索引<br> 索引命中：二级索引的叶子节点中保存了主键索引的位置，在给二级索引加锁的时候，对应聚簇索引也会一并加锁。加两个X锁。<br> 索引未命中：只会在二级索引加GAP锁，不会在聚簇索引上加锁。<br> 范围条件：对范围区间内命中的唯一索引加Next-Key 锁(对条件范围内的索引加GAP锁+X锁)，并且对命中索引对应的聚簇索引也会加 X锁。</li>
+<li>非唯一索引<br> 索引命中：对命中的非唯一索引加 Next-Key锁，在非唯一索引相邻区间加 GAP 锁。并且对命中索引对应的聚簇索引加X锁。<br> 索引未命中: 只会在二级索引加GAP锁，不会在聚簇索引上加锁。<br> 范围条件：与唯一索引的范围条件加锁类似，对命中的索引加Next-Key锁(对条件范围内的索引加GAP锁+X锁)，对应的聚簇索引加X锁。</li>
+<li>无索引<br> 在没有索引的时候，只能走聚簇索引，对表中的记录进行全表扫描。会给所有记录加行锁，所有聚簇索引之间会加上 GAP 锁。</li>
+</ol>
+<h4><span id="wei-shi-me-wu-suo-yin-geng-xin-hui-suo-quan-biao">为什么无索引更新会锁全表？</span><a href="#wei-shi-me-wu-suo-yin-geng-xin-hui-suo-quan-biao" class="header-anchor">#</a></h4><p>在没有索引的时候，只能走聚簇索引，对表中的记录进行全表扫描。会给所有记录加行锁，所有聚簇索引和聚簇索引之间还会加上 GAP 锁。<br>eg: UPDATE student SET age = 100 WHERE age = 33;   age无索引。<br>why: RR 下要保证当前读时不出现幻读。需要锁全表！否则任何一个记录都可以变成age=33, 任何一个地方都可以insert一条age=33。再执行该sql的时候会发现多出记录了。</p>
+<h4><span id="si-suo-chang-jing">死锁场景</span><a href="#si-suo-chang-jing" class="header-anchor">#</a></h4><p>死锁的可能性并不受隔离级别的影响。隔离级别改变的是读操作的行为，而死锁是由于写操作产生的。</p>
+<ol>
+<li>两个行锁顺序不同的获取<br>stu_no字段 是唯一索引_<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">session1 : update student set age = 88 where stu_no = 1;</span><br><span class="line">session2 : update student set age = 99 where stu_no = 3;</span><br><span class="line">session1 : update student set age = 99 where stu_no = 3;</span><br><span class="line">session2 : update student set age = 88 where stu_no = 1;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>死锁, 一个有stu_no=1的 X RECORD锁，一个有<em>stu_no=3的。</em></p>
+<ol start="2">
+<li><p>两个gap锁各自阻塞另一个事务的插入意向锁<br>stu_no字段 是唯一索引_</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">session1 : delete from student where stu_no = 8;</span><br><span class="line">session2 : delete from student where stu_no= 7;</span><br><span class="line">session1 : insert student (stu_no) values (6);</span><br><span class="line">session2 : insert student (stu_no) values (9);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>两个insert duplicate失败会加S RECORD, 若session1 commit, 两个返回duplicate-key error，若session1 rollback, 两个都想获取X锁，但对方都不释放S锁<br>stu_no字段是唯一索引_</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">session1: insert student (stu_no) values (6);</span><br><span class="line">session2: insert student (stu_no) values (6);</span><br><span class="line">session3: insert student (stu_no) values (6);</span><br><span class="line">session1: rollback;</span><br><span class="line">session2: commit;</span><br><span class="line">session3: commit;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>参考文档：<br><a href="https://mp.weixin.qq.com/s/IyeiP2t1TGxZlPqSPAWNZg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/IyeiP2t1TGxZlPqSPAWNZg</a><br><a href="https://mp.weixin.qq.com/s/dRIfbVwAJfEuZ978VlyXIA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/dRIfbVwAJfEuZ978VlyXIA</a><br><a href="https://mp.weixin.qq.com/s/S9Fzwu7-g81DsWgjaARHvQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/S9Fzwu7-g81DsWgjaARHvQ</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1247 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/23/mysql/dbfenbiao/">分库分表组件原理</a>
+            
+        </h1>
+        <div class="content">
+            <p>参考文档：<br><a href="https://github.com/Meituan-Dianping/Zebra/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6%E4%B8%BB%E6%B5%81%E8%AE%BE%E8%AE%A1" target="_blank" rel="noopener">https://github.com/Meituan-Dianping/Zebra/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6%E4%B8%BB%E6%B5%81%E8%AE%BE%E8%AE%A1</a></p>
+<ol>
+<li>数据库中间件设计方案<br>典型的数据库中间件设计方案有2种：<br>服务端代理(proxy：代理数据库)、<br>客户端代理(datasource：代理数据源)。<br>下图演示了这两种方案的架构</li>
+</ol>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/db/databasdesign.png" alt></p>
+<p>可以看到不论是代理数据库还是代理数据源，底层都操作了多个数据库实例。不同的是：</p>
+<p>服务端代理(proxy：代理数据库)中： 我们独立部署一个代理服务，这个代理服务背后管理多个数据库实例。而在应用中，我们通过一个普通的数据源(c3p0、druid、dbcp等)与代理服务器建立连接，所有的sql操作语句都是发送给这个代理，由这个代理去操作底层数据库，得到结果并返回给应用。在这种方案下，分库分表和读写分离的逻辑对开发人员是完全透明的。</p>
+<p>客户端代理(datasource：代理数据源)： 应用程序需要使用一个特定的数据源，其作用是代理，内部管理了多个普通的数据源(c3p0、druid、dbcp等)，每个普通数据源各自与不同的库建立连接。应用程序产生的sql交给数据源代理进行处理，数据源内部对sql进行必要的操作，如sql改写等，然后交给各个普通的数据源去执行，将得到的结果进行合并，返回给应用。数据源代理通常也实现了JDBC规范定义的API，因此能够直接与orm框架整合。在这种方案下，用户的代码需要修改，使用这个代理的数据源，而不是直接使用c3p0、druid、dbcp这样的连接池</p>
+<ol start="2">
+<li>主流的数据库中间件实现对比<br>无论是代理数据库，还是代理数据源，二者的作用都是类似的。以下列出了这两种方案目前已有的实现以及各自的优缺点：</li>
+</ol>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/db/databasecompare.jpg" alt></p>
+<p>数据库代理</p>
+<p>目前的实现方案有：阿里巴巴开源的cobar，mycat团队在cobar基础上开发的mycat，mysql官方提供的mysql-proxy，奇虎360在mysql-proxy基础开发的atlas。目前除了mycat，其他几个项目基本已经没有维护。</p>
+<p>优点：多语言支持。也就是说，不论你用的php、java或是其他语言，都可以支持。原因在于数据库代理本身就实现了mysql的通信协议，你可以就将其看成一个mysql 服务器。mysql官方团队为不同语言提供了不同的客户端驱动，如java语言的mysql-connector-java，python语言的mysql-connector-python等等。因此不同语言的开发者都可以使用mysql官方提供的对应的驱动来与这个代理服务器建通信。</p>
+<p>缺点：实现复杂。因为代理服务器需要实现mysql服务端的通信协议，因此实现难度较大。</p>
+<p>数据源代理<br>目前的实现方案有：阿里巴巴开源的tddl，大众点评开源的zebra，当当网开源的sharding-jdbc。</p>
+<p>优点：更加轻量，可以与任何orm框架整合。这种方案不需要实现mysql的通信协议，因为底层管理的普通数据源，可以直接通过mysql-connector-java驱动与mysql服务器进行通信，因此实现相对简单。</p>
+<p>缺点：仅支持某一种语言。例如tddl、zebra、sharding-jdbc都是使用java语言开发，因此对于使用其他语言的用户，就无法使用这些中间件。版本升级困难，因为应用使用数据源代理就是引入一个jar包的依赖，在有多个应用都对某个版本的jar包产生依赖时，一旦这个版本有bug，所有的应用都需要升级。而数据库代理升级则相对容易，因为服务是单独部署的，只要升级这个代理服务器，所有连接到这个代理的应用自然也就相当于都升级了。</p>
+<p>ORM框架代理<br>目前有hibernate提供的hibernate-shards，也可以通过mybatis插件的方式编写。相对于前面两种方案，这种方案可以说是只有缺点，没有优点。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 625 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/23/netty/nettyrun/">netty服务端启动原理</a>
+            
+        </h1>
+        <div class="content">
+            <p>Netty 是一个事件驱动模式的高性能的 NIO 框架，对内封装了 Java NIO 的大量复杂且繁琐的实现细节，对外提供了高度抽象的组件和易用的 API，提供了针对市面上大部分通信协议的支持，是当下 Java 生态中最流行的远程通信框架之一。</p>
+<p><strong>Netty 框架本质上是对于 Java NIO 的封装，Java NIO 本质上是对于操作系统提供的 IO 多路复用功能的封装</strong>，因此其设计思路是一脉相承的，即采取了事件驱动的 Reactor 模式。</p>
+<p>其中的 bossGroup 就是 mainReactor 的具体实现，主要用于监听服务端口，接收客户端的 TCP 连接请求。 workerGroup 就是 subReactor 的具体实现，主要用于消息的读取发送、编解码以及其他业务逻辑的处理。</p>
+<p>它们本质上都可以视作一个线程池，里面的每个线程（NioEventLoop）都唯一绑定了一个 Java NIO 中的 Selector 对象，用于实现 IO 多路复用的功能，来监听多个（文件描述符）客户端的输入。</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/netty/netty%E6%9E%B6%E6%9E%84.png" alt></p>
+<p>启动demo</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DiscardServer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> port;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">DiscardServer</span><span class="hljs-params">(<span class="hljs-keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.port = port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;</span><br><span class="line">          <span class="hljs-comment">// mainReactor(Acceptor)线程池，主要用于监听服务端口，处理客户端连接</span></span><br><span class="line">        EventLoopGroup bossGroup = <span class="hljs-keyword">new</span> NioEventLoopGroup();</span><br><span class="line">          <span class="hljs-comment">// subReactor线程池，主要用于实现对于消息的接收发送、编解码以及其他业务处理</span></span><br><span class="line">        EventLoopGroup workerGroup = <span class="hljs-keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">            <span class="hljs-comment">// Netty的启动辅助类</span></span><br><span class="line">            ServerBootstrap b = <span class="hljs-keyword">new</span> ServerBootstrap();</span><br><span class="line">            <span class="hljs-comment">// 初始化ServerBootstrap实例</span></span><br><span class="line">            b.group(bossGroup, workerGroup)</span><br><span class="line">             <span class="hljs-comment">// 指定Channel类型为NioServerSocketChannel</span></span><br><span class="line">             .channel(NioServerSocketChannel.class)</span><br><span class="line">             <span class="hljs-comment">// 添加自定义Handler，会用于workerGroup中的Channel的处理</span></span><br><span class="line">             .childHandler(<span class="hljs-keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                 <span class="hljs-meta">@Override</span></span><br><span class="line">                 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(SocketChannel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                     ch.pipeline().addLast(<span class="hljs-keyword">new</span> DiscardServerHandler());</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;)</span><br><span class="line">             <span class="hljs-comment">// 添加Channel选项</span></span><br><span class="line">             .option(ChannelOption.SO_BACKLOG, <span class="hljs-number">128</span>)</span><br><span class="line">             .childOption(ChannelOption.SO_KEEPALIVE, <span class="hljs-keyword">true</span>); </span><br><span class="line"></span><br><span class="line">            <span class="hljs-comment">// Bind and start to accept incoming connections.</span></span><br><span class="line">            <span class="hljs-comment">// 服务端启动核心逻辑，初始化Channel并绑定指定服务端口开始监听</span></span><br><span class="line">            ChannelFuture f = b.bind(port).sync();</span><br><span class="line"></span><br><span class="line">            <span class="hljs-comment">// Wait until the server socket is closed.</span></span><br><span class="line">            <span class="hljs-comment">// In this example, this does not happen, but you can do that to gracefully</span></span><br><span class="line">            <span class="hljs-comment">// shut down your server.</span></span><br><span class="line">            f.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="hljs-keyword">finally</span> &#123;</span><br><span class="line">            <span class="hljs-comment">// 服务端关闭</span></span><br><span class="line">            workerGroup.shutdownGracefully();</span><br><span class="line">            bossGroup.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">int</span> port = <span class="hljs-number">8080</span>;</span><br><span class="line">        <span class="hljs-keyword">if</span> (args.length &gt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">            port = Integer.parseInt(args[<span class="hljs-number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">new</span> DiscardServer(port).run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>初始化： 创建 ServerBootstrap 实例并进行初始化</li>
+<li>启动服务： ServerBootstrap 绑定服务端口并开始监听</li>
+</ol>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/design/">design</a>
@@ -319,7 +485,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    13 分钟 读完 (大约 1942 个字)
+                    3 分钟 读完 (大约 484 个字)
                 </span>
                 
                 
@@ -328,298 +494,26 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/12/03/design/idemptent/">幂等设计</a>
+                <a class="has-link-black-ter" href="/2021/08/23/design/stable/">线上稳定性保障</a>
             
         </h1>
         <div class="content">
-            <p>请求幂等性总结：</p>
-<p>1.是否需要幂等。比如查询，insert含唯一索引的表，update set数据，delete by id 等简单场景是天然幂等。不需要额外做幂等操作。无法这样的比如要做数据的累加，就要做幂等。</p>
-<p>2.如何判断重复。</p>
-<p>业务唯一键，查记录表或流水表，根据记录的有无和状态来判断。</p>
-<p>3.实现。  </p>
-<ol>
-<li>简单的话接口直接实现, 但通常幂等逻辑是有通用性的</li>
-<li>如果服务多接口使用写幂等工具类</li>
-<li>如果多服务使用一套幂等逻辑，写sdk</li>
-<li>最复杂的多服务间幂等，还无法都获取到记录结果，就要在sdk统一读写幂等表，读写相同的幂等记录做幂等</li>
-</ol>
-<p>4.并发处理</p>
-<ol>
-<li>单机情况下，使用java锁synchronized    </li>
-<li>使用数据库锁，悲观锁：select for update，乐观锁：update set XXX and version = 2 where version = 1     </li>
-<li>使用分布式锁：<br>redis锁：1.过期时间导致并发问题，2.主从切换时锁丢失<br>zookeeper锁：写能力不如redis   </li>
-</ol>
-<p>原文：</p>
-<ol>
-<li><p><strong>维度1 : 是否需要幂等处理？</strong></p>
-<ol>
-<li><p>查询场景</p>
-<p> select 字段 from 表 where 条件 ，这种是不会对数据产生任何变化，所以查询场景具备天然幂等性；注意这里的幂等是对系统资源的改变，而不是返回数据的结果，即使返回结果不相同但是该操作本身没有副作用，所以幂等</p>
+            <ol>
+<li><p>监控<br>把各个环节的业务量级、成功失败原因、活动量级上报，这些数据是有因果关系的<br>所以我们把这些数据汇总到大盘，提高问题定位的速度。</p>
 </li>
-<li><p>新增场景</p>
-<p> insert into 表 （order_id，字段） value（1，字段） ：</p>
-<p> 1）如果order_id为唯一键，重复操作上面的业务，只会插入一条数据，具备天然幂等性。</p>
-<p> 2）如order_id不是唯一键，那上面业务多次操作，数据都会新增多条，不具备幂等性。</p>
+<li><p>隔离<br>区分业务，隔离餐团与买单业务，然后区分了环节，隔离查询与交易环节<br>最终业务与业务隔离，交易与查询隔离，保障了系统的稳定性。</p>
 </li>
-<li><p>修改场景</p>
-<p> 1）直接赋值场景：update 表 set price = 20 where id=1 ；分析： 这种场景不管执行多少次，price都一样，具备天然幂等性；</p>
-<p> 2）计算赋值场景：update 表 set price = price + 20 where id=1，每次操作price数据都不一样，不具备幂等性；</p>
-</li>
-<li><p>删除场景</p>
-<p> 1）delete from 表 where id=1 ，多次操作，结果一样，具备天然幂等性</p>
-<p> 2）delete from 表 where price &gt; 20,多次操作，结果一样，具备天然幂等性</p>
-<p> 总结：单纯的查询接口，删除接口，没有计算的更新接口，每次执行结果是天然幂等的，其他情况则可能需要做幂等</p>
+<li><p>降级，首先是确认场景优先级，区分核心功能非核心功能，区分核心依赖非核心依赖</p>
 </li>
 </ol>
-</li>
-<li><p><strong>维度2 : 是否需要并发控制？</strong></p>
-<ol>
-<li><p>场景1: 唯一键数据的重复插入</p>
-<p> 此场景不需要并发控制，天然并发安全，但需要业务方处理DuplicateKeyException异常</p>
-</li>
-<li><p>场景2：转账，若 a &gt;= 100, a -100， b+100</p>
-<p> 此场景为了保证数据一致性，事务原子性，需要顺序执行</p>
-<p> 总结：除了极其简单的场景外，大部分幂等场景都需要并发控制，需要强锁还是弱锁</p>
-</li>
-</ol>
-</li>
-<li><p><strong>维度3 : 如何判断是重复请求？</strong></p>
-<ol>
-<li><p>场景1: 无业务主键的新增</p>
-<p> 此场景下需要服务端颁发token，通过token判断是否重复，做防重复提交</p>
-</li>
-<li><p>场景2: 有业务唯一键的新增</p>
-<p> 此场景下可以使用业务唯一键判断是否重复</p>
-</li>
-<li><p>场景3: 有业务唯一键的更新</p>
-<p> 此场景下可以使用业务数据对应的状态判断是否重复</p>
-</li>
-</ol>
-</li>
-<li><p><strong>维度4 : 重复请求处理方式？</strong></p>
-<ol>
-<li><p>场景1：消息重复消费</p>
-<p> 此场景下，不需要给上游一个返回，重复执行只需要丢弃</p>
-</li>
-<li><p>场景2：前端重复提交</p>
-<p> 此场景下，需要给用户一个提示，那么重复请求可以直接抛出一个DuplicateReqeustException异常，由上层捕获，前端展示“请不要重复请求”</p>
-</li>
-<li><p>场景3: 底层的转账接口</p>
-<p> 此场景下，同一笔转账，重复调用第一次若成功了，第二次应该返回相同“成功”，若第一次失败了，第二次返回业务执行结果</p>
-<p> 结论：根据不同场景，应该有不同的结束方式，应该由业务方自己决定是丢弃，抛异常，直接返回，还是执行业务逻辑</p>
-</li>
-</ol>
-</li>
-<li><p><strong>维度5 : 重复请求返回是否相同？</strong></p>
-<ol>
-<li><p>场景1：第一次执行成功，第二次返回应该与第一次相同</p>
-</li>
-<li><p>场景2：第一次执行因为代码原因导致的异常而失败，第二次返回应该与第一次相同</p>
-</li>
-<li><p>场景3：第一次执行因为网络原因失败，第二次应该执行业务逻辑，返回结果可能不一致</p>
-<p> 总结：根据第一次执行的成功和失败，判断第二次应该执行业务逻辑还是直接返回相同结果</p>
-</li>
-</ol>
-</li>
-<li><p><strong>维度6 : 重复请求调用下游如何处理？</strong></p>
-<ol>
-<li><p>场景1: 业务逻辑中，有调用下游rpc接口，第一次执行失败，第二次重复执行业务逻辑再次调用下游接口</p>
-<p> 总结：此场景本质上是一个分布式一致性问题，需要业务方自己解决，或者保证下游接口也是幂等的</p>
-</li>
-</ol>
-</li>
-<li><p><strong>识别相同请求</strong></p>
-<ol>
-<li>token机制：每次提交上来的请求，都带上一个token标识，同一个token只处理一次，例如：新增场景的防止重复提交</li>
-<li>业务唯一标识：使用id或者unique key，例如：支付后，支付凭证落库</li>
-<li>业务唯一标识 + 状态：支付后，通过支付凭证号和当前订单状态，更新订单状态</li>
-<li>在业务侧建立同库幂等数据表，记录请求唯一键和执行状态，执行成功后更新状态为成功</li>
-</ol>
-</li>
-<li><p><strong>并发处理方式</strong></p>
-<ol>
-<li><p>单机情况下，使用java锁synchronized</p>
-</li>
-<li><p>使用数据库锁，悲观锁：select for update，乐观锁：update set XXX and version = 2 where version = 1</p>
-</li>
-<li><p>使用分布式锁：</p>
-<p> redis锁：1.过期时间导致并发问题，2.主从切换时锁丢失</p>
-<p> zookeeper锁：写能力不如redis</p>
-</li>
-</ol>
-</li>
-<li><p><strong>一致性保证</strong></p>
-<ol>
-<li>业务方需保证原子性，本地更新都在一个事务里</li>
-<li>若无法保证分布式事务，下游接口需是幂等的，且本地事务必须重试达到最终一致</li>
-</ol>
-</li>
-</ol>
-<h1><span id="sdk-she-ji"><strong>SDK设计</strong></span><a href="#sdk-she-ji" class="header-anchor">#</a></h1><ol>
-<li><strong>并发控制</strong><ol>
-<li>提供注解，按业务自动划分，提供指定幂等唯一键</li>
-<li>提供并发控制，分布式锁服务（redis或zk），指定分布式锁时间</li>
-<li>提供并发时幂等处理方式，丢弃/抛异常/等待锁</li>
-<li>提供降级选择，不强依赖于锁服务</li>
-<li>提供token注解，防止重复提交</li>
-</ol>
-</li>
-<li><strong>判断重复请求</strong></li>
-</ol>
-<p>处理方式     优点               缺点</p>
-<p>方案一     业务方自己判断     业务方需要自己考虑判重</p>
-<p>方案二    sdk提供判重接口，由业务方实现      可以实现重复请求的通用处理</p>
-<p>方案三    幂等表：在业务侧建立同库幂等数据表，记录请求唯一键和执行状态，执行成功后更新状态为成功    业务方无需再关心判重问题       数据量大，开发量大，复杂度较高</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/redis/">redis</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2 分钟 读完 (大约 333 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/11/18/redis/缓存雪崩等/">缓存穿透、击穿、雪崩</a>
-            
-        </h1>
-        <div class="content">
-            <h3><span id="huan-cun-chuan-tou"><strong>缓存穿透</strong></span><a href="#huan-cun-chuan-tou" class="header-anchor">#</a></h3><p>定义: 访问一个<strong>不存在的key</strong>，缓存不起作用，请求会穿透到DB，流量大时DB会挂掉。</p>
-<p>解决方案：</p>
-<ol>
-<li>缓存空值 （值少时）</li>
-<li>布隆过滤器， 特性: 没有的肯定没有，有的不一定有</li>
-</ol>
-<h3><span id="huan-cun-ji-chuan"><strong>缓存击穿</strong></span><a href="#huan-cun-ji-chuan" class="header-anchor">#</a></h3><p>定义：<strong>并发性,一个存在的key，在缓存过期的一刻</strong>，同时有<strong>大量的并发请求</strong>，这些请求都会击穿到DB，造成瞬时DB请求量大、压力骤增。</p>
-<p>解决方案：</p>
-<ol>
-<li>分布式锁，在访问key之前，采用分布式锁SETNX（set if not exists）来设置另一个短期key来锁住当前key的访问，访问结束再删除该短期key</li>
-</ol>
-<h3><span id="huan-cun-xue-beng"><strong>缓存雪崩</strong></span><a href="#huan-cun-xue-beng" class="header-anchor">#</a></h3><p>定义：<strong>大量的key</strong>设置了相同的过期时间，或者某台服务器宕机，导致大量缓存在<strong>同一时刻全部失效</strong>，造成瞬时DB请求量大、压力骤增，引起雪崩。</p>
-<p>解决方案：</p>
-<ol>
-<li>将key的过期时间设置时添加一个随机时间，分散过期时间</li>
-<li>如果是热点key，可以加分布式锁，减少并发量</li>
-<li>二级缓存（本地缓存），减少db压力</li>
-</ol>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分钟 读完 (大约 849 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/10/20/travel/shsz/">2019国庆上海苏州四日游记</a>
-            
-        </h1>
-        <div class="content">
-            <div class="toc">
-
-<!-- toc -->
-
 <ul>
-<li><a href="#9-yue-30-ri-wai-tan-hen-jiu-yi-qian-yang-rou-chuan">9月30日 外滩  很久以前羊肉串</a></li>
-<li><a href="#10-yue-01-ri-wu-kang-lu">10月01日 武康路</a></li>
-<li><a href="#10-yue-2-ri-xie-mian-cheng-pin-shu-dian-jin-ji-hu">10月2日 蟹面 诚品书店 金鸡湖</a></li>
-<li><a href="#10-yue-3-ri-yi-yuan-liu-yuan">10月3日 怡园 留园</a></li>
-<li><a href="#10-yue-4-ri-gui-tu">10月4日 归途</a></li>
+<li>系统容量问题，优先降级非核心功能，限流查询链路</li>
+<li>功能异常问题，按业务、场景类型进行降级，避免故障影响扩大</li>
 </ul>
-<!-- tocstop -->
-
-</div>
-
-<h3><span id="9-yue-30-ri-wai-tan-hen-jiu-yi-qian-yang-rou-chuan">9月30日  外滩  很久以前羊肉串</span><a href="#9-yue-30-ri-wai-tan-hen-jiu-yi-qian-yang-rou-chuan" class="header-anchor">#</a></h3><p>接到小菜猫，先去旅馆放下东西，直接去外滩。 南京东路上都是武警，维持秩序，看着有点厉害。我是第二次来外滩，小菜猫是第一次，还是很好看的，人很多，当晚有灯光表演，30分钟一次，我们赶上了一半。海风很舒服。整个外滩的爱国氛围也很浓厚。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%A4%96%E6%BB%A9.jpeg" alt="外滩"></p>
-<p>去吃了很久以前羊肉串，吃到晚上12点多，羊肉真的好嫩，当面烤也是特色，配上啤酒，舒服，长肉。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E5%BE%88%E4%B9%85%E4%BB%A5%E5%89%8D%E7%BE%8A%E8%82%89%E4%B8%B2.jpeg" alt></p>
-<h3><span id="10-yue-01-ri-wu-kang-lu">10月01日 武康路</span><a href="#10-yue-01-ri-wu-kang-lu" class="header-anchor">#</a></h3><p>武康路没有拍什么照片，是一条安静古老的小路，下着小雨，氛围很好</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%A5%BC.jpeg" alt></p>
-<p>在这里出发去世界上最大的星巴克</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%9C%80%E5%A4%A7%E7%9A%84%E6%98%9F%E5%B7%B4%E5%85%8B.jpeg" alt></p>
-<p>一栋星巴克，里面两层。点了一杯奶和一杯咖啡。没有太好喝但环境很好，主要咖啡☕️咱也不懂。里面有些机器在做咖啡，全流程透明化。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%98%9F%E5%B7%B4%E5%85%8Bbb.jpeg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%98%9F%E5%B7%B4%E5%85%8B%E5%B7%A5%E4%B8%9A%E8%89%BA%E6%9C%AF.jpeg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%98%9F%E5%B7%B4%E5%85%8B21.jpeg" alt></p>
-<p>下午5点多了，风雨越来越大，继续出发，去豫园&amp;城隍庙，但到了之后风雨太大，也没找到豫园在哪，哈哈，就转地铁回去了。</p>
-<p>晚上去吃了和府捞面，办了会员，赠了个虾，嚯，真虾(瞎)</p>
-<h3><span id="10-yue-2-ri-xie-mian-cheng-pin-shu-dian-jin-ji-hu">10月2日 蟹面 诚品书店 金鸡湖</span><a href="#10-yue-2-ri-xie-mian-cheng-pin-shu-dian-jin-ji-hu" class="header-anchor">#</a></h3><p>上午出门去吃蟹面，尴尬的是行李太沉，不该带着行李去吃，不过蟹面还是很不错，从没吃过这样式儿的，带汤的那碗很不错，人超级多，排了好一会儿</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E8%9F%B9%E9%9D%A2.jpeg" alt></p>
-<p>出发去苏州~</p>
-<p>上海到苏州也太快了，半个小时就到了，小菜猫睡了一会儿，我还没睡就到了，放下行李先奔了金鸡湖</p>
-<p>诚品书店太安静了，没怎么拍照片，金鸡湖还是很美的，毕竟北方湖还是很少的。见到漂亮的湖，小风一吹，还是很爽。</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E9%87%91%E9%B8%A1%E6%B9%96.jpeg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E9%87%91%E9%B8%A1%E6%B9%962.jpeg" alt></p>
-<p>美美哒<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E9%87%91%E9%B8%A1%E6%B9%963.jpeg" alt></p>
-<p>晚上吃了高级台湾自助火锅，到了才发现是自助，不过还是靠实力吃回来了。</p>
-<h3><span id="10-yue-3-ri-yi-yuan-liu-yuan">10月3日 怡园 留园</span><a href="#10-yue-3-ri-yi-yuan-liu-yuan" class="header-anchor">#</a></h3><p>上午要去留园，然后我拉肚子，耽误了坐车，就先去了怡园，没想到怡园还不错，后来发现留园反而因为人多，毫无观赏体验。</p>
-<p>怡园</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%80%A1%E5%9B%AD.jpeg" alt></p>
-<p>留园就不放了，人太多了，下次不去那么多人的地方了。。</p>
-<h3><span id="10-yue-4-ri-gui-tu">10月4日 归途</span><a href="#10-yue-4-ri-gui-tu" class="header-anchor">#</a></h3><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E8%A7%84%E7%A8%8B.jpeg" alt></p>
-<p>沿途的风光也不错，回家啦</p>
+<ol start="4">
+<li>全链路压测<br>需要定期进行全链路压测评估链路流量负载能力。<br>压测前，会对压测流量进行ID偏移，防止污染线上，同步压测数据并进行状态改写。<br>压测中读写分离，读线上数据，防止污染本地缓存，写影子表防止污染线上表。<br>压测后扫描线上数据，确保无压测数据写到线上，然后清理压测数据。</li>
+</ol>
+<p>总结：<br>事前准备，主要做链路梳理，明确强弱依赖，然后进行性能评估，主要进行容量评估和负载评估，然后完善监控，明确因果建设大盘，最后准备降级预案，区分场景，区分优先级。<br>事中快速响应，通过监控大盘定位问题，按预案进行扩容、限流、降级、熔断等操作。<br>事后进行性能优化，问题修复并进行复盘总结。</p>
 
         </div>
         
@@ -641,17 +535,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-19T22:54:24.000Z">2019-09-20</time>
+                <time class="level-item has-text-grey" datetime="2021-08-21T03:10:43.000Z">2021-08-21</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 238 个字)
+                    7 分钟 读完 (大约 1089 个字)
                 </span>
                 
                 
@@ -660,30 +554,28 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/20/travel/shszplan/">2019国庆上海苏州四日游行程计划</a>
+                <a class="has-link-black-ter" href="/2021/08/21/design/delaymq/">如何实现延迟队列</a>
             
         </h1>
         <div class="content">
-            <div class="toc">
-
-<!-- toc -->
-
+            <p>如何实现一个延迟队列？</p>
+<h4><span id="1-shu-ju-ku-lun-xun">(1) 数据库轮询</span><a href="#1-shu-ju-ku-lun-xun" class="header-anchor">#</a></h4><p>例如对于订单支付失效要求比较高的，每2S扫表一次检查过期的订单进行主动关单操作<br>优点是简单<br>缺点是每分钟全局扫表，浪费资源，如果遇到表数据订单量即将过期的订单量很大，会造成关单延迟</p>
+<h4><span id="2-jdk-de-yan-chi-dui-lie">(2) JDK的延迟队列</span><a href="#2-jdk-de-yan-chi-dui-lie" class="header-anchor">#</a></h4><p>一个无界阻塞队列，该队列只有在延迟期满的时候才能从中获取元素，放入DelayQueue中的对象，是必须实现Delayed接口的<br>优点:效率高,任务触发时间延迟低。<br>缺点:(1)服务器重启后，数据全部消失，怕宕机 (2)集群扩展相当麻烦 (3)因为内存条件限制的原因，比如下单未付款的订单数太多，那么很容易就出现OOM异常 (4)代码复杂度较高</p>
+<h4><span id="3-shi-jian-lun-suan-fa">(3) 时间轮算法</span><a href="#3-shi-jian-lun-suan-fa" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis/%E6%97%B6%E9%97%B4%E8%BD%AE.png" alt></p>
+<p>时间轮算法可以类比于时钟，如上图箭头（指针）按某一个方向按固定频率轮动，每一次跳动称为一个 tick。这样可以看出定时轮由个3个重要的属性参数，ticksPerWheel（一轮的tick数），tickDuration（一个tick的持续时间）以及 timeUnit（时间单位），例如当ticksPerWheel=60，tickDuration=1，timeUnit=秒，这就和现实中的始终的秒针走动完全类似了。<br>如果当前指针指在1上面，我有一个任务需要4秒以后执行，那么这个执行的线程回调或者消息将会被放在5上。那如果需要在20秒之后执行怎么办，由于这个环形结构槽数只到8，如果要20秒，指针需要多转2圈。位置是在2圈之后的5上面（20 % 8 + 1）</p>
+<p>优点:效率高,任务触发时间延迟时间比delayQueue低，代码复杂度比delayQueue低。<br>缺点:</p>
 <ul>
-<li><a href="#2019-guo-qing-shang-hai-su-zhou-si-tian-lu-xing">2019 国庆上海苏州四天旅行</a><ul>
-<li><a href="#xing-cheng-gui-hua">行程规划</a></li>
+<li>服务器重启后，数据全部消失，怕宕机</li>
+<li>集群扩展相当麻烦</li>
+<li>因为内存条件限制的原因，比如下单未付款的订单数太多，那么很容易就出现OOM异常</li>
 </ul>
-</li>
-</ul>
-<!-- tocstop -->
-
-</div>
-
-<h3><span id="2019-guo-qing-shang-hai-su-zhou-si-tian-lu-xing">2019 国庆上海苏州四天旅行</span><a href="#2019-guo-qing-shang-hai-su-zhou-si-tian-lu-xing" class="header-anchor">#</a></h3><h4><span id="xing-cheng-gui-hua">行程规划</span><a href="#xing-cheng-gui-hua" class="header-anchor">#</a></h4><p>北京前往上海 9.30 14:10 - 20:09 G141 检票口 11    </p>
-<h5><span id="9-yue-30-ri">9月30日</span><a href="#9-yue-30-ri" class="header-anchor">#</a></h5><p>住宿 上海家荣酒店公寓(中山公园店)<br>21点 很久以前羊肉串(中山公园店)   </p>
-<h5><span id="10-yue-1-ri">10月1日</span><a href="#10-yue-1-ri" class="header-anchor">#</a></h5><p>上午 9点<br>武康路<br>上午 11点<br>田子坊<br>下午1点<br>豫园&amp;城隍庙 ，明朝时期的私人花园，拥有“城市山林”、“奇秀甲于东南”两种美称，是江南园林中的一颗明珠。<br>下午4点<br>东方明珠<br>南京路步行街<br>下午7点半<br>外滩  外滩观光隧道  </p>
-<h5><span id="10-yue-2-ri">10月2日</span><a href="#10-yue-2-ri" class="header-anchor">#</a></h5><p>上午9点<br>中华艺术宫<br>上午12点<br>退房<br>下午14:41 上海前往苏州  14:41 - 15:15 D3010 检票口 25A<br>住宿 骏怡连锁酒店<br>下午4点半<br>诚品书店<br>金鸡湖<br>阳澄湖大闸蟹   </p>
-<h5><span id="10-yue-3-ri">10月3日</span><a href="#10-yue-3-ri" class="header-anchor">#</a></h5><p>上午9点<br>拙政园<br>苏州博物馆<br>下午1点<br>虎丘<br>留园<br>网师园夜景</p>
-<h5><span id="10-yue-4-ri">10月4日</span><a href="#10-yue-4-ri" class="header-anchor">#</a></h5><p>苏州前往北京 10.4 11:40 - 17:10 G128 检票口 A1</p>
+<h4><span id="4-redis-zset-shi-xian">(4) redis zset实现</span><a href="#4-redis-zset-shi-xian" class="header-anchor">#</a></h4><p>利用redis的zset,zset是一个有序集合，每一个元素(member)都关联了一个score,通过score排序来取集合中的值。<br>zset常用命令<br>添加元素: ZADD key score member [[score member] [score member] …]<br>按顺序查询元素: ZRANGE key start stop [WITHSCORES]<br>查询元素score: ZSCORE key member<br>移除元素: ZREM key member [member …]</p>
+<p>我们将订单超时时间戳与订单号分别设置为score和member,系统扫描第一个元素判断是否超时（zrange key 0 0 [withscores] ）</p>
+<p>存在一个致命的硬伤，在高并发条件下，多消费者会取到同一个订单号.<br>解决方案:<br>(1) 用分布式锁，但是用分布式锁，性能下降了，该方案不细说。<br>(2) 对ZREM的返回值进行判断，只有大于0的时候 (删除成功)，才可消费数据</p>
+<p>优点:<br>(1) 由于使用Redis作为消息通道，消息都存储在Redis中。如果发送程序或者任务处理程序挂了，重启之后，还有重新处理数据的可能性。<br>(2) 做集群扩展相当方便<br>(3) 时间准确度高<br>缺点:<br>(1) 需要额外进行redis维护</p>
+<h4><span id="5-shi-yong-xiao-xi-dui-lie">(5)使用消息队列</span><a href="#5-shi-yong-xiao-xi-dui-lie" class="header-anchor">#</a></h4><p>我们可以采用rabbitMQ的延时队列。RabbitMQ具有以下两个特性，可以实现延迟队列</p>
+<p>RabbitMQ可以针对Queue和Message设置 x-message-tt，来控制消息的生存时间，如果超时，则消息变为dead letter<br>lRabbitMQ的Queue可以配置x-dead-letter-exchange 和x-dead-letter-routing-key（可选）两个参数，用来控制队列内出现了deadletter，则按照这两个参数重新路由。</p>
+<p>优缺点<br>优点: 高效,可以利用rabbitmq的分布式特性轻易的进行横向扩展,消息支持持久化增加了可靠性。缺点：本身的易用度要依赖于rabbitMq的运维.因为要引用rabbitMq,所以复杂度和成本变高</p>
 
         </div>
         
@@ -705,17 +597,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-10T12:54:24.000Z">2019-09-10</time>
+                <time class="level-item has-text-grey" datetime="2021-08-13T09:40:43.000Z">2021-08-13</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/spring/">spring</a>
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 349 个字)
+                    2 分钟 读完 (大约 350 个字)
                 </span>
                 
                 
@@ -724,14 +616,17 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/10/spring/springioc初始化/">springioc初始化</a>
+                <a class="has-link-black-ter" href="/2021/08/13/design/report/">报表设计学习</a>
             
         </h1>
         <div class="content">
-            <p>IOC 容器的初始化过程分为三步骤：Resource 定位、BeanDefinition 的载入和解析，BeanDefinition 注册</p>
-<p>1.Resource 定位。我们一般用外部资源来描述 Bean 对象，所以在初始化 IOC 容器的第一步就是需要定位这个外部资源。</p>
-<p>2.BeanDefinition 的载入和解析。装载就是 BeanDefinition 的载入。BeanDefinitionReader 读取、解析 Resource 资源，也就是将用户定义的 Bean 表示成 IOC 容器的内部数据结构：BeanDefinition。在 IOC 容器内部维护着一个 BeanDefinition Map 的数据结构，在配置文件中每一个都对应着一个BeanDefinition对象。</p>
-<p>3.BeanDefinition 注册。向IOC容器注册在第二步解析好的 BeanDefinition，这个过程是通过 BeanDefinitionRegistery 接口来实现的。在 IOC 容器内部其实是将第二个过程解析得到的 BeanDefinition 注入到一个 HashMap 容器中，IOC 容器就是通过这个 HashMap 来维护这些 BeanDefinition 的。在这里需要注意的一点是这个过程并没有完成依赖注入，依赖注册是发生在应用第一次调用 getBean() 向容器索要 Bean 时。当然我们可以通过设置预处理，即对某个 Bean 设置 lazyinit 属性，那么这个 Bean 的依赖注入就会在容器初始化的时候完成。</p>
+            <p>es + clickhouse 搭配</p>
+<h4><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h4><p>es适合做全文检索需求，ch适合做大数据分析需求，本需求使用ch建立es视图表兼容es的维表，将维表数据和事实表数据分开处理，使用时连表查询，充分利用了两种引擎的特性，既支持全文检索，也保证了查询性能</p>
+<h4><span id="es-amp-clickhouse">es &amp; clickhouse</span><a href="#es-amp-clickhouse" class="header-anchor">#</a></h4><p>clickhouse除了不能全文检索，其他方面完全超过es, 尤其是在事实表，这种日志类型不断增加的业务类型上，主要在查询性能，稳定性，磁盘使用率 上要比es优秀很多，</p>
+<p>因为ch本身的一个列式存储，编码压缩，向量化执行等特性。而且ch支持sql语言。</p>
+<p>我们这个业务实际没有导入ch，而是ch上建立了一个es的视图表，从ch层兼容了es。</p>
+<p>账户维度数据使用es，便于这块数据的更新，因为ch在update原数据方面支持的不算很好，且es支持全文检索<br>消耗事实数据使用ch，这部分量非常大，每个account每分钟一行, 且是纯insert, 适合ch处理。</p>
+<p>es的存储特性，让他在全文检索的时候不能替代。</p>
 
         </div>
         
@@ -753,17 +648,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-03T02:54:24.000Z">2019-09-03</time>
+                <time class="level-item has-text-grey" datetime="2021-08-13T09:10:43.000Z">2021-08-13</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/生活/">生活</a>
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 617 个字)
+                    5 分钟 读完 (大约 780 个字)
                 </span>
                 
                 
@@ -772,41 +667,20 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/09/03/life/天通苑东三区/">记录租房第三个住处-天通苑东三区</a>
+                <a class="has-link-black-ter" href="/2021/08/13/design/ac/">权限管理模型学习</a>
             
         </h1>
         <div class="content">
-            <p>上上周末8月24号搬到了新的租房，搬到了天通苑北一区，换了一居，也住了十几天了，感觉很不错，但之前的租房也很好，它有一个大大的天台，还可以上房顶，把照片记录下来。</p>
-<p>上周末回去稍微收拾了下屋子，卖了东西，图中为美丽聪慧的对象</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2711567514587_.pic.jpg" alt="客厅兼卧室"></p>
-<p>很大的地方还有个落地灯</p>
-<p>厨房以前在这个地方，这个屋在之前一段时间我们都把垫子搬过来打地铺睡，因为有一天我发现这里比较隔猫</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2701567514586_.pic.jpg" alt></p>
-<p>我的电脑桌放在这个地方</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2731567514589_.pic.jpg" alt></p>
-<p>大大的厕所，目前住过最大厕所<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/428161567558962_.pic.jpg" alt></p>
-<p>小储藏室<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2821567514600_.pic.jpg" alt></p>
-<p>通往天台的门，lily最爱去的地方，总是会在这个地方站好开叫，然后看你过来了就扒扒门，lily非常渴望自由，想出去玩</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2671567514583_.pic.jpg" alt></p>
-<p>出来啦！<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2771567514595_.pic.jpg" alt></p>
-<p>有一圈的天台，第一次见时真的很惊喜<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2791567514597_.pic.jpg" alt></p>
-<p>视野十分开阔，夕阳西下，喝酒吃肉，美滋滋</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2811567514599_.pic.jpg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2761567514594_.pic.jpg" alt></p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2781567514596_.pic.jpg" alt></p>
-<p>在小区里捡到了很能叫又贪吃的新家庭成员，小 jojo</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/3021567516511_.pic.jpg" alt></p>
-<p>开始小小的很可爱，<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG301.jpeg" alt></p>
-<p>陪我玩电脑<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG297.jpeg" alt></p>
-<p>写博客<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG290.jpeg" alt></p>
-<p>要抱抱<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG293.jpeg" alt></p>
-<p>举高高<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG287.jpeg" alt></p>
-<p>与lily从打闹慢慢有点和谐相处</p>
-<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG292.jpeg" alt></p>
-<p>学lily睡窗台<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/3031567557968_.pic.jpg" alt></p>
-<p>和我们一起睡觉，四生物一张床<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG294.jpeg" alt></p>
-<p>后来因为早上太闹，用梳妆台挡住这两个捣蛋鬼，jojo此时已显猪态<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG284.jpeg" alt></p>
-<p>幸福生活未完待续..</p>
+            <p>本质上可以抽象出用户(User)、对象(Object)、行为(Action)和策略(Policy)的四个基本要素。策略(Policy)决定了用户(User)在一定的条件下对指定的对象(Object)有什么样的行为(Action)。</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/design/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9E%8B.png" alt></p>
+<h4><span id="acl">ACL</span><a href="#acl" class="header-anchor">#</a></h4><p>ACL即访问控制列表，是基于资源的一种权限控制管理方式。实现原理非常简单，每一项资源都有一个访问列表，记录哪些用户可以对这个资源做CRUD的操作。当用户访问某个资源的时候，系统会检测用户是否在访问列表里，从而确定用户是否有对资源的操作权限</p>
+<h4><span id="rbac">RBAC</span><a href="#rbac" class="header-anchor">#</a></h4><p>RBAC, 相比与ACL的直接用户上赋予权限</p>
+<p>引入角色：<br>角色  —&gt;  权限的集合，批量操作权限，权限可以统一分配和回收，角色可以和企业的岗位对应，能更加好理解和维护。</p>
+<p>引入组织架构：<br>组织部门    —&gt;   人员的集合， 批量操作人员  （eg: 赋予部门权限，或判断用户是否在组织中）</p>
+<p>RBAC的特点如下：<br> 优点是权限只和角色关联，可以统一分配和回收，使用简单，也降低了维护成本。角色可以和企业的岗位对应，能更加好理解和维护。<br> 缺点是当某个角色下的某些用户需要做特别的权限限定，例如去除一些权限，就无能为力。另外，角色规划不好的情况下容易造成角色爆炸和混乱。</p>
+<h4><span id="abac">ABAC</span><a href="#abac" class="header-anchor">#</a></h4><p>ABAC是基于属性的权限验证控制，动态的计算一组属性从而判断当前用户是否有操作权限。属性可以分为用户属性(岗位)、环境属性(公司、家里、时间)、对象属性(对象的类型，比如服务器、楼宇等)、操作属性(启动、创建、读取等)。一组属性可以叫做一个策略，策略可以配置在用户实体上，也可以配置在组织架构上</p>
+<p>ABAC的特点如下：<br> 非常灵活，可以根据不同的维度、粒度进行权限管控<br> 无需预置判定逻辑，可以根据需要随时调整，在经常变化的系统中可以很好的支持<br> 策略配置复杂时，会给管理者和问题追查时带来困难<br> 策略判定需要实时计算，会带来性能损耗<br> 从策略上不能很直观的看到人和对象的关系</p>
+<p>个人总结：<br>ACL太复杂了，容易乱，操作起来级联严重<br>RABC, 适合公司类型，组织架构、人员角色的权限固定管理。<br>ABAC, 策略过于灵活，适合变化非常多的，策略复杂的</p>
 
         </div>
         
@@ -828,17 +702,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-08-30T22:54:24.000Z">2019-08-31</time>
+                <time class="level-item has-text-grey" datetime="2021-08-01T03:10:43.000Z">2021-08-01</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/rss/">rss</a>
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 43 个字)
+                    3 分钟 读完 (大约 387 个字)
                 </span>
                 
                 
@@ -847,79 +721,16 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/08/31/rss/rss/">rss订阅</a>
+                <a class="has-link-black-ter" href="/2021/08/01/design/ds_lock/">分布式锁</a>
             
         </h1>
         <div class="content">
-            <p>使用 feedly 订阅 rss，实现多设备同步  </p>
-<p>教程：<a href="https://techmoon.xyz/feedly/" target="_blank" rel="noopener">https://techmoon.xyz/feedly/</a></p>
-<p>目前导出的我的订阅源, Feedly订阅.opml</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">opml</span> <span class="hljs-attr">version</span>=<span class="hljs-string">"2.0"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Feedly订阅<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"NBA"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"NBA"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"千年孤寂 的 Youtube 视频"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"千年孤寂 的 Youtube 视频"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/youtube/channel/UC6QUkl7S6AYwkpQFhmdFIoQ"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.youtube.com/channel/UC6QUkl7S6AYwkpQFhmdFIoQ"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/184687394/#/article"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"听说不怕肚子疼 的 bilibili 专栏"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"听说不怕肚子疼 的 bilibili 专栏"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/article/184687394"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"产品"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"产品"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"李自然说 的 bilibili 空间"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/video/39089748"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/39089748"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"李自然说 的 bilibili 空间"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://post.smzdm.com/hot_7"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/smzdm/haowen/7"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"周热门-什么值得买好文"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"周热门-什么值得买好文"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://fz0512.com/feed"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"最好金龟换酒"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"最好金龟换酒"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://fz0512.com"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"少数派"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"少数派"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://sspai.com"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://sspai.com/feed"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"V2EX-最热主题"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/v2ex/topics/hot"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"V2EX-最热主题"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.v2ex.com/"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/wechat/csm/darkinsider"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://chuansongme.com/account/darkinsider"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"图片"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"图片"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"国家地理每日一图"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"国家地理每日一图"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.nationalgeographic.com"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://feedx.co/rss/nationalgeodayphoto.xml"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"好友"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"好友"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"大菜猫"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.techwei.cn/"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"大菜猫"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://techwei.cn/atom.xml"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://jacobchang.cn/"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"黄小豆的博客"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"黄小豆的博客"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://jacobchang.cn/atom.xml"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/video/11036610"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"爱浪的黄小豆 的 bilibili 空间"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"爱浪的黄小豆 的 bilibili 空间"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/11036610"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.yuanqiongqiong.cn/"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"袁琼琼的博客"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://yuanqiongqiong.cn/atom.xml"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"袁琼琼的博客"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"技术"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"技术"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/juejin/category/backend"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"掘金后端"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"掘金后端"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://juejin.im/welcome/backend"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"美团技术团队"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://tech.meituan.com/feed/"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/meituan/tech/home"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"美团技术团队"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://www.ruanyifeng.com/blog/"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://www.ruanyifeng.com/blog/atom.xml"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"阮一峰的网络日志"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"阮一峰的网络日志"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://chuansongme.com/account/importnew"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/wechat/csm/importnew"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"微信公众号 - ImportNew"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"微信公众号 - ImportNew"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"微信公众号 - 一本黑"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://chuansongme.com/account/darkinsider"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/wechat/csm/darkinsider"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"新闻"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"新闻"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/gov/zhengce/zuixin"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"最新政策 - 中国政府网"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"最新政策 - 中国政府网"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://www.gov.cn/zhengce/zuixin.htm"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"生活"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"生活"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"美国日记"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"美国日记"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://cn.derekyang.us"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://cn.derekyang.us/?feed=rss2"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"人生不过如此"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://nana.blog.paowang.net"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"人生不过如此"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"http://nana.blog.paowang.net/feed/"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"电影"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"电影"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://www.douban.com"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://feedx.co/rss/doubanmvweek.xml"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"豆瓣电影本周口碑榜"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"豆瓣电影本周口碑榜"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"MovieTalk-电影七日谈 的 bilibili 空间"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"MovieTalk-电影七日谈 的 bilibili 空间"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://rsshub.app/bilibili/user/video/10869763"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"https://space.bilibili.com/10869763"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"艺术"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"艺术"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">outline</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"rss"</span> <span class="hljs-attr">htmlUrl</span>=<span class="hljs-string">"http://bing.com"</span> <span class="hljs-attr">text</span>=<span class="hljs-string">"必应今日美图"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"必应今日美图"</span> <span class="hljs-attr">xmlUrl</span>=<span class="hljs-string">"https://feedx.co/rss/bingwallpaper.xml"</span> /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">outline</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">opml</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">opml</span>&gt;</span></span><br></pre></td></tr></table></figure>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-14T02:54:24.000Z">2019-07-14</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/读书笔记/">读书笔记</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    9 分钟 读完 (大约 1404 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/07/14/read/controll/">读《自控力》</a>
-            
-        </h1>
-        <div class="content">
-            <h2><span id="qian-yan">前言</span><a href="#qian-yan" class="header-anchor">#</a></h2><p>看了本周”李自然说”讨论学习方法，里面有一句话非常喜欢，人和人的差距大于人和猪的差距。 </p>
-<p>这句话夸张的表达了人和人的差距会有多大，人和人理解问题的深度、处事的态度、说话的逻辑和好听程度，有趣指数，相信大家都想做人上人，百里挑一的人，不止是为了获得更多的财富，更是让自己的生活满意，做事情处事不惊，游刃有余。 今天开始阅读《自控力》，不是说这一本书能带我走向人生巅峰，只希望是个好的开始。</p>
-<h2><span id="01-yi-zhi-li-shi-shi-me-wei-shi-me-zhi-guan-chong-yao">01 意志力是什么，为什么至关重要</span><a href="#01-yi-zhi-li-shi-shi-me-wei-shi-me-zhi-guan-chong-yao" class="header-anchor">#</a></h2><p>###意志力</p>
-<p>就是驾驭 “我不要”， “我要做”，”我想要” 这三种力量。</p>
-<h4><span id="wo-bu-yao-di-zhi-you-huo">“我不要” : 抵制诱惑！</span><a href="#wo-bu-yao-di-zhi-you-huo" class="header-anchor">#</a></h4><p>抵制甜甜圈，香烟，清仓大甩卖，或一夜情等等很诱人的东西，这些东西阻碍你实现你真正想要的，比如瘦身，好的肺，幸福的家庭等，如果你一面对就会无法抵抗，那就要提升意志力，提升“我不要”的能力。</p>
-<p>这些东西可能会带来即时的快感，但只是因为真正美好的东西暂时离你远，因为时空的距离感，让你选择了当前的选项，但如果思维清晰，目标明确，就不要为眼前的小利益而放弃大目标。</p>
-<p>比如你想换工作、换城市，考虑清楚之后，知道换了之后的结果是好的，但过程中有困难和安逸给你选，如果选了安逸，就是当前的诱惑赢了，如果选了困难，就是意志力的体现，对当前诱惑说出 “我不要” ！</p>
-<h4><span id="wo-yao-zuo-jin-ri-shi-jin-ri-bi">“我要做” ：今日事今日毕 ！</span><a href="#wo-yao-zuo-jin-ri-shi-jin-ri-bi" class="header-anchor">#</a></h4><p>“明日复明日”，拖延症晚期患者有些事情可能拖到下辈子再做，是这部分意志力薄弱，我理解不可能每天真毕，但“做” 和 “拖”的差距是很大的，是“我要做”意志力的体现。</p>
-<h4><span id="wo-xiang-yao-zhen-zheng-yao-de-shi-shi-me">“我想要”： 真正要的是什么！</span><a href="#wo-xiang-yao-zhen-zheng-yao-de-shi-shi-me" class="header-anchor">#</a></h4><p>当我们在冲动的时候有时会觉得这就是自己想要的，想要玩游戏、想要喝酒、巧克力蛋糕、骂人等等，但一定得想清楚，你真正要的是什么样的身材，什么样的素养，什么样的生活，是否希望苗条、升职加薪、家庭美满，是否吃”巧克力蛋糕”, 吃多少，要在关键时刻遏制住一时冲动，明确自己的目标，强大的目标明确能力，是“我想要”意志力的体现。</p>
-<h4><span id="xiao-zong-jie">小总结</span><a href="#xiao-zong-jie" class="header-anchor">#</a></h4><p>个人理解意志力的体现肯定不是要让我们当机器人或当狗（加班狗、奋斗狗），而是像某口号一样，集中力量办大事，只是集中的是自己的力量，办的是“我想要”的事。</p>
-<h3><span id="liang-ge-zi-wo">两个自我</span><a href="#liang-ge-zi-wo" class="header-anchor">#</a></h3><p>大脑中有两个部分，一部分是控制自己，一部分是冲动的自己。冲动为原始的冲动，我们的本能; 控制自己的就是我们的前额皮质。</p>
-<p>“两个自我发生分歧的时候，总会有一方击败另一方。决定放弃的一方并没有做错，只是双方觉得重要的东西不同而已。”</p>
-<p>原始的本能冲动是我们必不可少的，没有欲望，人就会变得沮丧，没有恐惧，就没法保护自己，没有厌恶，就没法提高自己，我们不是要消灭冲动的自己，而是要学会利用冲动的自己，换句话就是在合适的时候冲动，合适的时候控制。</p>
-<p>原始的冲动带着自己进步，而当冲动要带我们走向错误的时候，控制自己的能力需要体现。</p>
-<h3><span id="zi-wo-yi-shi">自我意识</span><a href="#zi-wo-yi-shi" class="header-anchor">#</a></h3><p>自我意识体现在做决定的时候，意识到要做自己的选择，生活才是自己的。</p>
-<p>这里重点是意识到自己可以做的选择。一件事，我根据自己的想法做出选择，是自我意识，而我如果没思考，下意识走了简单舒适的选择时，就是自我意识的缺失，一种随波逐流，这样选的结果不一定不好，但不会一直是自己想要的。</p>
-<p>做一个有自我的人</p>
-<h3><span id="ming-xiang">冥想</span><a href="#ming-xiang" class="header-anchor">#</a></h3><p>冥想通过坐着闭眼专注于”呼“ ”吸“， 锻炼自己的控制能力，注意力集中能力，意志力。</p>
-<p>冥想我相信对应现实中的注意力集中能力，自控能力都会有一定提升。</p>
-<p>今天进行了人生第一次冥想，虽然大部分时间都无法专注于呼吸，但我看到了挑战，当我能完全专注于呼吸的时候，那我的集中注意力的能力就会变得很强。</p>
-<p>mark一篇完整冥想步骤文章</p>
-<p><a href="https://mp.weixin.qq.com/s/2nV2u66ScuLJEHEXcrHkMQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/2nV2u66ScuLJEHEXcrHkMQ</a></p>
+            <p>1、 基于MySQL的分布式锁实现<br>原理：直接创建一张锁表，然后通过操作该表中的数据来实现了.<br>。利用唯一索引的排他性来实现分布式锁，只有抢到锁的线程才能插入成功，释放锁删除该条记录即可</p>
+<p>缺点：<br>1、强依赖数据库的可用性，存在单点问题。<br>2、数据库在高并发的场景下，性能上表现欠佳</p>
+<p>2、基于Redis的分布式锁实现<br>可以通过set nx的特性来实现分布式锁</p>
+<p>3、基于Zookeeper的分布式锁实现<br>可以利用临时有序节点的特性来实现分布式锁。<br>原理：1、先建一个目录lock 2、线程A想获取锁就在lock目录下创建一个带顺序的临时节点 3、然后获取比当前顺序号小的顺序号，获取到则获取锁失败，获取不到则获取锁成功。 4、解锁则是删除这个临时节点。</p>
+<p>临时节点是根据客户端维护的session会话来维持生命周期的，当客户端不在维护session时，或者说客户端断开连接时，session消失，那么临时节点就会消失，这种特性正好满足了分布式锁要有过期时间的需求，不会产生死锁问题</p>
+<p>缺点：抗不了多少并发，内存无法横向扩展</p>
 
         </div>
         
@@ -953,7 +764,7 @@
             
             <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/6/">6</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
             
         </ul>
     </nav>
@@ -1003,7 +814,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        57
+                        92
                     </p>
                 </div>
             </div>
@@ -1013,7 +824,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        25
+                        27
                     </p>
                 </div>
             </div>
@@ -1023,7 +834,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        36
                     </p>
                 </div>
             </div>
@@ -1126,7 +937,7 @@
                 <span class="level-item">design</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/git/">
@@ -1134,7 +945,7 @@
                 <span class="level-item">git</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/hadoop/">
@@ -1158,7 +969,7 @@
                 <span class="level-item">jvm</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/kafka/">
@@ -1177,12 +988,20 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/mybatis/">
+            <span class="level-start">
+                <span class="level-item">mybatis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/mysql/">
             <span class="level-start">
                 <span class="level-item">mysql</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/netty/">
@@ -1190,7 +1009,7 @@
                 <span class="level-item">netty</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/network/">
@@ -1230,7 +1049,7 @@
                 <span class="level-item">springboot</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/storm/">
@@ -1254,7 +1073,7 @@
                 <span class="level-item">zookeeper</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/并发/">
@@ -1287,6 +1106,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/线上问题/">
+            <span class="level-start">
+                <span class="level-item">线上问题</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/英语/">
@@ -1332,7 +1159,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 16.25px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 17.5px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.25px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 12.5px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 18.75px;">mysql</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/network/" style="font-size: 11.25px;">network</a> <a href="/tags/pcursor/" style="font-size: 10px;">pcursor</a> <a href="/tags/redis/" style="font-size: 12.5px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 11.25px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 13.75px;">并发</a> <a href="/tags/旅游/" style="font-size: 12.5px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.25px;">生活</a> <a href="/tags/索引/" style="font-size: 11.25px;">索引</a> <a href="/tags/线上问题/" style="font-size: 10px;">线上问题</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -1351,8 +1178,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1364,10 +1191,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1377,10 +1204,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1390,10 +1217,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1403,10 +1230,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1425,9 +1252,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1436,9 +1263,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1485,7 +1378,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1707,7 +1600,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1721,7 +1614,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1756,7 +1649,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1777,21 +1670,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1799,6 +1692,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1826,7 +1726,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1854,7 +1754,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1889,6 +1789,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1910,6 +1817,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1948,8 +1862,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1961,10 +1875,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1974,10 +1888,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1987,10 +1901,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -2000,10 +1914,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -2022,9 +1936,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -2033,9 +1947,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -2082,7 +2062,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -2304,7 +2284,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -2318,7 +2298,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2353,7 +2333,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2374,21 +2354,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2396,6 +2376,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2423,7 +2410,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -2451,7 +2438,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -2486,6 +2473,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2507,6 +2501,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2539,7 +2540,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 大菜猫&nbsp;
+                &copy; 2023 大菜猫&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>

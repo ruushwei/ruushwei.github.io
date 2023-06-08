@@ -152,17 +152,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-10-25T12:54:24.000Z">2017-10-25</time>
+                <time class="level-item has-text-grey" datetime="2019-07-04T02:54:24.000Z">2019-07-04</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
+                <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1068 个字)
+                    5 分钟 读完 (大约 738 个字)
                 </span>
                 
                 
@@ -171,37 +171,25 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/10/25/springboot/springboot文档理解/第二章 使用/">springboot文档阅读 第二章 继承parent与远程调试</a>
+                <a class="has-link-black-ter" href="/2019/07/04/netty/BIO_NIO_AIO/">BIO NIO AIO 阻塞 非阻塞</a>
             
         </h1>
         <div class="content">
-            <p><strong>继承 starter parent ?</strong></p>
-<p>继承的话：</p>
-<p>如果你想配置项目，让其继承自<code>spring-boot-starter-parent</code>，只需将<code>parent</code>按如下设置：</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!-- Inherit defaults from Spring Boot --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">parent</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.4.1.BUILD-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">parent</span>&gt;</span></span><br></pre></td></tr></table></figure>
+            <h4><span id="bio-tong-bu-zu-sai-io-mian-xiang-liu-de">BIO:同步阻塞IO（面向流的）</span><a href="#bio-tong-bu-zu-sai-io-mian-xiang-liu-de" class="header-anchor">#</a></h4><p>特点：一个连接建立一个线程，连接如果没有IO请求时，则会浪费线程资源开销，可以通过线程池技术来改善</p>
+<p>适用场景：连接数小，并发数小，架构固定（java1.4之前唯一的IO）</p>
+<h4><span id="nio-tong-bu-fei-zu-sai-mian-xiang-buffer-de">NIO：同步非阻塞（面向Buffer的）</span><a href="#nio-tong-bu-fei-zu-sai-mian-xiang-buffer-de" class="header-anchor">#</a></h4><p>特点：客户的发送的连接请求会注册到多路复用器上，多路复用器轮询到连接存在有效请求时才会启动一个线程来进行处理<br>适用场景：连接数目多，且连接比较短的架构，比如聊天服务器（java1.4开始支持）</p>
+<h4><span id="aio-yi-bu-fei-zu-sai">AIO：异步非阻塞</span><a href="#aio-yi-bu-fei-zu-sai" class="header-anchor">#</a></h4><p>特点：针对客户端连接发出的IO请求，会由OS先完成IO操作后，在通知服务器启动线程进行处理<br>适用场景：连接数目多，连接比较长，比如相册服务器，充分调用OS参与并发操作（java1.7开始支持）</p>
+<h4><span id="tong-bu-yi-bu-guan-zhu-dian-xiao-xi-tong-xin-ji-zhi-io-qing-qiu-fa-song">同步、异步（关注点：消息通信机制、IO请求发送）</span><a href="#tong-bu-yi-bu-guan-zhu-dian-xiao-xi-tong-xin-ji-zhi-io-qing-qiu-fa-song" class="header-anchor">#</a></h4><p>同步：发送一个请求后，会不断的去轮询、等待请求结果返回后再发送下一个请求，可以避免死锁，脏读的发生</p>
+<p>异步：发送一个请求后，不需要等待结果返回也可以发送下一个请求，可以提高效率，保证并发，OS执行完成后会通过回调函数通知应用程序获取结果</p>
+<h4><span id="zu-sai-fei-zu-sai-guan-zhu-dian-cheng-xu-zai-deng-dai-diao-yong-jie-guo-shi-de-zhuang-tai-io-cao-zuo-jie-guo-huo-qu">阻塞、非阻塞（关注点：程序在等待调用结果时的状态、IO操作结果获取）</span><a href="#zu-sai-fei-zu-sai-guan-zhu-dian-cheng-xu-zai-deng-dai-diao-yong-jie-guo-shi-de-zhuang-tai-io-cao-zuo-jie-guo-huo-qu" class="header-anchor">#</a></h4><p>阻塞：程序在等待请求结果的时候，线程会被挂起，调用线程只有在得到结果之后才会返回</p>
+<p>非阻塞：虽然不能立马得到结果，但是该调用不会阻塞当前线程，此线程还可以干其他事</p>
+<h4><span id="nio-io-duo-lu-fu-yong">NIO IO多路复用</span><a href="#nio-io-duo-lu-fu-yong" class="header-anchor">#</a></h4><p>NIO是概念，IO多路复用是一套方案</p>
+<p>当某个连接发送请求到服务器，服务器把这个连接请求当作一个请求“事件”，并把这个“事件”分配给相应的函数处理。我们可以把这个处理函数放到线程中去执行，执行完就把线程归还，这样一个线程就可以异步的处理多个线程</p>
+<p>而阻塞式 I/O 的线程的大部分时间都被浪费在等待请求上了</p>
+<p>对于同步非阻塞，一个线程可以执行多个连接中的请求，而同步阻塞则时一个线程对应一个连接，所以阻塞会很严重, 线程浪费严重</p>
 
-<p><strong>注</strong>：你应该只需在该依赖上指定Spring Boot版本，<strong>如果导入其他的starters，放心的省略版本号</strong>好了。</p>
-<p>按照以上设置，你<strong>可以在自己的项目中通过覆盖属性来覆盖个别的依赖</strong>。例如，你可以将以下设置添加到<code>pom.xml</code>中来升级Spring Data到另一个发布版本。</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">spring-data-releasetrain.version</span>&gt;</span>Fowler-SR2<span class="hljs-tag">&lt;/<span class="hljs-name">spring-data-releasetrain.version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注</strong> 查看<a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-dependencies/pom.xml" target="_blank" rel="noopener">spring-boot-dependencies pom</a>获取支持的属性列表。</p>
-<p><code>spring-boot-starter-parent</code>选择了相当保守的Java兼容策略，如果你遵循我们的建议，使用最新的Java版本，可以添加一个<code>java.version</code>属性：</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">java.version</span>&gt;</span>1.8<span class="hljs-tag">&lt;/<span class="hljs-name">java.version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>Spring Boot包含一个[Maven插件](../VIII. Build tool plugins/58. Spring Boot Maven plugin.md)，它可以将项目打包成一个可执行jar。如果想使用它，你可以将该插件添加到<code>&lt;plugins&gt;</code>节点处：</p>
-<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span></span><br><span class="line">            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></span><br><span class="line">            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>注</strong>：如果使用Spring Boot starter parent pom，你只需添加该插件而无需配置它，除非你想改变定义在partent中的设置。</p>
         </div>
         
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/10/25/springboot/springboot文档理解/第二章 使用/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
         
         
     </div>
@@ -220,17 +208,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-10-23T12:54:24.000Z">2017-10-23</time>
+                <time class="level-item has-text-grey" datetime="2019-06-13T02:54:24.000Z">2019-06-13</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
+                <a class="has-link-grey -link" href="/categories/java/">java</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 493 个字)
+                    19 分钟 读完 (大约 2849 个字)
                 </span>
                 
                 
@@ -239,24 +227,57 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/10/23/springboot/springboot文档理解/第一章 开始/">springboot文档阅读 第一章</a>
+                <a class="has-link-black-ter" href="/2019/06/13/dataStructure/tree/">红黑树、AVL树、B树代价分析与比较</a>
             
         </h1>
         <div class="content">
-            <p><strong>@RestController和@RequestMapping</strong></p>
-<p>Example类上使用的第一个注解是<code>@RestController</code>，这被称为构造型（stereotype）注解。它为阅读代码的人提供暗示（这是一个支持REST的控制器），对于Spring，该类扮演了一个特殊角色。在本示例中，我们的类是一个web <code>@Controller</code>，所以当web请求进来时，Spring会考虑是否使用它来处理。</p>
-<p><code>@RequestMapping</code>注解提供路由信息，它告诉Spring任何来自”/“路径的HTTP请求都应该被映射到<code>home</code>方法。<code>@RestController</code>注解告诉Spring以字符串的形式渲染结果，并直接返回给调用者。</p>
-<p><strong>注</strong>：<code>@RestController</code>和<code>@RequestMapping</code>是Spring MVC中的注解（它们不是Spring Boot的特定部分），具体参考Spring文档的<a href="http://mvc.linesh.tw" target="_blank" rel="noopener">MVC章节</a>。</p>
+            <h4><span id="yi-ge-chong-shu-jian-jie">一、各种树简介</span><a href="#yi-ge-chong-shu-jian-jie" class="header-anchor">#</a></h4><h5><span id="hong-hei-shu">红黑树</span><a href="#hong-hei-shu" class="header-anchor">#</a></h5><p>它可以在 O(logn) 时间内完成查找，插入和删除，这里的n是树中元素的数目.</p>
+<p>常考五个性质</p>
+<p>自编顺口溜：有红有黑，头黑尾黑，红后黑，任尾同黑</p>
+<ol>
+<li>结点是红色或黑色</li>
+<li>根结点始终是黑色</li>
+<li>叶子结点（NIL 结点）都是黑色</li>
+<li>红色结点的两个直接孩子结点都是黑色（即从叶子到根的所有路径上不存在两个连续的红色结点）</li>
+<li>从任一结点到每个叶子的所有简单路径都包含相同数目的黑色结点</li>
+</ol>
+<p>保证了红黑树在满足平衡二叉树特征的前提下，还可以做到 从根到叶子的最长路径最多不会超过最短路径的两倍。</p>
+<h5><span id="avl-shu">AVL树</span><a href="#avl-shu" class="header-anchor">#</a></h5><p>AVL树定义:<br>二叉排序树，其中每一个结点的左子树和右子树的高度差不超过1（小于等于1）。   </p>
+<p>二叉树的平衡因子 （Balance Factor） 等于该结点的左子树深度减去右子树深度的值称为平衡因子。平衡因子只可能是－1，0，1。  </p>
+<p>红黑树相对于AVL树来说，牺牲了部分平衡性以换取插入/删除操作时少量的旋转操作，整体来说性能要优于AVL树。</p>
+<p>红黑树和AVL树都是从树的平衡性出发，找到合适的平衡方式，一个通过颜色标识限定，一个通过树高差限定，使树都处于平衡状态。</p>
+<p>AVL树由于实现比较复杂，而且插入和删除性能差，在实际环境下的应用不如红黑树。</p>
+<h5><span id="b-shu">B树</span><a href="#b-shu" class="header-anchor">#</a></h5><p>B树相对于红黑树的区别</p>
+<p>在大规模数据存储的时候，红黑树往往出现由于树的深度过大而造成磁盘IO读写过于频繁，进而导致效率低下的情况。为什么会出现这样的情况，我们知道要获取磁盘上数据，必须先通过磁盘移动臂移动到数据所在的柱面，然后找到指定盘面，接着旋转盘面找到数据所在的磁道，最后对数据进行读写。磁盘IO代价主要花费在查找所需的柱面上，树的深度过大会造成磁盘IO频繁读写。根据磁盘查找存取的次数往往由树的高度所决定，所以，只要我们通过某种较好的树结构减少树的结构尽量减少树的高度，B树可以有多个子女，从几十到上千，可以降低树的高度。</p>
+<p>B树的数据结构就是为内外存的数据交互准备的。<br>外存（如硬盘）是将 所有的信息分割成相等大小的页面，每次硬盘读写的都是一个或多个完整的页面 。如果要处理的硬盘数据量很大，无法一次全部装入内存中，就要对B树进行调整，是的B树的阶数（或结点的元素）与硬盘存储的页面大小相匹配。比如一棵B树的阶为1001（1个结点可以包含1000个元素），高度为2，它可以存储超过10亿（1000X1000X1000）个关键字，我们只要让根结点持久的保留在内存中，那么在这棵树上，寻找某一个关键字至多需要两次硬盘的读取。通过这种方式，在有限内存的情况下，每一次磁盘的访问都可以获得最大数量的数据。</p>
+<h4><span id="er-ge-shu-cao-zuo-dai-jie">二、各树操作代价</span><a href="#er-ge-shu-cao-zuo-dai-jie" class="header-anchor">#</a></h4><p>整个红黑树的查找，插入和删除都是O(logN)的，原因就是整个红黑树的高度是logN，查找从根到叶，走过的路径是树的高度，删除和插入操作是从叶到根的，所以经过的路径都是logN。</p>
+<h5><span id="rbt-de-cao-zuo-dai-jie-fen-xi">RBT 的操作代价分析</span><a href="#rbt-de-cao-zuo-dai-jie-fen-xi" class="header-anchor">#</a></h5><p>(1) 查找代价：由于红黑树的性质(最长路径长度不超过最短路径长度的2倍)，可以说明红黑树虽然不像AVL一样是严格平衡的，但平衡性能还是要比BST要好。其查找代价基本维持在O(logN)左右，但在最差情况下(最长路径是最短路径的2倍少1)，比AVL要略逊色一点。  </p>
+<p>(2) 插入代价：RBT插入结点时，需要旋转操作和变色操作。但由于只需要保证RBT基本平衡就可以了。因此插入结点最多只需要2次旋转，这一点和AVL的插入操作一样。虽然变色操作需要O(logN)，但是变色操作十分简单，代价很小。  </p>
+<p>(3) 删除代价：RBT的删除操作代价要比AVL要好的多，删除一个结点最多只需要3次旋转操作。   </p>
+<p>RBT 效率总结 : </p>
+<p>查找 效率最好情况下时间复杂度为O(logN)，但在最坏情况下比AVL要差一些，但也远远好于BST。<br>插入和删除操作改变树的平衡性的概率要远远小于AVL（RBT不是高度平衡的）。因此需要的旋转操作的可能性要小，而且一旦需要旋转，插入一个结点最多只需要旋转2次，删除最多只需要旋转3次(小于AVL的删除操作所需要的旋转次数)。虽然变色操作的时间复杂度在O(logN)，但是实际上，这种操作由于简单所需要的代价很小。</p>
+<h5><span id="avl-de-cao-zuo-dai-jie-fen-xi">AVL 的操作代价分析</span><a href="#avl-de-cao-zuo-dai-jie-fen-xi" class="header-anchor">#</a></h5><p>(1) 查找代价： AVL是严格平衡的BST（平衡因子不超过1）。那么查找过程与BST一样，只是AVL不会出现最差情况的BST(单支树)。因此查找效率最好，最坏情况都是O(logN)数量级的。  </p>
+<p>(2) 插入代价： AVL必须要保证严格平衡(|bf|&lt;=1)，那么每一次插入数据使得AVL中某些结点的平衡因子超过1就必须进行旋转操作。事实上，AVL的每一次插入结点操作最多只需要旋转1次(单旋转或双旋转)。因此，总体上插入操作的代价仍然在O(logN)级别上(插入结点需要首先查找插入的位置)。  </p>
+<p>(3) 删除代价：AVL删除结点的算法可以参见BST的删除结点，但是删除之后必须检查从删除结点开始到根结点路径上的所有结点的平衡因子。因此删除的代价稍微要大一些。每一次删除操作最多需要O(logN)次旋转。因此，删除操作的时间复杂度为O(logN)+O(logN)=O(2logN)  </p>
+<p>AVL 效率总结 </p>
+<p>查找的时间复杂度维持在O(logN)，不会出现最差情况<br>AVL树在执行每个插入操作时最多需要1次旋转，其时间复杂度在O(logN)左右。</p>
+<p>AVL树在执行删除时代价稍大，执行每个删除操作的时间复杂度需要O(2logN)。</p>
+<h5><span id="b-shu-de-cao-zuo-dai-jie-fen-xi">B树的操作代价分析</span><a href="#b-shu-de-cao-zuo-dai-jie-fen-xi" class="header-anchor">#</a></h5><p>(1) 查找代价： B-Tree作为一个平衡多路查找树(m-叉)。B树的查找分成两种：一种是从一个结点查找另一结点的地址的时候，需要定位磁盘地址(查找地址)，查找代价极高。另一种是将结点中的有序关键字序列放入内存，进行优化查找(可以用折半)，相比查找代价极低。而B树的高度很小，因此在这一背景下，B树比任何二叉结构查找树的效率都要高很多。而且B+树作为B树的变种，其查找效率更高。  </p>
+<p>(2)插入代价： B-Tree的插入会发生结点的分裂操作。当插入操作引起了s个节点的分裂时，磁盘访问的次数为h(读取搜索路径上的节点)＋2s(回写两个分裂出的新节点)＋1（回写新的根节点或插入后没有导致分裂的节点）。因此，所需要的磁盘访问次数是h+2s+1，最多可达到3h+1。因此插入的代价是很大的。  </p>
+<p>(3)删除代价：B-Tree的删除会发生结点合并操作。最坏情况下磁盘访问次数是3h＝（找到包含被删除元素需要h次读访问）+（获取第2至h层的最相邻兄弟需要h-1次读访问）+（在第3至h层的合并需要h-2次写访问）+（对修改过的根节点和第2层的两个节点进行3次写访问）  </p>
+<p>B-Tree效率总结： 由于考虑磁盘储存结构，B树的查找、删除、插入的代价都远远要小于任何二叉结构树(读写磁盘次数的降低)。</p>
+<h4><span id="san-avl-yu-hong-hei-shu-de-dui-bi">三、AVL与红黑树的对比</span><a href="#san-avl-yu-hong-hei-shu-de-dui-bi" class="header-anchor">#</a></h4><p>AVL 和RBT 都是二叉查找树的优化。其性能要远远好于二叉查找树。他们之间都有自己的优势，其应用上也有不同。 </p>
+<p>结构对比： AVL的结构高度平衡，RBT的结构基本平衡。平衡度AVL &gt; RBT.</p>
+<p>查找对比： AVL 查找时间复杂度最好，最坏情况都是O(logN)。  </p>
+<p>RBT 查找时间复杂度最好为O(logN)，最坏情况下比AVL略差。</p>
+<p>插入删除对比： 1. AVL的插入和删除结点很容易造成树结构的不平衡，而RBT的平衡度要求较低。因此在大量数据插入的情况下，RBT需要通过旋转变色操作来重新达到平衡的频度要小于AVL。</p>
+<p>如果需要平衡处理时，RBT比AVL多一种变色操作，而且变色的时间复杂度在O(logN)数量级上。但是由于操作简单，所以在实践中这种变色仍然是非常快速的。</p>
+<p>当插入一个结点都引起了树的不平衡，AVL和RBT都最多需要2次旋转操作。但删除一个结点引起不平衡后，AVL最多需要logN 次旋转操作，而RBT最多只需要3次。因此两者插入一个结点的代价差不多，但删除一个结点的代价RBT要低一些。</p>
+<p>AVL和RBT的插入删除代价主要还是消耗在查找待操作的结点上。因此时间复杂度基本上都是与O(logN) 成正比的。</p>
+<p>总体评价：大量数据实践证明，RBT的总体统计性能要好于平衡二叉树。</p>
+
         </div>
         
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/10/23/springboot/springboot文档理解/第一章 开始/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
         
         
     </div>
@@ -275,10 +296,10 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-10-20T12:54:24.000Z">2017-10-20</time>
+                <time class="level-item has-text-grey" datetime="2019-06-02T02:54:24.000Z">2019-06-02</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/git/">git</a>
+                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
                 </div>
                 
                 
@@ -294,20 +315,21 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/10/20/git/git_common/">git常用命令</a>
+                <a class="has-link-black-ter" href="/2019/06/02/concurrentProgramming/volatile/">volatile可见性、内存屏障</a>
             
         </h1>
         <div class="content">
-            <p>总结下git通常情况下会使用的命令。</p>
-<p>重新编辑提交信息：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+            <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>volatile关键字具有许多特性，其中最重要的特性就是保证了用volatile修饰的变量对所有线程的可见性。利用内存屏障使得读写、读读、写写 都不能同时发生, 且不能指令重排。</p>
+<h4 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h4><p>当一个线程修改了变量的值，新的值会立刻同步到主内存当中。而其他线程读取这个变量的时候，也会从主内存中拉取最新的变量值。</p>
+<p>得益于java语言的先行发生原则（happens-before）<br>对于一个volatile变量的写操作先行发生于后面对这个变量的读操作。</p>
+<h4 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h4><p>内存屏障（Memory Barrier）是一种CPU指令。<strong>禁止重排序，控制执行顺序，刷新缓存与获取最新主存数据。</strong></p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/10/20/git/git_common/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/06/02/concurrentProgramming/volatile/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -329,17 +351,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-08-13T12:54:24.000Z">2017-08-13</time>
+                <time class="level-item has-text-grey" datetime="2019-06-02T02:54:24.000Z">2019-06-02</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/vim/">vim</a>
+                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 801 个字)
+                    9 分钟 读完 (大约 1325 个字)
                 </span>
                 
                 
@@ -348,35 +370,89 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/08/13/vim/vim入门/">vim入门</a>
+                <a class="has-link-black-ter" href="/2019/06/02/concurrentProgramming/aqs/">AQS原理解析</a>
             
         </h1>
         <div class="content">
-            <p>最常用</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- i → Insert 模式，按 ESC 回到 Normal 模式.</span><br><span class="line">- x → 删当前光标所在的一个字符。</span><br><span class="line">- :wq → 存盘 + 退出 (:w 存盘, :q 退出)   （陈皓注：:w 后可以跟文件名）</span><br><span class="line">- :x， ZZ 或 :wq → 保存并退出 (:x 表示仅在需要时保存，ZZ不需要输入冒号并回车)</span><br><span class="line">- dd → 删除当前行，并把删除的行存到剪贴板里</span><br><span class="line">- 2dd → 删除2行</span><br><span class="line">- p → 粘贴剪贴板</span><br><span class="line"></span><br><span class="line">- **/pattern** → 搜索 pattern 的字符串（陈皓注：如果搜索出多个匹配，可按n键到下一个）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- 100idesu [ESC] → 会写下 “desu desu desu desu ..“</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- . → 重复上一个命令—— 100 “desu “.</span><br><span class="line">- 3. → 重复 3 次 “desu” (注意：不是 300，你看，VIM多聪明啊).</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">- hjkl (强例推荐使用其移动光标，但不必需) →你也可以使用光标键 (←↓↑→). 注: j 就像下箭头。</span><br><span class="line">- :help &lt;command&gt; → 显示相关命令的帮助。你也可以就输入 :help 而不跟命令。（陈皓注：退出帮助需要输入:q）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- NG → 到第 N 行 （陈皓注：注意命令中的G是大写的，**另我一般使用 : N 到第N行，如 :137 到第137行**）</span><br><span class="line"></span><br><span class="line">- gg → 到第一行。（陈皓注：相当于1G，或 :1）</span><br><span class="line"></span><br><span class="line">- G → 到最后一行。</span><br></pre></td></tr></table></figure>
+            <h4><span id="tan-tan-ni-dui-aqs-de-li-jie">谈谈你对AQS的理解</span><a href="#tan-tan-ni-dui-aqs-de-li-jie" class="header-anchor">#</a></h4><p>AQS是JUC(java.util.concurrent)中很多同步组件的构建基础，简单来讲，它内部实现主要是状态变量state和一个FIFO队列来完成，同步队列的头结点是当前获取到同步状态的结点，获取同步状态state失败的线程，会被构造成一个结点（或共享式或独占式）加入到同步队列尾部（采用自旋CAS来保证此操作的线程安全），随后线程会阻塞；释放时唤醒头结点的后继结点，使其加入对同步状态的争夺中。</p>
+<h5><span id="aqs-de-nei-bu-shi-xian">AQS的内部实现</span><a href="#aqs-de-nei-bu-shi-xian" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/1524404680870b808dc51a9.jpeg" alt></p>
+<ul>
+<li>state 资源状态</li>
+<li>exclusiveOwnerThread 持有资源的线程</li>
+<li>CLH 同步等待队列。</li>
+</ul>
+<p>AQS维护一个共享资源state，内置的同步队列由一个一个的Node结点组成，每个Node结点维护一个prev引用和next引用，分别指向自己的前驱和后继结点。</p>
+<p>AQS维护两个指针，分别指向队列头部head和尾部tail</p>
+<h5><span id="ji-cheng-zi-aqs-de-chang-jian-lei">继承自AQS的常见类</span><a href="#ji-cheng-zi-aqs-de-chang-jian-lei" class="header-anchor">#</a></h5><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/WechatIMG33.jpeg" alt></p>
+<p>CountDownLatch、ReentrantLock、Semaphore等</p>
+<h5><span id="aqs-de-liang-chong-shi-xian-fang-shi">AQS的两种实现方式</span><a href="#aqs-de-liang-chong-shi-xian-fang-shi" class="header-anchor">#</a></h5><p>独占式&amp;共享式, 这样方便使用者实现不同类型的同步组件，独占式如ReentrantLock，共享式如Semaphore，CountDownLatch，组合式的如ReentrantReadWriteLock。</p>
+<p>AQS定义的以下可重写的方法：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">独占式获取同步状态，试着获取，成功返回true，反之为false</span><br><span class="line">protected boolean tryAcquire(int arg) </span><br><span class="line"></span><br><span class="line">独占式释放同步状态，等待中的其他线程此时将有机会获取到同步状态</span><br><span class="line">protected boolean tryRelease(int arg) </span><br><span class="line">  </span><br><span class="line">共享式获取同步状态，返回值大于等于0，代表获取成功；反之获取失败</span><br><span class="line">protected int tryAcquireShared(int arg) </span><br><span class="line"></span><br><span class="line">共享式释放同步状态，成功为true，失败为false</span><br><span class="line">protected boolean tryReleaseShared(int arg) </span><br><span class="line"></span><br><span class="line">是否在独占模式下被线程占用</span><br><span class="line">protected boolean isHeldExclusively()</span><br></pre></td></tr></table></figure>
 
-<p>  ​</p>
-<p>各种插入模式</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- a → 在光标后插入</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- o → 在当前行后插入一个新行</span><br><span class="line">- O → 在当前行前插入一个新行</span><br><span class="line">- cw → 替换从光标所在位置后到一个单词结尾的字符</span><br></pre></td></tr></table></figure>
+<p><strong>独占式</strong></p>
+<p>1.tryAcquire方法尝试获取锁，如果成功就返回，如果不成功，走到2.</p>
+<p>2.把当前线程和等待状态信息构造成一个Node节点，并将结点放入同步队列的尾部</p>
+<p>3.该Node结点在队列中尝试获取同步状态，若获取不到，则阻塞结点线程，直到被前驱结点唤醒或者被中断.</p>
+<p>以ReentrantLock为例，state初始化为0，表示未锁定状态。A线程lock()时，会调用tryAcquire()独占该锁并将state+1。此后，其他线程再tryAcquire()时就会失败，直到A线程unlock()到state=0（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，A线程自己是可以重复获取此锁的（state会累加），这就是可重入的概念。但要注意，获取多少次就要释放多么次，这样才能保证state是能回到零态的</p>
+<p>自我实现独占锁示例，待重写方法提供更新state等操作.</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> java.util.concurrent.locks.AbstractQueuedSynchronizer;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyLock</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Sync sync = <span class="hljs-keyword">new</span> Sync();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sync.acquire(<span class="hljs-number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">unlock</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        sync.release(<span class="hljs-number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isLocked</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> sync.isHeldExclusively();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Sync</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractQueuedSynchronizer</span> </span>&#123;</span><br><span class="line">        <span class="hljs-meta">@Override</span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryAcquire</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            <span class="hljs-comment">//首先判断状态是否等于=0,如果状态==0，就将status设置为1</span></span><br><span class="line">            <span class="hljs-keyword">if</span> (compareAndSetState(<span class="hljs-number">0</span>,<span class="hljs-number">1</span>)) &#123;</span><br><span class="line">                <span class="hljs-comment">//将当前线程赋值给独占模式的onwer</span></span><br><span class="line">                setExclusiveOwnerThread(Thread.currentThread());</span><br><span class="line">                <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-meta">@Override</span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">tryRelease</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (getState() == <span class="hljs-number">0</span>) &#123;</span><br><span class="line">                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalMonitorStateException();</span><br><span class="line">            &#125;</span><br><span class="line">            setExclusiveOwnerThread(<span class="hljs-keyword">null</span>);</span><br><span class="line">            setState(<span class="hljs-number">0</span>);</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-meta">@Override</span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isHeldExclusively</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> getState() == <span class="hljs-number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>简单的移动光标</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 0 → 数字零，到行头</span><br><span class="line">- $ → 到本行行尾</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- ^ → 到本行第一个不是blank字符的位置（所谓blank字符就是空格，tab，换行，回车等）</span><br><span class="line">- g_ → 到本行最后一个不是blank字符的位置。</span><br><span class="line">- **/pattern** → 搜索 pattern 的字符串（陈皓注：如果搜索出多个匹配，可按n键到下一个）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- fa → 到下一个为a的字符处，你也可以fs到下一个为s的字符。</span><br><span class="line">- t, → 到逗号前的第一个字符。逗号可以变成其它字符。</span><br><span class="line">- 3fa → 在当前行查找第三个出现的a。</span><br></pre></td></tr></table></figure>
+<p><strong>共享式</strong></p>
+<p>CountDownLatch:<br>任务分为N个子线程去执行，state也初始化为N（注意N要与线程个数一致）。这N个子线程是并行执行的，每个子线程执行完后countDown()一次，state会CAS减1。等到所有子线程都执行完后(即state=0)，会unpark()主调用线程，然后主调用线程就会从await()函数返回，继续后余动作。</p>
+<p>Semaphore:<br>AQS通过state值来控制对共享资源访问的线程数，有线程请求同步状态成功state值减1，若超过共享资源数量获取同步状态失败，则将线程封装共享模式的Node结点加入到同步队列等待。有线程执行完任务释放同步状态后，state值会增加1，同步队列中的线程才有机会获得执行权。公平锁与非公平锁不同在于公平锁申请获取同步状态前都会先判断同步队列中释放存在Node，若有则将当前线程封装成Node结点入队，从而保证按FIFO的方式获取同步状态，而非公平锁则可以直接通过竞争获取线程执行权。</p>
+<p>一般来说，自定义同步器要么是独占方法，要么是共享方式，他们也只需实现tryAcquire-tryRelease、tryAcquireShared-tryReleaseShared中的一种即可。但AQS也支持自定义同步器同时实现独占和共享两种方式，如ReentrantReadWriteLock。</p>
 
-<p>拷贝/粘贴 （陈皓注：p/P都可以，p是表示在当前位置之后，P表示在当前位置之前）</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- P → 粘贴</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- yy → 拷贝当前行当行于 ddP</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        
+    </div>
+</div>
 
-<p>Undo/Redo</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- u → undo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- &lt;C-r&gt; → redo</span><br></pre></td></tr></table></figure>
 
-<p>打开/保存/退出/改变文件(Buffer)</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- :e &lt;path/to/file&gt; → 打开一个文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- :w → 存盘</span><br><span class="line">- :saveas &lt;path/to/file&gt; → 另存为 &lt;path/to/file&gt;</span><br><span class="line">- :x， ZZ 或 :wq → 保存并退出 (:x 表示仅在需要时保存，ZZ不需要输入冒号并回车)</span><br><span class="line">- :q! → 退出不保存 :qa! 强行退出所有的正在编辑的文件，就算别的文件有更改。</span><br><span class="line">- :bn 和 :bp → 你可以同时打开很多文件，使用这两个命令来切换下一个或上一个文件。（陈皓注：我喜欢使用:n到下一个文件）</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-05-31T02:54:24.000Z">2019-05-31</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/java/">java</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1215 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/05/31/concurrenthashmap/concurrenthashmap/">hashtable and concurrenthashmap1.7、1.8</a>
+            
+        </h1>
+        <div class="content">
+            <p>hashtable&amp;concurrenthashmap1.7&amp;1.8 总结</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/08/13/vim/vim入门/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/31/concurrenthashmap/concurrenthashmap/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -398,17 +474,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-08-02T02:54:24.000Z">2017-08-02</time>
+                <time class="level-item has-text-grey" datetime="2019-05-29T02:54:24.000Z">2019-05-29</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/storm/">storm</a>
+                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 272 个字)
+                    6 分钟 读完 (大约 922 个字)
                 </span>
                 
                 
@@ -417,25 +493,20 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/08/02/storm/mac 下安装配置 storm/">mac下安装配置storm</a>
+                <a class="has-link-black-ter" href="/2019/05/29/concurrentProgramming/cas/">CAS原理、缺点、AtomicInteger使用解析</a>
             
         </h1>
         <div class="content">
-            <p>装了一天多，才装好。。主要是jzmq装不好，把它依赖卸载重新安装就好了，记下来，免得以后还得再找。。笑脸</p>
-<p>mac上安装storm ，就是安装四个东西，zookeeper, zeromq , jzmq , storm </p>
-<p>zookeeper</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install zookeeper</span><br></pre></td></tr></table></figure>
-
-<p>或者自己去下载tar包解压，</p>
-<p>修改配置文件，conf/zoo_sample.cfg</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp zoo_sample.cfg zoo.cfg             //  默认配置文件</span><br></pre></td></tr></table></figure>
+            <h4 id="cas原理"><a href="#cas原理" class="headerlink" title="cas原理"></a>cas原理</h4><p>CAS（Compare and Swap），即比较并替换, 是设计并发算法时用到的一种技术。简单来说，比较和替换是使用一个期望值和一个变量的当前值进行比较，如果当前变量的值与我们期望的值相等，就使用一个新值替换当前变量的值。</p>
+<p>CAS有三个操作数：内存值V、旧的预期值A、要修改的值B，当且仅当预期值A和内存值V相同时，将内存值修改为B并返回true，否则什么都不做并返回false。</p>
+<p>在CAS中，比较和替换是一组原子操作，不会被外部打断，且在性能上更占有优势。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/08/02/storm/mac 下安装配置 storm/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/29/concurrentProgramming/cas/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -457,17 +528,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-07-19T02:54:24.000Z">2017-07-19</time>
+                <time class="level-item has-text-grey" datetime="2019-05-26T10:54:24.000Z">2019-05-26</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/zookeeper/">zookeeper</a>
+                <a class="has-link-grey -link" href="/categories/java/">java</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    34 分钟 读完 (大约 5147 个字)
+                    7 分钟 读完 (大约 1025 个字)
                 </span>
                 
                 
@@ -476,31 +547,22 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/07/19/zookeeper/zookeeper分享总结/">zookeeper分享总结</a>
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/总结目录/">Hashmap源码解析-总览&amp;目录</a>
             
         </h1>
         <div class="content">
-            <p>给公司组内成员做的zookeeper的分享，研究了两三个星期，包含zookeeper的各个方面，由浅入深，没有探讨一致性算法，但对zookeeper的理解和使用、常用应用做了详细的整理和总结。</p>
-<p>一.  定义</p>
-<p><strong>官方定义：</strong></p>
-<p>Zookeeper是分布式系统的<strong>高性能协调服务</strong>。</p>
-<p>它将公共服务：像 <strong>命名、配置管理、同步、</strong>和 <strong>群组服务</strong> 暴露在一个简单的接口里。</p>
-<p>你可以使用现成的Zookeeper去实现 <strong>共识、群组管理、领导人选举</strong>和 <strong>presence protocols（存在，出席协议）</strong>。</p>
-<p>你没有必要从头开始实现它们，并且可以在它的基础之上建立自己的特定的需求。</p>
-<p><strong>共识：</strong></p>
-<p>就是在一个进程提出了一个值应当是什么后，每个进程都提出自己的提议，最终通过共识算法，使所有进程对这个值达成一致意见。</p>
-<p><strong>自己理解</strong></p>
-<p>zookeeper是  znode组成的文件系统 + watcher监听器 + 一致性协议zab协议</p>
-<p><strong>为什么要使用zookeeper</strong>：</p>
-<p>如果应用程序自己去实现这些服务都不可避免的引入大量的工作。</p>
-<p>zookeeper将协调服务与系统服务解耦，降低复杂度。</p>
+            <h4 id="HashMap："><a href="#HashMap：" class="headerlink" title="HashMap："></a>HashMap：</h4><p>它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 </p>
+<p>HashMap最多只允许一条记录的键为null，允许多条记录的值为null。</p>
+<p>HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以用 Collections的synchronizedMap方法使HashMap具有线程安全的能力，或者使用ConcurrentHashMap。</p>
+<p>结构: 数组 + 链表, 链表长度达到8转化成红黑树</p>
+<p>扩容: hashMap的容量达到threshold会触发扩容。扩容前后，哈希桶的长度一定会是2的次方, 这样在根据key的hash值寻找对应的哈希桶时，可以用位运算替代取余操作，更加高效。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/07/19/zookeeper/zookeeper分享总结/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/总结目录/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -522,17 +584,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2012-06-23T02:54:24.000Z">2012-06-23</time>
+                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/生活/">生活</a>
+                <a class="has-link-grey -link" href="/categories/java/">java</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 621 个字)
+                    9 分钟 读完 (大约 1399 个字)
                 </span>
                 
                 
@@ -541,19 +603,143 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2012/06/23/life/muteAll/">mute all 20190623</a>
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/扩容函数/">Hashmap源码解析-扩容函数</a>
             
         </h1>
         <div class="content">
-            <p>昨晚龙哥来我家玩，游戏开始的时候使用了快捷命令，/mute all, 屏蔽所有人的语言与信号，几场有输有赢但没有发生口角，专注于游戏。龙哥在以前打游戏的时候，会经常和别人吵起来，争论到底谁才是那个sx, 但mute all之后就不会了，心情也好了，胜率也高了。    </p>
-<p>有点小感叹我的生活，毕业前，我专注于学习，每天想的就是学习找工作，因为我一无所有所以目标明确且动力十足，会有点害怕。    </p>
-<p>而现在的话，也是想学习找工作，但首先每天都会抱怨一番现在的工作，每天都会跟同事讨论下现在有多么不爽，直接把自己带到负面情绪中，日复一日，而我是那个经常去讨论的人，虽说对学习有点推进作用，但过多的时候，会越来越急躁、烦躁、甚至暴躁，我那个暴躁的自己是最该mute的人。  </p>
-<p>其次的话，现在比在学校不一样的，就是会有更多信息，更多欲望，更多的信息渠道告诉你怎么样可能满足你的desire，比如怎样能获得更多的钱，更多事情更多的人你期望获取到对应的respect。我们开始观察、着急，想快速成功也害怕错过机会，我们肯定要追寻成功，但不能一心二用，不应该是在游戏开始的时候，当游戏开始时不该分精力去管那些desire、那些respect，你需要mute all，专心起来。   </p>
-<p>每个人都有自己的主观意识，没有人即使是你对象、父母，也不完全是你，只有自己了解自己，只有自己能承担自己，不能在人群中迷失了自我，不能在人们的讨论声中忘记了自我，想法不能被别人左右，只能自己左右，跳出人群，跳出这讨论，跳出来mute all , 做自己的判断。</p>
-<p>我会努力不带情绪工作，也会努力学习去hz，如果我做不到，我仍需进步。</p>
-
+            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
+<li><a href="../总结目录">总览&amp;目录</a></li>
+<li><a href="../链表节点NODE">链表节点NODE</a></li>
+<li><a href="../构造函数">构造函数</a></li>
+<li><a href="../扩容函数">扩容函数</a></li>
+<li><a href="../put">put</a></li>
+<li><a href="../remove">remove</a></li>
+<li><a href="../get">get</a></li>
+<li><a href="../遍历">遍历</a></li>
+<li><a href="../&hashtable">&amp;hashtable</a></li>
+</ol>
+<h4 id="扩容函数"><a href="#扩容函数" class="headerlink" title="扩容函数"></a>扩容函数</h4><p>1.更新容量和阈值, </p>
+<p>​    if cap&gt;0, 不超过上限的情况下cap、thre都乘2</p>
+<p>​    if cap=0, oldThr&gt;0, 说明初始化的时候赋初始容量参数了，newCap=oldThr</p>
+<p>​    if cap=0, oldthr=0, 直接重新初始化,cap=16,thre=12</p>
+<p>2.更新哈希桶, 遍历原桶</p>
+<p>​    if 只有一个节点，直接挪过去</p>
+<p>​    if 链表有超过8个节点，是红黑树, 复杂, 再说todo</p>
+<p>​    if 少于8个的链表，则可能挪到低位，也可能挪到高位，看它本身hash在新容量时应在哪里，代码中巧妙通过与oldCap &amp; 的方式判断需改到高还是低，具体在代码注释中有</p>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/扩容函数/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/java/">java</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    1 分钟 读完 (大约 163 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/&hashtable/">Hashmap源码解析-与hashtable区别</a>
+            
+        </h1>
+        <div class="content">
+            <p>HashMap是非线程安全的，HashTable是线程安全的。</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/&hashtable/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/java/">java</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分钟 读完 (大约 1334 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/put/">Hashmap源码解析-put</a>
+            
+        </h1>
+        <div class="content">
+            <p>源码解析-put函数</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/put/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -573,7 +759,7 @@
         <div class="pagination-previous">
             <a class="is-flex-grow has-text-black-ter" href="/page/5/">上一页</a>
         </div>
-        <div class="pagination-next is-invisible is-hidden-mobile">
+        <div class="pagination-next">
             <a class="is-flex-grow has-text-black-ter" href="/page/7/">下一页</a>
         </div>
         <ul class="pagination-list is-hidden-mobile">
@@ -585,6 +771,12 @@
             <li><a class="pagination-link has-text-black-ter" href="/page/5/">5</a></li>
             
             <li><a class="pagination-link is-current" href="/page/6/">6</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/7/">7</a></li>
+            
+            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
             
         </ul>
     </nav>
@@ -634,7 +826,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        57
+                        92
                     </p>
                 </div>
             </div>
@@ -644,7 +836,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        25
+                        27
                     </p>
                 </div>
             </div>
@@ -654,7 +846,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        36
                     </p>
                 </div>
             </div>
@@ -757,7 +949,7 @@
                 <span class="level-item">design</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/git/">
@@ -765,7 +957,7 @@
                 <span class="level-item">git</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/hadoop/">
@@ -789,7 +981,7 @@
                 <span class="level-item">jvm</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/kafka/">
@@ -808,12 +1000,20 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/mybatis/">
+            <span class="level-start">
+                <span class="level-item">mybatis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/mysql/">
             <span class="level-start">
                 <span class="level-item">mysql</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/netty/">
@@ -821,7 +1021,7 @@
                 <span class="level-item">netty</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/network/">
@@ -861,7 +1061,7 @@
                 <span class="level-item">springboot</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/storm/">
@@ -885,7 +1085,7 @@
                 <span class="level-item">zookeeper</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/并发/">
@@ -918,6 +1118,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/线上问题/">
+            <span class="level-start">
+                <span class="level-item">线上问题</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/英语/">
@@ -963,7 +1171,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 16.25px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 17.5px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.25px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 12.5px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 18.75px;">mysql</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/network/" style="font-size: 11.25px;">network</a> <a href="/tags/pcursor/" style="font-size: 10px;">pcursor</a> <a href="/tags/redis/" style="font-size: 12.5px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 11.25px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 13.75px;">并发</a> <a href="/tags/旅游/" style="font-size: 12.5px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.25px;">生活</a> <a href="/tags/索引/" style="font-size: 11.25px;">索引</a> <a href="/tags/线上问题/" style="font-size: 10px;">线上问题</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -982,8 +1190,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -995,10 +1203,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1008,10 +1216,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1021,10 +1229,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1034,10 +1242,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1056,9 +1264,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1067,9 +1275,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1116,7 +1390,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1338,7 +1612,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1352,7 +1626,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1387,7 +1661,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1408,21 +1682,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1430,6 +1704,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1457,7 +1738,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1485,7 +1766,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1520,6 +1801,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1541,6 +1829,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1579,8 +1874,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1592,10 +1887,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1605,10 +1900,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1618,10 +1913,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1631,10 +1926,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1653,9 +1948,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1664,9 +1959,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1713,7 +2074,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1935,7 +2296,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1949,7 +2310,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1984,7 +2345,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2005,21 +2366,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2027,6 +2388,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2054,7 +2422,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -2082,7 +2450,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -2117,6 +2485,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2138,6 +2513,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2170,7 +2552,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 大菜猫&nbsp;
+                &copy; 2023 大菜猫&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>

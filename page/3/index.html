@@ -152,17 +152,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-29T02:54:24.000Z">2019-05-29</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 922 个字)
+                    10 分钟 读完 (大约 1520 个字)
                 </span>
                 
                 
@@ -171,431 +167,84 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/29/concurrentProgramming/cas/">CAS原理、缺点、AtomicInteger使用解析</a>
+                <a class="has-link-black-ter" href="/2021/07/29/interview/java/">java</a>
             
         </h1>
         <div class="content">
-            <h4 id="cas原理"><a href="#cas原理" class="headerlink" title="cas原理"></a>cas原理</h4><p>CAS（Compare and Swap），即比较并替换, 是设计并发算法时用到的一种技术。简单来说，比较和替换是使用一个期望值和一个变量的当前值进行比较，如果当前变量的值与我们期望的值相等，就使用一个新值替换当前变量的值。</p>
-<p>CAS有三个操作数：内存值V、旧的预期值A、要修改的值B，当且仅当预期值A和内存值V相同时，将内存值修改为B并返回true，否则什么都不做并返回false。</p>
-<p>在CAS中，比较和替换是一组原子操作，不会被外部打断，且在性能上更占有优势。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/29/concurrentProgramming/cas/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#chang-jian-java-ji-he-lei">- 常见Java集合类</a></li>
+<li><a href="#arraylist-he-linkedlist-de-qu-bie">- ArrayList 和 LinkedList的区别</a></li>
+<li><a href="#xiang-mu-zhong-yong-dao-guo-na-xie-shu-ju-jie-gou">- 项目中用到过哪些数据结构</a></li>
+<li><a href="#bio-nio-aio-de-qu-bie-he-lian-xi">- BIO、NIO、AIO 的区別和联系</a></li>
+<li><a href="#tan-tan-dui-java-nio-de-liao-jie">- 谈谈对Java NIO的了解</a></li>
+<li><a href="#select-epoll">- select epoll</a></li>
+<li><a href="#tan-tan-dui-hashmap-de-liao-jie">- 谈谈对hashMap的了解</a></li>
+<li><a href="#loadfactor-he-threshold-de-guan-xi">- loadFactor和threshold的关系?</a></li>
+</ul>
+<!-- tocstop -->
+
 </div>
+### - 常见Java集合类
 
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T10:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 1025 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/总结目录/">Hashmap源码解析-总览&amp;目录</a>
-            
-        </h1>
-        <div class="content">
-            <h4 id="HashMap："><a href="#HashMap：" class="headerlink" title="HashMap："></a>HashMap：</h4><p>它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 </p>
-<p>HashMap最多只允许一条记录的键为null，允许多条记录的值为null。</p>
-<p>HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以用 Collections的synchronizedMap方法使HashMap具有线程安全的能力，或者使用ConcurrentHashMap。</p>
-<p>结构: 数组 + 链表, 链表长度达到8转化成红黑树</p>
-<p>扩容: hashMap的容量达到threshold会触发扩容。扩容前后，哈希桶的长度一定会是2的次方, 这样在根据key的hash值寻找对应的哈希桶时，可以用位运算替代取余操作，更加高效。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/总结目录/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    9 分钟 读完 (大约 1334 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/put/">Hashmap源码解析-put</a>
-            
-        </h1>
-        <div class="content">
-            <p>源码解析-put函数</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/put/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    1 分钟 读完 (大约 163 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/&hashtable/">Hashmap源码解析-与hashtable区别</a>
-            
-        </h1>
-        <div class="content">
-            <p>HashMap是非线程安全的，HashTable是线程安全的。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/&hashtable/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 1073 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/构造函数/">Hashmap源码解析-构造函数</a>
-            
-        </h1>
-        <div class="content">
-            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
-<li><a href="../总结目录">总览&amp;目录</a></li>
-<li><a href="../链表节点NODE">链表节点NODE</a></li>
-<li><a href="../构造函数">构造函数</a></li>
-<li><a href="../扩容函数">扩容函数</a></li>
-<li><a href="../put">put</a></li>
-<li><a href="../remove">remove</a></li>
-<li><a href="../get">get</a></li>
-<li><a href="../遍历">遍历</a></li>
-<li><a href="../&hashtable">&amp;hashtable</a></li>
+<p><strong>非线程安全</strong><br>ArrayList:  底层数组<br>LinkedList:  底层双向链表<br>HashMap: (<em>重要必考</em>)   
+数组加链表，链表长度 到 8 转化为红黑树  </p>
+<h3><span id="arraylist-he-linkedlist-de-qu-bie">- ArrayList 和 LinkedList的区别</span><a href="#arraylist-he-linkedlist-de-qu-bie" class="header-anchor">#</a></h3><ol>
+<li>数据结构  数组 / 双向链表 </li>
+<li>是否支持快速随机访问</li>
+<li>随机插入删除速度, ArrayList需要整体位移</li>
 </ol>
-<h4 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h4><p>构造函数:</p>
-<p>默认构造函数什么都不做，只是将加载因子设为默认加载因子。</p>
-<p>有初始值大小的构造函数，</p>
-<p>​    会将threshold设置为大于输入参数且最近的2的整数次幂的数,比如10，设置阈值16.</p>
-<p>​    即使有initialCapacity参数的构造，也是设置threshold，不会现在设置cap，如要设置cap就需要new资源了，而原理是在等真的插入的时候才去通过resize操作申请内存资源, 见resize.md,put.md</p>
-<p>重点:</p>
-<p>1.参数最大容量,默认的加载因子,加载因子,阈值</p>
-<p>2.哈希桶, Node&lt;K,V&gt;[] table, 是Node数组, 存放链表, 长度初始化时为0, 之后是2的N次方</p>
-<p>3.loadFactor和threshold的关系</p>
-<p>4.tableSizeFor函数的原理, 见下面解析</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/构造函数/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2 分钟 读完 (大约 320 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/get/">Hashmap源码解析-get</a>
-            
-        </h1>
-        <div class="content">
-            <h4 id="get"><a href="#get" class="headerlink" title="get"></a>get</h4><p>查找过程和删除基本差不多， 找到返回节点，否则返回null</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/get/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    3 分钟 读完 (大约 524 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/remove/">Hashmap源码解析-remove</a>
-            
-        </h1>
-        <div class="content">
-            <h4 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h4><p>1.找到待删除节点，也是分第一个节点就是，红黑树中找该节点，普通链表中找该节点</p>
-<p>2.删除节点，分红黑树删除，头节点删除，中间节点删除(包括尾)</p>
-<p>3.++modCount, –size</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/remove/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    9 分钟 读完 (大约 1399 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/扩容函数/">Hashmap源码解析-扩容函数</a>
-            
-        </h1>
-        <div class="content">
-            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
-<li><a href="../总结目录">总览&amp;目录</a></li>
-<li><a href="../链表节点NODE">链表节点NODE</a></li>
-<li><a href="../构造函数">构造函数</a></li>
-<li><a href="../扩容函数">扩容函数</a></li>
-<li><a href="../put">put</a></li>
-<li><a href="../remove">remove</a></li>
-<li><a href="../get">get</a></li>
-<li><a href="../遍历">遍历</a></li>
-<li><a href="../&hashtable">&amp;hashtable</a></li>
+<h3><span id="xiang-mu-zhong-yong-dao-guo-na-xie-shu-ju-jie-gou">- 项目中用到过哪些数据结构</span><a href="#xiang-mu-zhong-yong-dao-guo-na-xie-shu-ju-jie-gou" class="header-anchor">#</a></h3><p>queue, map, set, list, 堆（priorityQueue）</p>
+<h3><span id="bio-nio-aio-de-qu-bie-he-lian-xi">- BIO、NIO、AIO 的区別和联系</span><a href="#bio-nio-aio-de-qu-bie-he-lian-xi" class="header-anchor">#</a></h3><p>BIO：同步、阻塞。服务器实现模式为一个连接一个线程,服务器端为每一个客户端的连接请求都需要启动一个线程进行处理</p>
+<p>NIO：多路复用技术，同步非阻塞。服务器实现模式为客户端的连接请求都会注册到多路复用器上,用同一个线程接收所有连接请求</p>
+<p>AIO：异步非阻塞IO</p>
+<p>BIO里用户最关心“我要读”，NIO里用户最关心”我可以读了”，在AIO模型里用户更需要关注的是“读完了” </p>
+<h3><span id="tan-tan-dui-java-nio-de-liao-jie">- 谈谈对Java NIO的了解</span><a href="#tan-tan-dui-java-nio-de-liao-jie" class="header-anchor">#</a></h3><p>NIO（Non-blocking I/O，在Java领域，也称为New I/O），是一种同步非阻塞的I/O模型，也是I/O多路复用的基础，已经成为解决高并发与大量连接、I/O处理问题的有效方式。<br>传统的BIO模型严重依赖于线程。但线程是很”贵”的资源。创建和销毁成本很高，本身占用较大内存，切换成本是很高。 </p>
+<p>NIO由原来占用线程的阻塞读写变成了单线程轮询事件，找到可以进行读写的网络描述符进行读写。大大地节约了线程，为处理海量连接提供了可能<br>NIO的主要事件有几个：读就绪、写就绪、有新连接到来。</p>
+<p>首先需要注册当这几个事件到来对应的处理器。然后在合适的时机告诉事件选择器<br>；其次，用一个死循环选择就绪的事件，会执行系统调用（Linux 2.6之前是select、poll（轮询），2.6之后是epoll（通知））</p>
+<p>总结NIO带来了什么：   </p>
+<ul>
+<li>事件驱动模型  </li>
+<li>避免多线程</li>
+<li>单线程处理多任务</li>
+<li>非阻塞I/O，I/O读写不再阻塞</li>
+<li>基于block的传输，通常比基于流的传输更高效(buffer)</li>
+<li>更高级的IO函数，zero-copy</li>
+<li>IO多路复用大大提高了Java网络应用的可伸缩性和实用性</li>
+<li>JavaNIO使用channel、buffer传输，更高效</li>
+</ul>
+<p>白话：nio 的核心在selector，相比于BIO一连接一线程，nio 一线程可以监听多个网络连接的文件描述符，监听处理其中的事件。这样很好的节省了线程资源，会增加服务端的并发能力和吞吐。</p>
+<h3><span id="select-epoll">- select epoll</span><a href="#select-epoll" class="header-anchor">#</a></h3><p>select 是轮询所有的文件描述符<br>epoll 是走回调，能支持的数量更多，效率更高</p>
+<h3><span id="tan-tan-dui-hashmap-de-liao-jie">- 谈谈对hashMap的了解</span><a href="#tan-tan-dui-hashmap-de-liao-jie" class="header-anchor">#</a></h3><p>基本：底层数据结构, 数组 + 链表，长度到8变为红黑树，非线程安全<br>注1：HashMap在put时, 经过了两次hash，一个是JDK自带的对对象key的hash，一个是内部扰动函数hash，做高16位与低16位异或，加大散列的效果<br>注2：HashMap 的长度为什么是2的幂次方。1. 散列值用之前要对数组长度取模，求桶位(n - 1) &amp; hash 更高效；2. 扩容的时候也可以用 hash值与扩容后的最高位 &amp; 判断节点是在高位还是低位，更高效。<br>注3：HashMap 非线程安全，多线程操作导致死循环问题，1.7  并发下头插形成循环链表，1.8 用尾插修复， 但仍可能造成丢失数据。</p>
+<p>HashMap.Node&lt;K, V&gt;[] table;</p>
+<p>get是怎么做的</p>
+<ol>
+<li>hash。 hashcode高低16位异或得到hash值， (h = key.hashCode()) ^ h &gt;&gt;&gt; 16</li>
+<li>根据hash值拿到桶位第一个节点，判断是否可以直接返回</li>
+<li>判断节点中结构类型是树还是链表，树则调用树查询方法，链表则遍历链表比较</li>
 </ol>
-<h4 id="扩容函数"><a href="#扩容函数" class="headerlink" title="扩容函数"></a>扩容函数</h4><p>1.更新容量和阈值, </p>
-<p>​    if cap&gt;0, 不超过上限的情况下cap、thre都乘2</p>
-<p>​    if cap=0, oldThr&gt;0, 说明初始化的时候赋初始容量参数了，newCap=oldThr</p>
-<p>​    if cap=0, oldthr=0, 直接重新初始化,cap=16,thre=12</p>
-<p>2.更新哈希桶, 遍历原桶</p>
-<p>​    if 只有一个节点，直接挪过去</p>
-<p>​    if 链表有超过8个节点，是红黑树, 复杂, 再说todo</p>
-<p>​    if 少于8个的链表，则可能挪到低位，也可能挪到高位，看它本身hash在新容量时应在哪里，代码中巧妙通过与oldCap &amp; 的方式判断需改到高还是低，具体在代码注释中有</p>
+<p>put是怎么做的</p>
+<ol>
+<li>hash。 hashcode高低16位异或得到hash值， (h = key.hashCode()) ^ h &gt;&gt;&gt; 16</li>
+<li>根据hash值拿第一个桶位的节点，如果为空则新建节点插入</li>
+<li>判断节点结构是树还是链表，树则调用树插入的方法, 链表则添加到表尾，如果链表节点到了8个，则触发treeifyBin() ！如果整体节点数量 &gt; threshold, 则resize()</li>
+</ol>
+<p>resize是怎么做的</p>
+<ol>
+<li>new HashMap.Node[newCap]，遍历每一个桶位</li>
+<li>如果只有一个节点直接赋到新桶位，新桶位计算方式：e.hash &amp; newCap - 1</li>
+<li>如果节点数据结构为树，则走树的split()</li>
+<li>如果节点数据结构为链表，遍历链表，判断属于新桶还是老桶，通过：e.hash &amp; oldCap(2^n), 通过最高位的0，1值</li>
+</ol>
+<p>白话：hashmap是非线程安全的集合。底层是数组+链表，链表长度到8会转成红黑树。hashmap中table的长度总是2的幂次方，这样可以使用&amp;运算代替取余运算(%)来提高效率，在求桶位和扩容时获取节点新位置在左边还是右边的时候。</p>
+<h3><span id="loadfactor-he-threshold-de-guan-xi">- loadFactor和threshold的关系?</span><a href="#loadfactor-he-threshold-de-guan-xi" class="header-anchor">#</a></h3><p>size: 当前共有多少个KV对<br>capacity: 当前HashMap的容量是多少, 桶位数, table大小, 默认是16<br>loadFactor: 负载因子，默认0.75<br>threshold: loadFactor* capacity，</p>
+<p>白话：负载因子就是控制碰撞几率的，调的小，碰撞的概率小，调的大，碰的概率就大。阈值就是扩容时机。阈值等于负载因子乘以table大小</p>
+
         </div>
         
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/扩容函数/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
         
         
     </div>
@@ -614,17 +263,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 522 个字)
+                    9 分钟 读完 (大约 1306 个字)
                 </span>
                 
                 
@@ -633,34 +278,45 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/遍历/">Hashmap源码解析-遍历</a>
+                <a class="has-link-black-ter" href="/2021/07/29/interview/dt/">分布式事务</a>
             
         </h1>
         <div class="content">
-            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
-<li><a href="../总结目录">总览&amp;目录</a></li>
-<li><a href="../链表节点NODE">链表节点NODE</a></li>
-<li><a href="../构造函数">构造函数</a></li>
-<li><a href="../扩容函数">扩容函数</a></li>
-<li><a href="../put">put</a></li>
-<li><a href="../remove">remove</a></li>
-<li><a href="../get">get</a></li>
-<li><a href="../遍历">遍历</a></li>
-<li><a href="../&hashtable">&amp;hashtable</a></li>
+            <h3><span id="fen-bu-shi-shi-wu">分布式事务</span><a href="#fen-bu-shi-shi-wu" class="header-anchor">#</a></h3><p>分布式事务，主要为了实现分布式系统下一组操作的全部成功或全部失败，<br>主要分为数据库层的和业务层的分布式事务，</p>
+<p>一、数据库层的主要是基于XA协议的分布式事务，实现的强一致性，基于XA模型，主要有全局的事务管理器和本地资源管理器，事务管理器会调度本地资源管理器的本地事务的提交和回滚，达到全局的强一致性</p>
+<p>二、业务层的，基于CAP和BASE理论，实现的最终一致性，来支持的分布式事务，主要有tcc模型的补偿性事务，tcc模型主要将操作分为三个，try, confirm, cancel,  try会预留该事务的资源，即使当前事务出问题，也不会影响其它事务，支持高并发， 当一组服务的try都成功，tcc会保证所有服务的confirm最终成功，如果一组服务中有try失败，tcc会保证所有的服务最终cancel成功。</p>
+<h4><span id="shi-wu">事务</span><a href="#shi-wu" class="header-anchor">#</a></h4><p>核心：修改多个数据时，保证对<strong>多个数据操作</strong>的<strong>一致性</strong></p>
+<p>如何保证一致性: 两阶段</p>
+<ul>
+<li>让失败的部分操作 全部成功 ( x )</li>
+<li>让成功的部分操作 全部回退 ( √ )</li>
+</ul>
+<h4><span id="shi-wu-yi-zhi-xing-de-ji-ben-yao-qiu">事务一致性的基本要求</span><a href="#shi-wu-yi-zhi-xing-de-ji-ben-yao-qiu" class="header-anchor">#</a></h4><p>在提交之前，要保证所有的操作都可以回滚<br>条件：</p>
+<ul>
+<li>对每个操作，要知道如何回滚</li>
+<li>为保证能正确回滚，需要控制事务的并发<br>  在并发场景下，不能让两条rollback之间相互影响<br>（可以是阻塞等待，也可以是抛出异常、返回失败。只要能避免事务往不一致的方向发展就好。）</li>
+</ul>
+<h4><span id="tcc-de-yi-zhi-xing-bao-zheng">tcc的一致性保证</span><a href="#tcc-de-yi-zhi-xing-bao-zheng" class="header-anchor">#</a></h4><p>cancel/confirm 失败怎么办？– 重试到成功为止<br>如何重试？ – 事务协调器  tc</p>
+<h5><span id="tc">tc</span><a href="#tc" class="header-anchor">#</a></h5><p>TC 是一个独立的服务，用于协调分布式事务内的多个操作一起提交或者回滚。<br>存储了事务执行的中间状态</p>
+<h4><span id="rocketmq-shi-wu">rocketMq事务</span><a href="#rocketmq-shi-wu" class="header-anchor">#</a></h4><p>先执行 DB 操作，再发消息，难以保证消息一定发出去。</p>
+<p>RocketMQ 就反过来，先发一个半消息（Half Msg，类似一个 Prepare 操作），这个半消息是不会投递给消费者的，半消息发送成功再执行 DB 操作，DB 操作成功以后，提交半消息，这个时候半消息就变成一个普通消息送到消费者那里。</p>
+<p>对于 RocketMQ 消费者而言，事务消息和非事务消息是没有区别的。</p>
+<ol>
+<li>第 1 步发生异常，半消息发送失败，那么本地 DB 事务根本就不会执行，整个操作失败了，但是 DB/消息的状态是一致的（都没有提交）。</li>
+<li>第 2 步发生异常，或者返回超时，生产者以为失败了，因此 DB 操作不会执行，也就没有后续了。另一边 Broker 存储半消息成功了,<br>却迟迟等不到后续的提交操作，等了好久（超时）以后，Broker 就会跑来问生产者（回查，也就是第 4 步），这个半消息到底是要提交还是回滚？<br>此时生产者去数据库中确认本地 DB 事务的完成状态（第 6 步），给 Broker 一个回答（第 7 步），然后 Broker 就知道要怎么办。</li>
+<li>第 3 步 DB 操作失败，生产者可在第 4 步，告知 Broker 回滚半消息。另外生产者也可以报告状态为”未知”，然后由 Broker 稍后触发回查来决定提交还是回滚半消息。</li>
+<li>第 4 步提交/回滚半消息失败，Broker 等不到这个操作，会在一段时间以后触发回查，与上面的第 2 步异常类似。</li>
+<li>第 5、6、7 步回查失败，如果回查发生异常或者回查仍然返回”未知”，或回查失败，RocketMQ 稍后会重新调度，最多会回查 15 次</li>
 </ol>
-<h4 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h4><p>1.Node implements Map.Entry</p>
-<p>2.EntryIterator extends HashIterator implements Iterator&lt;Map.Entry&lt;K,V&gt;&gt; </p>
-<p>3.迭代器HashIterator实现 expectedModCount = modCount 支持fastfail</p>
+<h4><span id="tcc-he-rocketmq-shi-wu-de-bi-jiao">tcc和rocketMq事务的比较</span><a href="#tcc-he-rocketmq-shi-wu-de-bi-jiao" class="header-anchor">#</a></h4><p>tcc优势</p>
+<ol>
+<li>rpc事务，将多个rpc组合在一起</li>
+<li>tcc可以无限去加更多的操作来判断整体的提交或回滚。事务中的操作有3个及以上，要根据其中的结果判断是否要回滚其中的前两个，这种rocketmq就无法去做。（rocketmq 比较被动，当本地事务提交了，后面的一定要提交，缺少判断多个操作的结果来判断整体是否提交的能力）</li>
+<li>rocket mq的异步消息在逻辑上一定是成功的，但tcc的其他操作也可以是失败的可以参与到整体成功与否的判断的。如果rocket mq中的异步操作不一定会成功不能使用rocket mq</li>
+</ol>
+
         </div>
         
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/遍历/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
         
         
     </div>
@@ -679,17 +335,13 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2021-07-29T03:10:43.000Z">2021-07-29</time>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 239 个字)
+                    16 分钟 读完 (大约 2393 个字)
                 </span>
                 
                 
@@ -698,34 +350,630 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/链表节点NODE/">Hashmap源码解析-链表节点NODE</a>
+                <a class="has-link-black-ter" href="/2021/07/29/interview/design/">系统设计</a>
             
         </h1>
         <div class="content">
-            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
-<li><a href="../总结目录">总览&amp;目录</a></li>
-<li><a href="../链表节点NODE">链表节点NODE</a></li>
-<li><a href="../构造函数">构造函数</a></li>
-<li><a href="../扩容函数">扩容函数</a></li>
-<li><a href="../put">put</a></li>
-<li><a href="../remove">remove</a></li>
-<li><a href="../get">get</a></li>
-<li><a href="../遍历">遍历</a></li>
-<li><a href="../&hashtable">&amp;hashtable</a></li>
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#gao-bing-fa-xi-tong-ti-xing-neng">- 高并发系统提性能</a></li>
+<li><a href="#qing-qiu-mi-deng-xing">- 请求幂等性</a></li>
+<li><a href="#fen-bu-shi-suo">- 分布式锁</a></li>
+<li><a href="#fen-bu-shi-zhu-jian-sheng-cheng-fang-an-xuan-ze">- 分布式主键生成方案选择</a></li>
+<li><a href="#ru-he-shi-xian-yan-chi-dui-lie">- 如何实现延迟队列</a></li>
+<li><a href="#gao-bing-fa-xi-tong-de-wen-ding-xing-bao-zheng">- 高并发系统的稳定性保证</a></li>
+<li><a href="#shuang-xie-fu-wu-qian-yi">- 双写服务迁移</a></li>
+<li><a href="#ling-yu-hua-fen">- 领域划分</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="gao-bing-fa-xi-tong-ti-xing-neng">- 高并发系统提性能</span><a href="#gao-bing-fa-xi-tong-ti-xing-neng" class="header-anchor">#</a></h3><p><strong>读优化</strong><br>多级缓存：让数据靠近计算<br>链路优化：合并batch请求缩短整体耗时</p>
+<p><strong>写优化</strong><br>流量漏⽃：缓存预扣减少数据库的⽆效访问<br>分库分表：提升数据库的整体写⼊能⼒( 窄表设计下单分片物理机可承载4500，云服务器可承载3000，仅供参考，具体以业务测试为准 )<br>并⾏扣减：降低库存扣减的响应时间<br>分库存：解决单行更新能力不足问题，（一般单行更新的QPS在500以内）<br>合并请求：异步批量，将多次扣减累计计数，集中成一次扣减，从而实现了将串行处理变成了批处理。大大减轻更新压力。</p>
+<p><strong>扩展</strong></p>
+<ol>
+<li>如果某个sku_id的库存扣减过热，单台实例支撑不了（mysql官方测评：一般单行更新的QPS在500以内），可以考虑将一个sku的大库存拆分成N份，放在不同的库中（也就是说所有子库的库存数总和才是一件sku的真实库存），由于前台的访问流量非常大，按照均分原则，每个子库分到的流量应该差不多。上层路由时只需要在sku_id后面拼接一个范围内的随机数，即可找到对应的子库，有效减轻系统压力。</li>
+<li>单条sku库存记录更新过热，也可以采用批量提交方式，将多次扣减累计计数，集中成一次扣减，从而实现了将串行处理变成了批处理，也可以大大减轻数据库压力。</li>
+<li>引入RocketMQ消息队列，经过前置校验后，如果有剩余库存，则把创建订单的操作封装成消息发送给MQ，订单系统从RocketMQ中以特定的频率消费，创建订单，该方案有一定的延迟性。</li>
 </ol>
-<h4 id="链表节点NODE"><a href="#链表节点NODE" class="headerlink" title="链表节点NODE"></a>链表节点NODE</h4><p>重点:</p>
-<p>1.单链表</p>
-<p>2.hashCode()是将key的hashCode和value的hashCode异或得到</p>
+<h3><span id="qing-qiu-mi-deng-xing">- 请求幂等性</span><a href="#qing-qiu-mi-deng-xing" class="header-anchor">#</a></h3><p>请求幂等性总结：<br>1.是否需要幂等。比如查询，insert含唯一索引的表，update set数据，delete by id 等简单场景是天然幂等。不需要额外做幂等操作。无法这样的比如要做数据的累加，就要做幂等。<br>2.如何判断重复。<br>业务唯一键，查记录表或流水表，根据记录的有无和状态来判断。<br>3.实现。  </p>
+<ol>
+<li>简单的话接口直接实现, 但通常幂等逻辑是有通用性的</li>
+<li>如果服务多接口使用写幂等工具类</li>
+<li>如果多服务使用一套幂等逻辑，写sdk</li>
+<li>最复杂的多服务间幂等，还无法都获取到记录结果，就要在sdk统一读写幂等表，读写相同的幂等记录做幂等</li>
+<li>并发处理</li>
+<li>单机情况下，使用java锁synchronized    </li>
+<li>使用数据库锁，悲观锁：select for update，乐观锁：update set XXX and version = 2 where version = 1     </li>
+<li>使用分布式锁：<br>redis锁：1.过期时间导致并发问题，2.主从切换时锁丢失<br>zookeeper锁：写能力不如redis  </li>
+</ol>
+<p><a href="/2019/12/03/design/idemptent/" title="幂等设计">幂等设计</a></p>
+<h3><span id="fen-bu-shi-suo">- 分布式锁</span><a href="#fen-bu-shi-suo" class="header-anchor">#</a></h3><p><strong>方案1、基于数据库唯一主键</strong><br>原理：在数据库中创建一个表，表中包含方法名等字段，并在方法名字段上创建唯一索引，想要执行某个方法，就使用这个方法名向表中插入数据，成功插入则获取锁，执行完成后删除对应的行数据释放锁。</p>
+<p><strong>方案2、基于redis实现分布式锁</strong><br>原理：通过redis 中的命信setNx 来实现 （当key不存在则设置值并返回true，否则返回失败）</p>
+<p><strong>方案3、基于Zookeeper来实现分布式锁</strong><br>原理：1、先建一个目录lock 2、线程A想获取锁就在lock目录下创建一个带顺序的临时节点 3、然后获取比当前顺序号小的顺序号，获取到则获取锁失败，获取不到则获取锁成功。 4、解锁则是删除这个临时节点。</p>
+<h3><span id="fen-bu-shi-zhu-jian-sheng-cheng-fang-an-xuan-ze">- 分布式主键生成方案选择</span><a href="#fen-bu-shi-zhu-jian-sheng-cheng-fang-an-xuan-ze" class="header-anchor">#</a></h3><p>分布式自增ID的实现</p>
+<p>1.uuid<br>组成部分：当前日期和时间、时钟序列、机器识别码 </p>
+<p>缺点：<br>UUID长度128bit，32个16进制字符，占用存储空间多，且生成的ID是无序的</p>
+<p>对于InnoDB这种聚集主键类型的引擎来说，数据会按照主键进行排序，由于UUID的无序性，InnoDB会产生巨大的IO压力，此时不适合使用UUID做物理主键。</p>
+<p>2.号段模式，底层proxy服务+数据库分段获取id<br>结合数据库维护一个Sequence表，每当需要为某个表的新纪录生成ID时就从Sequence表中取出对应的nextid,将其+1后更新到数据库中以备下次使用。</p>
+<p>缺点：由于所有的插入都要访问该表，很容易造成性能瓶颈。<br>在高并发场景下，无法保证高性能。</p>
+<p>3.Snowflake<br>使用41bit作为毫秒数，10bit作为机器的ID（5个bit是数据中心，5个bit的机器ID），12bit作为毫秒内的流水号（意味着每个节点在每毫秒可以产生 4096 个 ID），最后还有一个符号位，永远是0。</p>
+<p>长度为64bit，占用存储空间多<br>存在时钟回拨问题， leaf已解决</p>
+<h3><span id="ru-he-shi-xian-yan-chi-dui-lie">- 如何实现延迟队列</span><a href="#ru-he-shi-xian-yan-chi-dui-lie" class="header-anchor">#</a></h3><p><a href="/2021/08/21/design/delaymq/" title="delaymq">delaymq</a></p>
+<h3><span id="gao-bing-fa-xi-tong-de-wen-ding-xing-bao-zheng">- 高并发系统的稳定性保证</span><a href="#gao-bing-fa-xi-tong-de-wen-ding-xing-bao-zheng" class="header-anchor">#</a></h3><p>限流，单机限流动态扩容，集群限流保护存储<br>隔离，业务与业务隔离，避免多业务之间互相影响。读写服务隔离，关注点不一样。环节隔离，查询和交易环节在流量和响应时间上有很大差异（api, order）。<br>监控，业务量级、成功失败原因、活动量级上报，尤其是失败原因。<br>降级</p>
+<ul>
+<li>非核心功能，容量问题，非核心功能。比如压力过大，先限流降级查询功能，减少入口流量，避免雪崩。</li>
+<li>非核心依赖，功能异常问题，熔断降级。eg: 直播视频制作，依赖算法，mmu，ytech，音视频，区分非核心依赖：mmu，ytech，即可做区别降级处理。发第三方券。<br>全链路压测<br>定期进行全链路压测评估链路流量负载能力<br>总结<br>事前：链路梳理，明确强弱依赖<br>   性能评估，容量评估，负载评估<br>   完善监控，明确因果，建设大盘<br>   降级预案，区分场景，区分等级<br>事中：扩容、限流、降级、熔断<br>事后：性能优化，问题修复，复盘总结</li>
+</ul>
+<p>redis监控：读写qps，内存使用率，响应耗时，缓存命中率，慢查询，大key<br>kafka监控：消费延迟量，消费失败数量，生产&amp;消费速率</p>
+<h3><span id="shuang-xie-fu-wu-qian-yi">- 双写服务迁移</span><a href="#shuang-xie-fu-wu-qian-yi" class="header-anchor">#</a></h3><ol>
+<li>迁移模式：老服务代理新服务完成内部迁移，再推业务方做sdk迁移</li>
+<li>双写操作：以谁为主，就同步写为主一侧，异步写另一侧，减少耗时</li>
+<li>路由策略<pre><code>查询以灰度为准，下单以灰度为准
+退款、回滚固定以下单为准。防止一单交易不同环节分别走到新老，新老数据可能不一致。 退款回滚时，请求新老流水，根据流水路由信息，判断退款路由策略</code></pre></li>
+<li>实时响应比对：双写完, 整合两侧结果上报mq, 消费mq做结果比对，打点，告警，问题及时发现</li>
+<li>离线数据最终一致校正：离线任务跑新老流水，判断以谁为主，以谁为主就用谁的流水校正另一侧的流水</li>
+</ol>
+<h3><span id="ling-yu-hua-fen">- 领域划分</span><a href="#ling-yu-hua-fen" class="header-anchor">#</a></h3><p>营销平台领域划分<br>业务领域：触达，感知，转化，留存。<br>工具域：立减，拼团，积分，优惠券<br>基础域：选品，选人，规则，库存，预算</p>
+<p>基建平台领域划分<br>前台: 代理商平台、crm平台、财务平台<br>业务编排：代理商引入、广告主引入、转账充值<br>基础域：客户域、财务域、报表分析域、销售管理域<br>支撑域：upm、计费、dsi、passport、审核</p>
+<p>直播剪辑的整体流程<br>近实时、配置化、异步制作</p>
+<ol>
+<li>自动剪辑配置，开启时段，剪辑时长，字幕，配乐，片头片尾</li>
+<li>自动剪辑，定时任务时间驱动，每10min,  异步制作<br>定时任务 </li>
+</ol>
+<p>-&gt; mq异步 （ 算法视频切片 -&gt; mmu语音转文字 -&gt; ytech视频特效 ）<br>-&gt; mq复用 ( 音视频片头片尾）<br>注：mmu、ytech、音视频可降级。</p>
+
         </div>
         
         
-        <div class="level is-mobile">
-            <div class="level-start">
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-03-18T02:54:24.000Z">2021-03-18</time>
+                
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/链表节点NODE/#more">阅读更多</a>
+                <a class="has-link-grey -link" href="/categories/线上问题/">线上问题</a>
                 </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 581 个字)
+                </span>
+                
+                
             </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/03/18/online/oom1/">一次线上OOM问题排查</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+
+
+<!-- tocstop -->
+
+</div>
+
+<p>一、问题</p>
+<p>一个查询 服务 jvm 偶现oom，容器异常退出，过会儿自动重新拉起进程，容器不变<br>​二、时间线<br>20210308 怀疑是cpu飙升导致<br>观察cpu出现飙升， 通过 top 命令查到进程 pid 通过 top -H -p <pid>, 看到下图</pid></p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/top.png" alt></p>
+<p><strong>耗cpu的线程都为GC线程，排除是cpu飙升的原因</strong></p>
+<p>20210311 复现oom 分析dump文件<br>本想通过sz 将dump文件拉到本地，但太费劲了，dump文件为16G, 即使分段也十分费劲，询问基础架构同学，提供了公司的dump文件分析工具 jifa<br>jifa 一个可以快速将dump文件快速上传到云端，且在远端使用MAT进行解析的工具，非常好使<br>将dump文件上传到S3云端，再根据返回的链接，直接跳转到jifa 平台，默认弹出刚才文件从S3导入的选择，选择导入，即会从S3导入到公司 jifa 平台。<br>选择对应机器的dump文件，进行在线分析，加载后即可得到线上MAT分析结果<br>从Dominator Tree中可看到有一个线程占用了96%的内存，且是线程中的一个ArrayList 占用着几乎这96%内存，点开发现全是 DotVO实体</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/mat1.jpg" alt></p>
+<p>该ArrayList 中存在 1.4 亿 个 DotVO实体</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/mat2.png" alt></p>
+<p>查该问题线程的堆栈，发现停在了 AssetsSecondInfoVO.result2VO</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/mat3.png" alt></p>
+<p>此处的逻辑为一个时间范围的中间数据补齐</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/mat4.png" alt></p>
+<p>看DotVO 中的时间 竟然还有50多万s 的时间。。。</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/jvm/mat6.jpg" alt></p>
+<p>查hive表数据，确实是有很大的时长的数据，比如视频时长为28s, 但是hive表中时间数据有16亿s的。。此时做中间时间补齐，则数据量会爆炸<br>询问数仓同学，是脏数据，是个已知问题<br>fix: 添加对下游数据正确性的校验逻辑 &amp; 数仓同学推动上报源改造</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-14T12:54:24.000Z">2020-08-14</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/spring/">spring</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    几秒 读完 (大约 0 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/14/spring/springioc初始化/">spring架构</a>
+            
+        </h1>
+        <div class="content">
+            <img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/image-20200814160251994.png" style="zoom:50%;">
+
+<img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/clipboard_20200814040710.png" style="zoom:50%;">
+
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-13T02:54:24.000Z">2020-08-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 679 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/13/design/pcursor/">pcursor基于游标的分页</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#yi-ji-yu-pian-yi-liang-fen-ye-ji-yu-you-biao-fen-ye">一、基于偏移量分页&amp;基于游标分页</a><ul>
+<li><a href="#1-ji-yu-pian-yi-liang-de-fen-ye">1.基于偏移量的分页</a></li>
+<li><a href="#2-ji-yu-you-biao-de-fen-ye">2.基于游标的分页</a></li>
+</ul>
+</li>
+<li><a href="#er-jie-kou-shi-xian">二、接口实现</a></li>
+<li><a href="#san-di-ceng-shi-xian">三、底层实现</a><ul>
+<li><a href="#1-pcursor-you-biao-ru-he-pin-jie">1. pcursor游标如何拼接</a></li>
+<li><a href="#2-pcursor-you-biao-ru-he-shi-yong">2.pcursor游标如何使用</a></li>
+<li><a href="#3-sheng-cheng-cha-xun-sql">3. 生成查询SQL</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="yi-ji-yu-pian-yi-liang-fen-ye-amp-ji-yu-you-biao-fen-ye">一、基于偏移量分页&amp;基于游标分页</span><a href="#yi-ji-yu-pian-yi-liang-fen-ye-amp-ji-yu-you-biao-fen-ye" class="header-anchor">#</a></h3><h4><span id="1-ji-yu-pian-yi-liang-de-fen-ye">1.基于偏移量的分页</span><a href="#1-ji-yu-pian-yi-liang-de-fen-ye" class="header-anchor">#</a></h4><p>适用于内容是静态的，或者不用实时返回数据最新的变化。特点：1.只要有新增或删除，就会有大量的数据偏移量的改变，造成重复展示或者漏展示。2.存在数据量大时的offset慢查询问题</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/clipboard_20200814041307.png" alt="img"></p>
+<h4><span id="2-ji-yu-you-biao-de-fen-ye">2.基于游标的分页</span><a href="#2-ji-yu-you-biao-de-fen-ye" class="header-anchor">#</a></h4><p>适用于查询结果在用户浏览过程中是变化的。特点：1.时间线里出现新的数据或删除数据，这些变化都可以在 “前一页” 或者 “后一页” 体现出来。 2.没有offset问题</p>
+<p>eg: 发现页 下拉获取最新，上拉获取更久</p>
+<h3><span id="er-jie-kou-shi-xian">二、接口实现</span><a href="#er-jie-kou-shi-xian" class="header-anchor">#</a></h3><p>请求参数</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">类型</th>
+<th align="left">逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">参数名</td>
+<td align="left">类型</td>
+<td align="left">逻辑</td>
+</tr>
+<tr>
+<td align="left">pcursor</td>
+<td align="left">String</td>
+<td align="left">初始值传 “” , 后续值使用后端返回值</td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">Integer</td>
+<td align="left">本次想获取的数据量</td>
+</tr>
+</tbody></table>
+<p>响应信息</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">类型</th>
+<th align="left">逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pcursor</td>
+<td align="left">String</td>
+<td align="left">透传给下一页查询 调用方判断是否为 “no_more”, 若是则不再调用，否则永远停不下来了</td>
+</tr>
+</tbody></table>
+<h3><span id="san-di-ceng-shi-xian">三、底层实现</span><a href="#san-di-ceng-shi-xian" class="header-anchor">#</a></h3><p>根据更新时间排序</p>
+<p>排序规则：order by update_time desc, id desc  原因: 更新时间 + id 的排序, 可以为所有数据确定顺序，即使更新时间相同，即确定每条记录的游标，游标为更新时间+id，只要查询条件不变，即游标可在该顺序下唯一确定一个位置</p>
+<h4><span id="1-pcursor-you-biao-ru-he-pin-jie">1. pcursor游标如何拼接</span><a href="#1-pcursor-you-biao-ru-he-pin-jie" class="header-anchor">#</a></h4><ul>
+<li>根据上面排序规则查询出数据</li>
+<li>取最后一个数据last，即为该排序下此次查询的终止位置</li>
+<li>根据last数据拼接成pcursor<br>pcursor = encrypt ( (“updateTime”, long, 1589439219430); (“id”, long, 95424 ); )</li>
+</ul>
+<h4><span id="2-pcursor-you-biao-ru-he-shi-yong">2.pcursor游标如何使用</span><a href="#2-pcursor-you-biao-ru-he-shi-yong" class="header-anchor">#</a></h4><ul>
+<li>pcursor解析为 上次查询last的 last.updateTime, last.id </li>
+<li>本次查询where条件中，updateTime &lt; last.updateTime or (update_time = last.updateTime and id &lt; last.id) order by update_time desc, id desc;<br>如下表格，为order by update_time desc, id desc，上次查询游标为last游标位置，则下次查询 updateTime &lt; 1555500001 or (updateTime = 1555500001 and id &lt; 32) order by update_time desc, id desc， 即为后三行数据</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">update_time</th>
+<th align="left">id</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1555500001</td>
+<td align="left">33</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500001</td>
+<td align="left">32</td>
+<td align="left">last 游标位置</td>
+</tr>
+<tr>
+<td align="left">1555500001</td>
+<td align="left">31</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500000</td>
+<td align="left">44</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500000</td>
+<td align="left">42</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h4><span id="3-sheng-cheng-cha-xun-sql">3. 生成查询SQL</span><a href="#3-sheng-cheng-cha-xun-sql" class="header-anchor">#</a></h4><p>若查询条件为 userId, status, updateTime 则查询语句为</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM</span><br><span class="line">    ad_xxx_info</span><br><span class="line">WHERE</span><br><span class="line">    user_id = xxx</span><br><span class="line">    AND STATUS = xxx</span><br><span class="line">    AND (</span><br><span class="line">        update_time &lt; xxx</span><br><span class="line">        OR ( update_time = xxx AND id &lt; xxx )</span><br><span class="line">    )</span><br><span class="line">ORDER BY</span><br><span class="line">    update_time DESC, id DESC</span><br><span class="line">LIMIT 20;</span><br></pre></td></tr></table></figure>
+
+<p>创建联合索引 (user_id, status, update_time) 查询即可全部走索引。注：主键也是索引的一部分，Extra为Using where。using where is fine <a href="https://stackoverflow.com/questions/9533841/mysql-fix-using-where" target="_blank" rel="noopener">https://stackoverflow.com/questions/9533841/mysql-fix-using-where</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-07T02:54:24.000Z">2020-08-07</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/mybatis/">mybatis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    11 分钟 读完 (大约 1640 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/07/mybatis/question/">mybatis疑问解答</a>
+            
+        </h1>
+        <div class="content">
+            <h3><span id="mybatis-de-dian">Mybatis的点</span><a href="#mybatis-de-dian" class="header-anchor">#</a></h3><p>通过动态代理，自动生成一些参数的映射、sql的执行、结果的映射，减少了大量重复的代码，且对sqlsession，jdbc操作，事务，一二级缓存，做了很好的封装</p>
+<h3><span id="mybatis-de-gong-zuo-yuan-li">MyBatis的工作原理</span><a href="#mybatis-de-gong-zuo-yuan-li" class="header-anchor">#</a></h3><p> 1）读取 MyBatis 配置文件：mybatis-config.xml 为 MyBatis 的全局配置文件，配置了 MyBatis 的运行环境等信息，例如数据库连接信息。<br> 2）加载映射文件。映射文件即 SQL 映射文件，该文件中配置了操作数据库的 SQL 语句，需要在 MyBatis 配置文件 mybatis-config.xml 中加载。mybatis-config.xml 文件可以加载多个映射文件，每个文件对应数据库中的一张表。<br> 3）构造会话工厂：通过 MyBatis 的环境等配置信息构建会话工厂 SqlSessionFactory。<br> 4）创建会话对象：由会话工厂创建 SqlSession 对象，该对象中包含了执行 SQL 语句的所有方法。<br> 5）Executor 执行器：MyBatis 底层定义了一个 Executor 接口来操作数据库，它将根据 SqlSession 传递的参数动态地生成需要执行的 SQL 语句，同时负责查询缓存的维护。<br> 6）MappedStatement 对象：在 Executor 接口的执行方法中有一个 MappedStatement 类型的参数，该参数是对映射信息的封装，用于存储要映射的 SQL 语句的 id、参数等信息。<br> 7）输入参数映射：输入参数类型可以是 Map、List 等集合类型，也可以是基本数据类型和 POJO 类型。输入参数映射过程类似于 JDBC 对 preparedStatement 对象设置参数的过程。<br> 8）输出结果映射：输出结果类型可以是 Map、 List 等集合类型，也可以是基本数据类型和 POJO 类型。输出结果映射过程类似于 JDBC 对结果集的解析过程。    </p>
+<h3><span id="mybaits-zhong-ru-he-wei-hu-yi-ji-huan-cun-yi-ji-huan-cun-de-sheng-ming-zhou-qi-yi-ji-huan-cun-he-shi-shi-xiao">mybaits中如何维护一级缓存、一级缓存的生命周期、一级缓存何时失效</span><a href="#mybaits-zhong-ru-he-wei-hu-yi-ji-huan-cun-yi-ji-huan-cun-de-sheng-ming-zhou-qi-yi-ji-huan-cun-he-shi-shi-xiao" class="header-anchor">#</a></h3><p>BaseExecutor成员变量之一的PerpetualCache，是对Cache接口最基本的实现， 其实现非常简单，内部持有HashMap，对一级缓存的操作实则是对HashMap的操作。</p>
+<p>一级缓存的生命周期和SqlSession一致，即一次会话</p>
+<p>何时失效<br>a. MyBatis在开启一个数据库会话时，会创建一个新的SqlSession对象，SqlSession对象中会有一个新的Executor对象，Executor对象中持有一个新的PerpetualCache对象；当会话结束时，SqlSession对象及其内部的Executor对象还有PerpetualCache对象也一并释放掉。<br>b. 如果SqlSession调用了close()方法，会释放掉一级缓存PerpetualCache对象，一级缓存将不可用；<br>c. 如果SqlSession调用了clearCache()，会清空PerpetualCache对象中的数据，但是该对象仍可使用；<br>d.SqlSession中执行了任何一个update操作update()、delete()、insert() ，都会清空PerpetualCache对象的数据   </p>
+<h3><span id="yi-ji-huan-cun-de-gong-zuo-liu-cheng">一级缓存的工作流程？</span><a href="#yi-ji-huan-cun-de-gong-zuo-liu-cheng" class="header-anchor">#</a></h3><p>a.对于某个查询，根据statementId,params,rowBounds来构建一个key值，根据这个key值去缓存Cache中取出对应的key值存储的缓存结果；<br>b. 判断从Cache中根据特定的key值取的数据数据是否为空，即是否命中；<br>c. 如果命中，则直接将缓存结果返回；<br>d. 如果没命中：去数据库中查询数据，得到查询结果；将key和查询到的结果分别作为key,value对存储到Cache中；将查询结果返回.   </p>
+<h3><span id="mybatis-sqlsession-connection-transition-de-li-jie">mybatis sqlsession、connection、transition的理解</span><a href="#mybatis-sqlsession-connection-transition-de-li-jie" class="header-anchor">#</a></h3><p>一个sqlsession会话，如果是多个更新操作   </p>
+<p>自动提交： 代码层是一个connection、一个transition事务配置， db层是一个connection，多个事务</p>
+<p>手动提交： 代码层是一个connection、一个transition事务配置，db层也是一个connection，一个事务</p>
+<h3><span id="mybatis-dong-tai-sql-shi-zuo-shi-me-de-du-you-na-xie-dong-tai-sql-jian-shu-yi-xia-dong-tai-sql-de-zhi-xing-yuan-li">Mybatis动态sql是做什么的？都有哪些动态sql？简述一下动态sql的执行原理？</span><a href="#mybatis-dong-tai-sql-shi-zuo-shi-me-de-du-you-na-xie-dong-tai-sql-jian-shu-yi-xia-dong-tai-sql-de-zhi-xing-yuan-li" class="header-anchor">#</a></h3><p>动态sql是用一定规则方便的拼接sql。</p>
+<p>动态sql: <where>、<if>  <foreach></foreach></if></where></p>
+<p>执行原理：获取当前节点的子节点，判断子节点的类型是否为文本或者CDATA，如果是则没有动态sql，如果节点类型为元素，则表明是动态sql，根据动态sql标签类型，给到不同的handler做处理，最终拼成一个sql</p>
+<h3><span id="mybatis-shi-fou-zhi-chi-yan-chi-jia-zai-ru-guo-zhi-chi-ta-de-shi-xian-yuan-li-shi-shi-me">Mybatis是否支持延迟加载？如果支持，它的实现原理是什么？</span><a href="#mybatis-shi-fou-zhi-chi-yan-chi-jia-zai-ru-guo-zhi-chi-ta-de-shi-xian-yuan-li-shi-shi-me" class="header-anchor">#</a></h3><p>支持。</p>
+<p>实现原理是动态代理。在resultSetHandler做结果集映射的时候，判断下属性是否配置了嵌套查询，如果配置了则先创建代理对象，实现代理对象的invoke方法，在对下get操作的时候，再去执行该字段的获取方法。</p>
+<h3><span id="mybatis-du-you-na-xie-executor-zhi-xing-qi-ta-men-zhi-jian-de-qu-bie-shi-shi-me">Mybatis都有哪些Executor执行器？它们之间的区别是什么？</span><a href="#mybatis-du-you-na-xie-executor-zhi-xing-qi-ta-men-zhi-jian-de-qu-bie-shi-shi-me" class="header-anchor">#</a></h3><p>SimpleExecutor, ReuseExecutor , BatchExecutor , CachingExecutor</p>
+<p>SimpleExecutor：每一次执行都会创建一个新的Statement对象.</p>
+<p>ReuseExecutor: 重复使用Statement对象</p>
+<p>ReuseExecutor比SimpleExecutor 性能更好一些</p>
+<p>BatchExecutor：批量statement提交。其事务无法自动提交</p>
+<p>CachingExecutor：用来做二级缓存，装饰者模式。</p>
+<p>实际生产环境中建议使用 ReuseExecutor </p>
+<h3><span id="jian-shu-xia-mybatis-de-yi-ji-er-ji-huan-cun-fen-bie-cong-cun-chu-jie-gou-fan-wei-shi-xiao-chang-jing-san-ge-fang-mian-lai-zuo-da">简述下Mybatis的一级、二级缓存（分别从存储结构、范围、失效场景。三个方面来作答）？</span><a href="#jian-shu-xia-mybatis-de-yi-ji-er-ji-huan-cun-fen-bie-cong-cun-chu-jie-gou-fan-wei-shi-xiao-chang-jing-san-ge-fang-mian-lai-zuo-da" class="header-anchor">#</a></h3><p>存储结构：一级、二级缓存的存储结构都为hashMap</p>
+<p>范围：一级缓存的范围是sqlsession级别，二级缓存的范围是namespace级别</p>
+<p>失效场景：</p>
+<p>当sqlsession做插入、更新、删除操作时</p>
+<h3><span id="jian-shu-mybatis-de-cha-jian-yun-xing-yuan-li-yi-ji-ru-he-bian-xie-yi-ge-cha-jian">简述Mybatis的插件运行原理，以及如何编写一个插件？</span><a href="#jian-shu-mybatis-de-cha-jian-yun-xing-yuan-li-yi-ji-ru-he-bian-xie-yi-ge-cha-jian" class="header-anchor">#</a></h3><p>拦截器，对mybatis的四大核心对象做拦截，做功能增强，底层动态代理实现，四大对象创建时，都会走到interceptorChain.pluginAll(), 返回增强后的对象</p>
+<p>编写插件：<br>1.实现一个interceptor， 加上注解， @Intercepts, 配置要增强的四大对象的接口和方法名<br>2.sqlMapperConfig中添加该自定义插件标签</p>
+<p>参考文献：<br><a href="https://juejin.im/post/6844904101587714061" target="_blank" rel="noopener">https://juejin.im/post/6844904101587714061</a><br><a href="https://www.shangmayuan.com/a/cfc40f96680e49e9b692a4e7.html" target="_blank" rel="noopener">https://www.shangmayuan.com/a/cfc40f96680e49e9b692a4e7.html</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-06T02:54:24.000Z">2020-08-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/mybatis/">mybatis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    1 分钟 读完 (大约 158 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/06/mybatis/arti/">mybatis架构流程</a>
+            
+        </h1>
+        <div class="content">
+            <p>架构图<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/mybatis%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg" alt="架构图"></p>
+<p>架构分层<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%9E%B6%E6%9E%84%E5%88%86%E5%B1%82.jpg" alt="架构分层"></p>
+<p>主要构件<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E4%B8%BB%E8%A6%81%E6%9E%84%E4%BB%B6.jpg" alt="主要构件"></p>
+<p>层次结构<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/mybatis%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84.jpg" alt="层次结构"></p>
+<p>总体流程<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E6%80%BB%E4%BD%93%E6%B5%81%E7%A8%8B.jpg" alt="总体流程"></p>
+<p>设计模式<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpg" alt="设计模式"></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-14T02:54:24.000Z">2020-04-14</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/jvm/">jvm</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1030 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/04/14/jvm/gcoptimiz/">gc调优（parnew+cms）</a>
+            
+        </h1>
+        <div class="content">
+            <h3><span id="1-ru-he-zuo-gc-diao-you">1如何做gc调优</span><a href="#1-ru-he-zuo-gc-diao-you" class="header-anchor">#</a></h3><p>调优目的：减少系统停顿时间<br>优化目标：减少younggc、减少cmsgc、减少fullgc<br>Old GC：只清理老年代空间的 GC 事件，只有 CMS 的并发收集是这个模式。<br>Full GC：清理整个堆的 GC 事件，包括新生代、老年代、元空间等 。</p>
+<h4><span id="1-1younggc-yuan-yin">1.1younggc原因</span><a href="#1-1younggc-yuan-yin" class="header-anchor">#</a></h4><p>1.请求中生成的对象多。新生代空间较小，Eden区很快被填满，就会导致频繁young GC     </p>
+<h4><span id="1-1-ru-he-jian-shao-younggc">1.1如何减少younggc</span><a href="#1-1-ru-he-jian-shao-younggc" class="header-anchor">#</a></h4><p>1.增大新生代空间<br>2.减少请求中生成对象大小<br>1.2cmsgc原因<br>1.有过多的对象到达了老年代，频繁触发cms gc<br>1.2如何减少cmsgc<br>1.增大老年代大小<br>2.减少进入老年代的对象大小, 提高晋升年龄阈值（如果小的话，比如改成了3、4）</p>
+<h4><span id="1-3fullgc-yuan-yin">1.3fullgc原因</span><a href="#1-3fullgc-yuan-yin" class="header-anchor">#</a></h4><p>1.metaspace扩容</p>
+<p>2.CMS GC时出现promotion failed(晋升失败)和concurrent mode failure 触发串行full gc。</p>
+<pre><code>promotion failed: 当新生代发生垃圾回收，老年代有足够的空间可以容纳晋升的对象，但是由于空闲空间的碎片化，导致晋升失败，此时会触发单线程且带压缩动作的Full GC
+concurrent mode failure: 发生的原因一般是CMS正在进行，但是由于老年代空间不足，需要尽快回收老年代里面的不再被使用的对象，这时停止所有的线程，同时终止CMS，直接进行Serial Old GC</code></pre><p>3.统计得到的Young GC晋升到老年代的平均大小大于老年代的剩余空间；</p>
+<p>4.主动触发Full GC，</p>
+<pre><code>程序代码执行System.gc(); 
+命令行中dump整个堆: 执行jmap -histo:live [pid]</code></pre><h4><span id="1-3-ru-he-jian-shao-fullgc">1.3如何减少fullgc</span><a href="#1-3-ru-he-jian-shao-fullgc" class="header-anchor">#</a></h4><p>原因1. 启动时设置好metaspace，避免因扩容导致fullgc<br>    “-XX:MetaspaceSize=256M”,<br>    “-XX:MaxMetaspaceSize=256M”</p>
+<p>原因2&amp;3. 减少cms gc</p>
+<p>•降低触发CMS GC的阈值, 以保证有足够的空间。即参数-XX:CMSInitiatingOccupancyFraction的值，让CMS GC尽早执行。<br>•增大老年代空间<br>•让对象尽量在新生代回收，避免进入老年代</p>
+<p>原因4. 避免使用System.gc()</p>
+<h3><span id="2-jvm-ru-he-nei-cun-fen-pei">2.Jvm如何内存分配</span><a href="#2-jvm-ru-he-nei-cun-fen-pei" class="header-anchor">#</a></h3><p>eg: 16G内存机器，9G老年代，4G新生代，3G直接内存</p>
+<h3><span id="3-gc-diao-you-an-li">3.gc调优案例</span><a href="#3-gc-diao-you-an-li" class="header-anchor">#</a></h3><h4><span id="3-1younggc">3.1younggc</span><a href="#3-1younggc" class="header-anchor">#</a></h4><p>1.请求中生成的对象大，eg:历史数据因历史原因对应很多或很大的返回结果，频繁访问造成gc较多，可以在场景允许的情况下将这部分数据下掉或者做个截断处理。减少younggc的频率和复制对象所花费的时间。<br>2.增大新生代大小</p>
+<h4><span id="3-2fullgc">3.2fullgc</span><a href="#3-2fullgc" class="header-anchor">#</a></h4><p>1.服务启动时metaspace扩容触发fullgc，导致刚启动时服务不稳定，jvm启动参数中设置好Metaspace的size和最大size。<br>2.服务偶尔发生concurrent mode failure。服务瞬间的可用性下降严重。修改jvm参数，降低触发cms gc的阈值（90%-&gt;75%），避免触发串行full gc。</p>
+<h4><span id="3-3cmsgc">3.3cmsgc</span><a href="#3-3cmsgc" class="header-anchor">#</a></h4><p>1.增大old区。肯定是有用的，至少能减少触发的频率<br>2.也可能是晋升年龄阈值比较小。-XX:MaxTenuringThreshold，默认15, 可能有人改小了，让年龄小的就直接到old区了，比如改成3、4。</p>
+<h3><span id="bei-zhu-cms-nei-cun-sui-pian-wen-ti">备注：cms内存碎片问题</span><a href="#bei-zhu-cms-nei-cun-sui-pian-wen-ti" class="header-anchor">#</a></h3><p>通常 CMS 的 GC 过程基于标记清除算法，不带压缩动作，导致越来越多的内存碎片需要压缩。常见以下场景会触发内存碎片压缩<br>新生代 Young GC 出现新生代晋升担保失败（promotion failed)）</p>
+<p>程序主动执行System.gc()</p>
+<p>可通过参数 CMSFullGCsBeforeCompaction 的值，设置多少次 Full GC 触发一次压缩。默认值为 0，代表每次进入 Full GC 都会触发压缩，带压缩动作的算法为上面提到的单线程 Serial Old 算法，暂停时间（STW）时间非常长，需要尽可能减少压缩时间。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-09T02:54:24.000Z">2020-03-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 977 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/03/09/mysql/事务隔离级别2/">innodb事务隔离级别</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#yi-ding-yi">一、定义</a></li>
+<li><a href="#er-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du">二、什么是快照读，什么是当前读</a></li>
+<li><a href="#san-rr-ji-bie-xia-mvcc-jie-jue-bu-ke-chong-fu-du-he-kuai-zhao-du-zhi-jian-de-huan-du">三、rr级别下mvcc解决不可重复读和快照读之间的幻读</a></li>
+<li><a href="#si-rr-ji-bie-xia-next-key-suo-jie-jue-dang-qian-du-zhi-jian-de-huan-du">四、rr级别下next-key锁解决当前读之间的幻读</a></li>
+<li><a href="#wu-rr-he-rc-qu-bie">五、rr和rc区别</a></li>
+<li><a href="#liu-todo-xue-xi">六、todo学习</a></li>
+<li><a href="#can-kao-wen-zhang">参考文章</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="yi-ding-yi">一、定义</span><a href="#yi-ding-yi" class="header-anchor">#</a></h3><p>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据<br>提交读(Read Committed)：只能读取到已经提交的数据. 可以阻止脏读，但是可能发生幻读或不可重复读<br>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的. 可以阻止脏读和不可重复读，幻读通过mvcc解决了快照读，next-key锁解决了当前读. mysql默认隔离级别.<br>串行读(Serializable)：读加共享锁，写加排他锁，读写互斥.   </p>
+<p>可重复读指的是同一行在同一个事务下无论怎么读取都是同一个结果(除非自己把它改了).</p>
+<p>幻读指的是在同一事务下，连续执行两次同样的SQL语句第二次的SQL语句可能返回之前不存在的行；</p>
+<h3><span id="er-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du">二、什么是快照读，什么是当前读</span><a href="#er-shi-me-shi-kuai-zhao-du-shi-me-shi-dang-qian-du" class="header-anchor">#</a></h3><p>快照读：就是select</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> ….;</span><br></pre></td></tr></table></figure>
+
+<p>当前读：特殊的读操作，插入/更新/删除操作，属于当前读，处理的都是当前的数据，需要加锁。</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">lock</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">share</span> <span class="hljs-keyword">mode</span>;</span><br><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">for</span> <span class="hljs-keyword">update</span>;</span><br><span class="line"><span class="hljs-keyword">insert</span>;</span><br><span class="line"><span class="hljs-keyword">update</span> ;</span><br><span class="line"><span class="hljs-keyword">delete</span>;</span><br></pre></td></tr></table></figure>
+
+<p>事务的隔离级别实际上都是定义了当前读的级别，MySQL为了减少锁处理（包括等待其它锁）的时间，提升并发能力，引入了快照读的概念，使得select不用加锁。而update、insert这些“当前读”，就需要另外的模块来解决了</p>
+<h3><span id="san-rr-ji-bie-xia-mvcc-jie-jue-bu-ke-chong-fu-du-he-kuai-zhao-du-zhi-jian-de-huan-du">三、rr级别下mvcc解决不可重复读和快照读之间的幻读</span><a href="#san-rr-ji-bie-xia-mvcc-jie-jue-bu-ke-chong-fu-du-he-kuai-zhao-du-zhi-jian-de-huan-du" class="header-anchor">#</a></h3><p>一致非锁定读，也可以称为快照读，即普通SELECT语句，既然是快照读，故 SELECT 的时候，会生成一个快照。</p>
+<p>生成快照的时机：事务中第一次调用SELECT语句的时候才会生成快照，在此之前事务中执行的update、insert、delete操作都不会生成快照</p>
+<p>REPEATED READ 隔离级别下，快照会在事务中第一次SELECT语句执行时生成，只有在本事务中对数据进行更改才会更新快照，因此，只有第一次SELECT之前其它已提交事务所作的更改你可以看到，但是如果已执行了SELECT，那么其它事务commit数据，你SELECT是看不到的。</p>
+<h3><span id="si-rr-ji-bie-xia-next-key-suo-jie-jue-dang-qian-du-zhi-jian-de-huan-du">四、rr级别下next-key锁解决当前读之间的幻读</span><a href="#si-rr-ji-bie-xia-next-key-suo-jie-jue-dang-qian-du-zhi-jian-de-huan-du" class="header-anchor">#</a></h3><p>在当前读下rr级别使用了next-key锁（临键锁），临键锁包括行锁+间隙锁， 来避免两个当前读时有其它事务插入数据，所以当前读使用next-key锁解决的幻读。</p>
+<p>最后备注下：如果是先快照读再当前读，影响行数不一致是否属于幻读，是有争议的但大多认为并不是幻读。</p>
+<h3><span id="wu-rr-he-rc-qu-bie">五、rr和rc区别</span><a href="#wu-rr-he-rc-qu-bie" class="header-anchor">#</a></h3><p>rc级别下的mvcc总是读取数据行的最新快照，而rr级别下的mvcc，会在事务第一次select的时候，为数据行生成一个快照，后面每次都读这个快照，除非自己更新</p>
+<p>如果问，rr为什么是默认的隔离级别，就说rr相比rc来说没有不可重复读和幻读问题. 后面再深入研究</p>
+<h3><span id="liu-todo-xue-xi">六、todo学习</span><a href="#liu-todo-xue-xi" class="header-anchor">#</a></h3><ol>
+<li>rr为什么是默认的隔离级别   </li>
+<li>mvcc在rc隔离级别下，读最新的快照，为什么不直接读行记录呢，rc级别是怎么解决脏读的</li>
+</ol>
+<h3><span id="can-kao-wen-zhang">参考文章</span><a href="#can-kao-wen-zhang" class="header-anchor">#</a></h3><p><a href="https://tech.meituan.com/2014/08/20/innodb-lock.html" target="_blank" rel="noopener">https://tech.meituan.com/2014/08/20/innodb-lock.html</a></p>
+
+        </div>
+        
         
         
     </div>
@@ -758,9 +1006,9 @@
             
             <li><a class="pagination-link has-text-black-ter" href="/page/4/">4</a></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/5/">5</a></li>
+            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
             
-            <li><a class="pagination-link has-text-black-ter" href="/page/6/">6</a></li>
+            <li><a class="pagination-link has-text-black-ter" href="/page/10/">10</a></li>
             
         </ul>
     </nav>
@@ -810,7 +1058,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        57
+                        92
                     </p>
                 </div>
             </div>
@@ -820,7 +1068,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        25
+                        27
                     </p>
                 </div>
             </div>
@@ -830,7 +1078,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        36
                     </p>
                 </div>
             </div>
@@ -933,7 +1181,7 @@
                 <span class="level-item">design</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/git/">
@@ -941,7 +1189,7 @@
                 <span class="level-item">git</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/hadoop/">
@@ -965,7 +1213,7 @@
                 <span class="level-item">jvm</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/kafka/">
@@ -984,12 +1232,20 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/mybatis/">
+            <span class="level-start">
+                <span class="level-item">mybatis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/mysql/">
             <span class="level-start">
                 <span class="level-item">mysql</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/netty/">
@@ -997,7 +1253,7 @@
                 <span class="level-item">netty</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/network/">
@@ -1037,7 +1293,7 @@
                 <span class="level-item">springboot</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/storm/">
@@ -1061,7 +1317,7 @@
                 <span class="level-item">zookeeper</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/并发/">
@@ -1094,6 +1350,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/线上问题/">
+            <span class="level-start">
+                <span class="level-item">线上问题</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/英语/">
@@ -1139,7 +1403,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 16.25px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 17.5px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.25px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 12.5px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 18.75px;">mysql</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/network/" style="font-size: 11.25px;">network</a> <a href="/tags/pcursor/" style="font-size: 10px;">pcursor</a> <a href="/tags/redis/" style="font-size: 12.5px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 11.25px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 13.75px;">并发</a> <a href="/tags/旅游/" style="font-size: 12.5px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.25px;">生活</a> <a href="/tags/索引/" style="font-size: 11.25px;">索引</a> <a href="/tags/线上问题/" style="font-size: 10px;">线上问题</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -1158,8 +1422,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1171,10 +1435,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1184,10 +1448,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1197,10 +1461,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1210,10 +1474,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1232,9 +1496,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1243,9 +1507,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1292,7 +1622,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1514,7 +1844,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1528,7 +1858,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1563,7 +1893,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1584,21 +1914,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1606,6 +1936,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1633,7 +1970,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1661,7 +1998,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1696,6 +2033,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1717,6 +2061,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1755,8 +2106,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1768,10 +2119,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1781,10 +2132,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1794,10 +2145,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1807,10 +2158,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1829,9 +2180,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1840,9 +2191,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1889,7 +2306,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -2111,7 +2528,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -2125,7 +2542,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2160,7 +2577,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2181,21 +2598,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2203,6 +2620,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2230,7 +2654,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -2258,7 +2682,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -2293,6 +2717,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2314,6 +2745,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -2346,7 +2784,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 大菜猫&nbsp;
+                &copy; 2023 大菜猫&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>

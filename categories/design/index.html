@@ -163,6 +163,492 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分钟 读完 (大约 484 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/23/design/stable/">线上稳定性保障</a>
+            
+        </h1>
+        <div class="content">
+            <ol>
+<li><p>监控<br>把各个环节的业务量级、成功失败原因、活动量级上报，这些数据是有因果关系的<br>所以我们把这些数据汇总到大盘，提高问题定位的速度。</p>
+</li>
+<li><p>隔离<br>区分业务，隔离餐团与买单业务，然后区分了环节，隔离查询与交易环节<br>最终业务与业务隔离，交易与查询隔离，保障了系统的稳定性。</p>
+</li>
+<li><p>降级，首先是确认场景优先级，区分核心功能非核心功能，区分核心依赖非核心依赖</p>
+</li>
+</ol>
+<ul>
+<li>系统容量问题，优先降级非核心功能，限流查询链路</li>
+<li>功能异常问题，按业务、场景类型进行降级，避免故障影响扩大</li>
+</ul>
+<ol start="4">
+<li>全链路压测<br>需要定期进行全链路压测评估链路流量负载能力。<br>压测前，会对压测流量进行ID偏移，防止污染线上，同步压测数据并进行状态改写。<br>压测中读写分离，读线上数据，防止污染本地缓存，写影子表防止污染线上表。<br>压测后扫描线上数据，确保无压测数据写到线上，然后清理压测数据。</li>
+</ol>
+<p>总结：<br>事前准备，主要做链路梳理，明确强弱依赖，然后进行性能评估，主要进行容量评估和负载评估，然后完善监控，明确因果建设大盘，最后准备降级预案，区分场景，区分优先级。<br>事中快速响应，通过监控大盘定位问题，按预案进行扩容、限流、降级、熔断等操作。<br>事后进行性能优化，问题修复并进行复盘总结。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-21T03:10:43.000Z">2021-08-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1089 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/21/design/delaymq/">如何实现延迟队列</a>
+            
+        </h1>
+        <div class="content">
+            <p>如何实现一个延迟队列？</p>
+<h4><span id="1-shu-ju-ku-lun-xun">(1) 数据库轮询</span><a href="#1-shu-ju-ku-lun-xun" class="header-anchor">#</a></h4><p>例如对于订单支付失效要求比较高的，每2S扫表一次检查过期的订单进行主动关单操作<br>优点是简单<br>缺点是每分钟全局扫表，浪费资源，如果遇到表数据订单量即将过期的订单量很大，会造成关单延迟</p>
+<h4><span id="2-jdk-de-yan-chi-dui-lie">(2) JDK的延迟队列</span><a href="#2-jdk-de-yan-chi-dui-lie" class="header-anchor">#</a></h4><p>一个无界阻塞队列，该队列只有在延迟期满的时候才能从中获取元素，放入DelayQueue中的对象，是必须实现Delayed接口的<br>优点:效率高,任务触发时间延迟低。<br>缺点:(1)服务器重启后，数据全部消失，怕宕机 (2)集群扩展相当麻烦 (3)因为内存条件限制的原因，比如下单未付款的订单数太多，那么很容易就出现OOM异常 (4)代码复杂度较高</p>
+<h4><span id="3-shi-jian-lun-suan-fa">(3) 时间轮算法</span><a href="#3-shi-jian-lun-suan-fa" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis/%E6%97%B6%E9%97%B4%E8%BD%AE.png" alt></p>
+<p>时间轮算法可以类比于时钟，如上图箭头（指针）按某一个方向按固定频率轮动，每一次跳动称为一个 tick。这样可以看出定时轮由个3个重要的属性参数，ticksPerWheel（一轮的tick数），tickDuration（一个tick的持续时间）以及 timeUnit（时间单位），例如当ticksPerWheel=60，tickDuration=1，timeUnit=秒，这就和现实中的始终的秒针走动完全类似了。<br>如果当前指针指在1上面，我有一个任务需要4秒以后执行，那么这个执行的线程回调或者消息将会被放在5上。那如果需要在20秒之后执行怎么办，由于这个环形结构槽数只到8，如果要20秒，指针需要多转2圈。位置是在2圈之后的5上面（20 % 8 + 1）</p>
+<p>优点:效率高,任务触发时间延迟时间比delayQueue低，代码复杂度比delayQueue低。<br>缺点:</p>
+<ul>
+<li>服务器重启后，数据全部消失，怕宕机</li>
+<li>集群扩展相当麻烦</li>
+<li>因为内存条件限制的原因，比如下单未付款的订单数太多，那么很容易就出现OOM异常</li>
+</ul>
+<h4><span id="4-redis-zset-shi-xian">(4) redis zset实现</span><a href="#4-redis-zset-shi-xian" class="header-anchor">#</a></h4><p>利用redis的zset,zset是一个有序集合，每一个元素(member)都关联了一个score,通过score排序来取集合中的值。<br>zset常用命令<br>添加元素: ZADD key score member [[score member] [score member] …]<br>按顺序查询元素: ZRANGE key start stop [WITHSCORES]<br>查询元素score: ZSCORE key member<br>移除元素: ZREM key member [member …]</p>
+<p>我们将订单超时时间戳与订单号分别设置为score和member,系统扫描第一个元素判断是否超时（zrange key 0 0 [withscores] ）</p>
+<p>存在一个致命的硬伤，在高并发条件下，多消费者会取到同一个订单号.<br>解决方案:<br>(1) 用分布式锁，但是用分布式锁，性能下降了，该方案不细说。<br>(2) 对ZREM的返回值进行判断，只有大于0的时候 (删除成功)，才可消费数据</p>
+<p>优点:<br>(1) 由于使用Redis作为消息通道，消息都存储在Redis中。如果发送程序或者任务处理程序挂了，重启之后，还有重新处理数据的可能性。<br>(2) 做集群扩展相当方便<br>(3) 时间准确度高<br>缺点:<br>(1) 需要额外进行redis维护</p>
+<h4><span id="5-shi-yong-xiao-xi-dui-lie">(5)使用消息队列</span><a href="#5-shi-yong-xiao-xi-dui-lie" class="header-anchor">#</a></h4><p>我们可以采用rabbitMQ的延时队列。RabbitMQ具有以下两个特性，可以实现延迟队列</p>
+<p>RabbitMQ可以针对Queue和Message设置 x-message-tt，来控制消息的生存时间，如果超时，则消息变为dead letter<br>lRabbitMQ的Queue可以配置x-dead-letter-exchange 和x-dead-letter-routing-key（可选）两个参数，用来控制队列内出现了deadletter，则按照这两个参数重新路由。</p>
+<p>优缺点<br>优点: 高效,可以利用rabbitmq的分布式特性轻易的进行横向扩展,消息支持持久化增加了可靠性。缺点：本身的易用度要依赖于rabbitMq的运维.因为要引用rabbitMq,所以复杂度和成本变高</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-13T09:40:43.000Z">2021-08-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    2 分钟 读完 (大约 350 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/13/design/report/">报表设计学习</a>
+            
+        </h1>
+        <div class="content">
+            <p>es + clickhouse 搭配</p>
+<h4><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h4><p>es适合做全文检索需求，ch适合做大数据分析需求，本需求使用ch建立es视图表兼容es的维表，将维表数据和事实表数据分开处理，使用时连表查询，充分利用了两种引擎的特性，既支持全文检索，也保证了查询性能</p>
+<h4><span id="es-amp-clickhouse">es &amp; clickhouse</span><a href="#es-amp-clickhouse" class="header-anchor">#</a></h4><p>clickhouse除了不能全文检索，其他方面完全超过es, 尤其是在事实表，这种日志类型不断增加的业务类型上，主要在查询性能，稳定性，磁盘使用率 上要比es优秀很多，</p>
+<p>因为ch本身的一个列式存储，编码压缩，向量化执行等特性。而且ch支持sql语言。</p>
+<p>我们这个业务实际没有导入ch，而是ch上建立了一个es的视图表，从ch层兼容了es。</p>
+<p>账户维度数据使用es，便于这块数据的更新，因为ch在update原数据方面支持的不算很好，且es支持全文检索<br>消耗事实数据使用ch，这部分量非常大，每个account每分钟一行, 且是纯insert, 适合ch处理。</p>
+<p>es的存储特性，让他在全文检索的时候不能替代。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-13T09:10:43.000Z">2021-08-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 780 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/13/design/ac/">权限管理模型学习</a>
+            
+        </h1>
+        <div class="content">
+            <p>本质上可以抽象出用户(User)、对象(Object)、行为(Action)和策略(Policy)的四个基本要素。策略(Policy)决定了用户(User)在一定的条件下对指定的对象(Object)有什么样的行为(Action)。</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/design/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9E%8B.png" alt></p>
+<h4><span id="acl">ACL</span><a href="#acl" class="header-anchor">#</a></h4><p>ACL即访问控制列表，是基于资源的一种权限控制管理方式。实现原理非常简单，每一项资源都有一个访问列表，记录哪些用户可以对这个资源做CRUD的操作。当用户访问某个资源的时候，系统会检测用户是否在访问列表里，从而确定用户是否有对资源的操作权限</p>
+<h4><span id="rbac">RBAC</span><a href="#rbac" class="header-anchor">#</a></h4><p>RBAC, 相比与ACL的直接用户上赋予权限</p>
+<p>引入角色：<br>角色  —&gt;  权限的集合，批量操作权限，权限可以统一分配和回收，角色可以和企业的岗位对应，能更加好理解和维护。</p>
+<p>引入组织架构：<br>组织部门    —&gt;   人员的集合， 批量操作人员  （eg: 赋予部门权限，或判断用户是否在组织中）</p>
+<p>RBAC的特点如下：<br> 优点是权限只和角色关联，可以统一分配和回收，使用简单，也降低了维护成本。角色可以和企业的岗位对应，能更加好理解和维护。<br> 缺点是当某个角色下的某些用户需要做特别的权限限定，例如去除一些权限，就无能为力。另外，角色规划不好的情况下容易造成角色爆炸和混乱。</p>
+<h4><span id="abac">ABAC</span><a href="#abac" class="header-anchor">#</a></h4><p>ABAC是基于属性的权限验证控制，动态的计算一组属性从而判断当前用户是否有操作权限。属性可以分为用户属性(岗位)、环境属性(公司、家里、时间)、对象属性(对象的类型，比如服务器、楼宇等)、操作属性(启动、创建、读取等)。一组属性可以叫做一个策略，策略可以配置在用户实体上，也可以配置在组织架构上</p>
+<p>ABAC的特点如下：<br> 非常灵活，可以根据不同的维度、粒度进行权限管控<br> 无需预置判定逻辑，可以根据需要随时调整，在经常变化的系统中可以很好的支持<br> 策略配置复杂时，会给管理者和问题追查时带来困难<br> 策略判定需要实时计算，会带来性能损耗<br> 从策略上不能很直观的看到人和对象的关系</p>
+<p>个人总结：<br>ACL太复杂了，容易乱，操作起来级联严重<br>RABC, 适合公司类型，组织架构、人员角色的权限固定管理。<br>ABAC, 策略过于灵活，适合变化非常多的，策略复杂的</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-01T03:10:43.000Z">2021-08-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分钟 读完 (大约 387 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/01/design/ds_lock/">分布式锁</a>
+            
+        </h1>
+        <div class="content">
+            <p>1、 基于MySQL的分布式锁实现<br>原理：直接创建一张锁表，然后通过操作该表中的数据来实现了.<br>。利用唯一索引的排他性来实现分布式锁，只有抢到锁的线程才能插入成功，释放锁删除该条记录即可</p>
+<p>缺点：<br>1、强依赖数据库的可用性，存在单点问题。<br>2、数据库在高并发的场景下，性能上表现欠佳</p>
+<p>2、基于Redis的分布式锁实现<br>可以通过set nx的特性来实现分布式锁</p>
+<p>3、基于Zookeeper的分布式锁实现<br>可以利用临时有序节点的特性来实现分布式锁。<br>原理：1、先建一个目录lock 2、线程A想获取锁就在lock目录下创建一个带顺序的临时节点 3、然后获取比当前顺序号小的顺序号，获取到则获取锁失败，获取不到则获取锁成功。 4、解锁则是删除这个临时节点。</p>
+<p>临时节点是根据客户端维护的session会话来维持生命周期的，当客户端不在维护session时，或者说客户端断开连接时，session消失，那么临时节点就会消失，这种特性正好满足了分布式锁要有过期时间的需求，不会产生死锁问题</p>
+<p>缺点：抗不了多少并发，内存无法横向扩展</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-08-01T03:10:43.000Z">2021-08-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分钟 读完 (大约 584 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/08/01/design/stock/">库存服务提性能</a>
+            
+        </h1>
+        <div class="content">
+            <h4><span id="ti-xing-neng">提性能</span><a href="#ti-xing-neng" class="header-anchor">#</a></h4><h5><span id="du-you-hua">读优化</span><a href="#du-you-hua" class="header-anchor">#</a></h5><p>多级缓存：让数据靠近计算<br>链路优化：缩短耗时<br>周期库存⽅案：提⾼周期库存查询性能</p>
+<h5><span id="xie-you-hua">写优化</span><a href="#xie-you-hua" class="header-anchor">#</a></h5><p>流量漏⽃：缓存预扣减少数据库的⽆效访问<br>分库分表：提升数据库的整体写⼊能⼒( 窄表设计下单分片物理机可承载4500，云服务器可承载3000，仅供参考，具体以业务测试为准 )<br>并⾏扣减：降低库存扣减的响应时间<br>分库存：解决单行更新能力不足问题，（一般单行更新的QPS在500以内）<br>合并请求：异步批量，将多次扣减累计计数，集中成一次扣减，从而实现了将串行处理变成了批处理。大大减轻更新压力。</p>
+<p>当前峰值TPS超3000，年增⻓50%，未来5年期望⽀撑量级1万+；<br>综合以上分8库，部署2个集群，每个集群4个库</p>
+<p>1、如果某个sku_id的库存扣减过热，单台实例支撑不了（mysql官方测评：一般单行更新的QPS在500以内），可以考虑将一个sku的大库存拆分成N份，放在不同的库中（也就是说所有子库的库存数总和才是一件sku的真实库存），由于前台的访问流量非常大，按照均分原则，每个子库分到的流量应该差不多。上层路由时只需要在sku_id后面拼接一个范围内的随机数，即可找到对应的子库，有效减轻系统压力。</p>
+<p>2、单条sku库存记录更新过热，也可以采用批量提交方式，将多次扣减累计计数，集中成一次扣减，从而实现了将串行处理变成了批处理，也可以大大减轻数据库压力。</p>
+<p>3、引入RocketMQ消息队列，经过前置校验后，如果有剩余库存，则把创建订单的操作封装成消息发送给MQ，订单系统从RocketMQ中以特定的频率消费，创建订单，该方案有一定的延迟性。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-08-13T02:54:24.000Z">2020-08-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/design/">design</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 679 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/08/13/design/pcursor/">pcursor基于游标的分页</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#yi-ji-yu-pian-yi-liang-fen-ye-ji-yu-you-biao-fen-ye">一、基于偏移量分页&amp;基于游标分页</a><ul>
+<li><a href="#1-ji-yu-pian-yi-liang-de-fen-ye">1.基于偏移量的分页</a></li>
+<li><a href="#2-ji-yu-you-biao-de-fen-ye">2.基于游标的分页</a></li>
+</ul>
+</li>
+<li><a href="#er-jie-kou-shi-xian">二、接口实现</a></li>
+<li><a href="#san-di-ceng-shi-xian">三、底层实现</a><ul>
+<li><a href="#1-pcursor-you-biao-ru-he-pin-jie">1. pcursor游标如何拼接</a></li>
+<li><a href="#2-pcursor-you-biao-ru-he-shi-yong">2.pcursor游标如何使用</a></li>
+<li><a href="#3-sheng-cheng-cha-xun-sql">3. 生成查询SQL</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+<h3><span id="yi-ji-yu-pian-yi-liang-fen-ye-amp-ji-yu-you-biao-fen-ye">一、基于偏移量分页&amp;基于游标分页</span><a href="#yi-ji-yu-pian-yi-liang-fen-ye-amp-ji-yu-you-biao-fen-ye" class="header-anchor">#</a></h3><h4><span id="1-ji-yu-pian-yi-liang-de-fen-ye">1.基于偏移量的分页</span><a href="#1-ji-yu-pian-yi-liang-de-fen-ye" class="header-anchor">#</a></h4><p>适用于内容是静态的，或者不用实时返回数据最新的变化。特点：1.只要有新增或删除，就会有大量的数据偏移量的改变，造成重复展示或者漏展示。2.存在数据量大时的offset慢查询问题</p>
+<p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/clipboard_20200814041307.png" alt="img"></p>
+<h4><span id="2-ji-yu-you-biao-de-fen-ye">2.基于游标的分页</span><a href="#2-ji-yu-you-biao-de-fen-ye" class="header-anchor">#</a></h4><p>适用于查询结果在用户浏览过程中是变化的。特点：1.时间线里出现新的数据或删除数据，这些变化都可以在 “前一页” 或者 “后一页” 体现出来。 2.没有offset问题</p>
+<p>eg: 发现页 下拉获取最新，上拉获取更久</p>
+<h3><span id="er-jie-kou-shi-xian">二、接口实现</span><a href="#er-jie-kou-shi-xian" class="header-anchor">#</a></h3><p>请求参数</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">类型</th>
+<th align="left">逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">参数名</td>
+<td align="left">类型</td>
+<td align="left">逻辑</td>
+</tr>
+<tr>
+<td align="left">pcursor</td>
+<td align="left">String</td>
+<td align="left">初始值传 “” , 后续值使用后端返回值</td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">Integer</td>
+<td align="left">本次想获取的数据量</td>
+</tr>
+</tbody></table>
+<p>响应信息</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数名</th>
+<th align="left">类型</th>
+<th align="left">逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pcursor</td>
+<td align="left">String</td>
+<td align="left">透传给下一页查询 调用方判断是否为 “no_more”, 若是则不再调用，否则永远停不下来了</td>
+</tr>
+</tbody></table>
+<h3><span id="san-di-ceng-shi-xian">三、底层实现</span><a href="#san-di-ceng-shi-xian" class="header-anchor">#</a></h3><p>根据更新时间排序</p>
+<p>排序规则：order by update_time desc, id desc  原因: 更新时间 + id 的排序, 可以为所有数据确定顺序，即使更新时间相同，即确定每条记录的游标，游标为更新时间+id，只要查询条件不变，即游标可在该顺序下唯一确定一个位置</p>
+<h4><span id="1-pcursor-you-biao-ru-he-pin-jie">1. pcursor游标如何拼接</span><a href="#1-pcursor-you-biao-ru-he-pin-jie" class="header-anchor">#</a></h4><ul>
+<li>根据上面排序规则查询出数据</li>
+<li>取最后一个数据last，即为该排序下此次查询的终止位置</li>
+<li>根据last数据拼接成pcursor<br>pcursor = encrypt ( (“updateTime”, long, 1589439219430); (“id”, long, 95424 ); )</li>
+</ul>
+<h4><span id="2-pcursor-you-biao-ru-he-shi-yong">2.pcursor游标如何使用</span><a href="#2-pcursor-you-biao-ru-he-shi-yong" class="header-anchor">#</a></h4><ul>
+<li>pcursor解析为 上次查询last的 last.updateTime, last.id </li>
+<li>本次查询where条件中，updateTime &lt; last.updateTime or (update_time = last.updateTime and id &lt; last.id) order by update_time desc, id desc;<br>如下表格，为order by update_time desc, id desc，上次查询游标为last游标位置，则下次查询 updateTime &lt; 1555500001 or (updateTime = 1555500001 and id &lt; 32) order by update_time desc, id desc， 即为后三行数据</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">update_time</th>
+<th align="left">id</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1555500001</td>
+<td align="left">33</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500001</td>
+<td align="left">32</td>
+<td align="left">last 游标位置</td>
+</tr>
+<tr>
+<td align="left">1555500001</td>
+<td align="left">31</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500000</td>
+<td align="left">44</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">1555500000</td>
+<td align="left">42</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h4><span id="3-sheng-cheng-cha-xun-sql">3. 生成查询SQL</span><a href="#3-sheng-cheng-cha-xun-sql" class="header-anchor">#</a></h4><p>若查询条件为 userId, status, updateTime 则查询语句为</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM</span><br><span class="line">    ad_xxx_info</span><br><span class="line">WHERE</span><br><span class="line">    user_id = xxx</span><br><span class="line">    AND STATUS = xxx</span><br><span class="line">    AND (</span><br><span class="line">        update_time &lt; xxx</span><br><span class="line">        OR ( update_time = xxx AND id &lt; xxx )</span><br><span class="line">    )</span><br><span class="line">ORDER BY</span><br><span class="line">    update_time DESC, id DESC</span><br><span class="line">LIMIT 20;</span><br></pre></td></tr></table></figure>
+
+<p>创建联合索引 (user_id, status, update_time) 查询即可全部走索引。注：主键也是索引的一部分，Extra为Using where。using where is fine <a href="https://stackoverflow.com/questions/9533841/mysql-fix-using-where" target="_blank" rel="noopener">https://stackoverflow.com/questions/9533841/mysql-fix-using-where</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time>
                 
                 <div class="level-item">
@@ -384,7 +870,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        57
+                        92
                     </p>
                 </div>
             </div>
@@ -394,7 +880,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        25
+                        27
                     </p>
                 </div>
             </div>
@@ -404,7 +890,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        36
                     </p>
                 </div>
             </div>
@@ -507,7 +993,7 @@
                 <span class="level-item">design</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/git/">
@@ -515,7 +1001,7 @@
                 <span class="level-item">git</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/hadoop/">
@@ -539,7 +1025,7 @@
                 <span class="level-item">jvm</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/kafka/">
@@ -558,12 +1044,20 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/mybatis/">
+            <span class="level-start">
+                <span class="level-item">mybatis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/mysql/">
             <span class="level-start">
                 <span class="level-item">mysql</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/netty/">
@@ -571,7 +1065,7 @@
                 <span class="level-item">netty</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/network/">
@@ -611,7 +1105,7 @@
                 <span class="level-item">springboot</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/storm/">
@@ -635,7 +1129,7 @@
                 <span class="level-item">zookeeper</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/并发/">
@@ -668,6 +1162,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/线上问题/">
+            <span class="level-start">
+                <span class="level-item">线上问题</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/英语/">
@@ -713,7 +1215,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 10px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 11.67px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.67px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 18.33px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.67px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 11.67px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a> <a href="/tags/netty/" style="font-size: 11.67px;">netty</a> <a href="/tags/network/" style="font-size: 11.67px;">network</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 10px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 15px;">并发</a> <a href="/tags/旅游/" style="font-size: 13.33px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.67px;">生活</a> <a href="/tags/索引/" style="font-size: 10px;">索引</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
+        <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/concurrenthashmap/" style="font-size: 10px;">concurrenthashmap</a> <a href="/tags/design/" style="font-size: 16.25px;">design</a> <a href="/tags/framework/" style="font-size: 10px;">framework</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hashmap/" style="font-size: 17.5px;">hashmap</a> <a href="/tags/innodb/" style="font-size: 11.25px;">innodb</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jvm/" style="font-size: 12.5px;">jvm</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/mybatis/" style="font-size: 12.5px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 18.75px;">mysql</a> <a href="/tags/netty/" style="font-size: 12.5px;">netty</a> <a href="/tags/network/" style="font-size: 11.25px;">network</a> <a href="/tags/pcursor/" style="font-size: 10px;">pcursor</a> <a href="/tags/redis/" style="font-size: 12.5px;">redis</a> <a href="/tags/rss/" style="font-size: 10px;">rss</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 15px;">springboot</a> <a href="/tags/storm/" style="font-size: 10px;">storm</a> <a href="/tags/tair/" style="font-size: 10px;">tair</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/zookeeper/" style="font-size: 11.25px;">zookeeper</a> <a href="/tags/并发/" style="font-size: 13.75px;">并发</a> <a href="/tags/旅游/" style="font-size: 12.5px;">旅游</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/生活/" style="font-size: 11.25px;">生活</a> <a href="/tags/索引/" style="font-size: 11.25px;">索引</a> <a href="/tags/线上问题/" style="font-size: 10px;">线上问题</a> <a href="/tags/英语/" style="font-size: 10px;">英语</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/锁/" style="font-size: 10px;">锁</a> <a href="/tags/面经/" style="font-size: 10px;">面经</a>
     </div>
 </div>
 
@@ -732,8 +1234,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -745,10 +1247,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -758,10 +1260,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -771,10 +1273,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -784,10 +1286,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -806,9 +1308,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -817,9 +1319,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -866,7 +1434,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1088,7 +1656,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1102,7 +1670,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1137,7 +1705,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1158,21 +1726,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1180,6 +1748,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1207,7 +1782,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1235,7 +1810,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1270,6 +1845,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1291,6 +1873,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1329,8 +1918,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-09T02:54:24.000Z">2020-07-09</time></div>
-                    <a href="/2020/07/09/mysql/事务隔离级别2/" class="has-link-black-ter is-size-6">innodb事务隔离级别</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
@@ -1342,10 +1931,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-02T12:54:24.000Z">2020-02-02</time></div>
-                    <a href="/2020/02/02/interview/kuaishou/" class="has-link-black-ter is-size-6">快手面经</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/git/">git</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1355,10 +1944,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T02:54:24.000Z">2019-12-03</time></div>
-                    <a href="/2019/12/03/design/idemptent/" class="has-link-black-ter is-size-6">幂等设计</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-02T00:54:24.000Z">2021-09-02</time></div>
+                    <a href="/2021/09/02/mysql/innodb锁/" class="has-link-black-ter is-size-6">Innodb 锁</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1368,10 +1957,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-18T02:54:24.000Z">2019-11-18</time></div>
-                    <a href="/2019/11/18/redis/缓存雪崩等/" class="has-link-black-ter is-size-6">缓存穿透、击穿、雪崩</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/redis/">redis</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1381,10 +1970,10 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-19T22:54:24.000Z">2019-10-20</time></div>
-                    <a href="/2019/10/20/travel/shsz/" class="has-link-black-ter is-size-6">2019国庆上海苏州四日游记</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/旅游/">旅游</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1403,9 +1992,9 @@
         <ul class="menu-list">
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/07/">
+            <a class="level is-marginless" href="/archives/2023/06/">
                 <span class="level-start">
-                    <span class="level-item">七月 2020</span>
+                    <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1414,9 +2003,75 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2020/02/">
+            <a class="level is-marginless" href="/archives/2021/09/">
                 <span class="level-start">
-                    <span class="level-item">二月 2020</span>
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1463,7 +2118,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">10</span>
                 </span>
             </a>
         </li>
@@ -1685,7 +2340,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/design/">
                         <span class="tag">design</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1699,7 +2354,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/git/">
                         <span class="tag">git</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1734,7 +2389,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jvm/">
                         <span class="tag">jvm</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1755,21 +2410,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mybatis/">
                         <span class="tag">mybatis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/mysql/">
                         <span class="tag">mysql</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/netty/">
                         <span class="tag">netty</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -1777,6 +2432,13 @@
                     <a class="tags has-addons" href="/tags/network/">
                         <span class="tag">network</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/pcursor/">
+                        <span class="tag">pcursor</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1804,7 +2466,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/springboot/">
                         <span class="tag">springboot</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1832,7 +2494,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/zookeeper/">
                         <span class="tag">zookeeper</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1867,6 +2529,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/索引/">
                         <span class="tag">索引</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/线上问题/">
+                        <span class="tag">线上问题</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1888,6 +2557,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/读书笔记/">
                         <span class="tag">读书笔记</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/锁/">
+                        <span class="tag">锁</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1920,7 +2596,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 大菜猫&nbsp;
+                &copy; 2023 大菜猫&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>
