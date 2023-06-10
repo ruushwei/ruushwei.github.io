@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.techwei.cn/"/>
-  <updated>2023-06-08T16:12:38.919Z</updated>
+  <updated>2023-06-10T09:51:33.163Z</updated>
   <id>https://www.techwei.cn/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>undo-redo-binlog的用处</title>
-    <link href="https://www.techwei.cn/2023/06/08/mysql/undo/"/>
-    <id>https://www.techwei.cn/2023/06/08/mysql/undo/</id>
-    <published>2023-06-08T13:54:24.000Z</published>
-    <updated>2023-06-08T16:12:38.919Z</updated>
+    <title>springboot启动原理</title>
+    <link href="https://www.techwei.cn/2023/06/10/springboot/springboot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
+    <id>https://www.techwei.cn/2023/06/10/springboot/springboot启动流程/</id>
+    <published>2023-06-10T07:10:43.000Z</published>
+    <updated>2023-06-10T09:51:33.163Z</updated>
     
     <summary type="html">
     
@@ -29,7 +29,34 @@
       
         
         
-          &lt;p&gt;总结：&lt;br&gt;binlog 一致性。用于主从复制和数据恢复&lt;br&gt;redolog 持久性。log用于保证持久化，恢复在内存更新后，还没来得及刷到磁盘的数据&lt;br&gt;undolog 原子性。用于实现回滚和mvcc多版本并发控制&lt;/p&gt;
+          &lt;h3&gt;&lt;span id=&quot;yi-ju-hua&quot;&gt;一句话&lt;/span&gt;&lt;a href=&quot;#yi-ju-hua&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;todo&lt;/p&gt;
+&lt;h3&gt;&lt;span
+        
+      
+    
+    </summary>
+    
+      <category term="springboot" scheme="https://www.techwei.cn/categories/springboot/"/>
+    
+    
+      <category term="springboot" scheme="https://www.techwei.cn/tags/springboot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>undolog、redolog、binlog的用处</title>
+    <link href="https://www.techwei.cn/2023/06/08/mysql/undo/"/>
+    <id>https://www.techwei.cn/2023/06/08/mysql/undo/</id>
+    <published>2023-06-08T13:54:24.000Z</published>
+    <updated>2023-06-10T08:34:58.467Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;总结：&lt;br&gt;binlog 一致性。用于主从复制和数据恢复&lt;br&gt;redolog 保证持久性。log用于保证持久化，恢复在内存更新后，还没来得及刷到磁盘的数据&lt;br&gt;undolog 原子性。用于实现事务回滚和mvcc多版本并发控制&lt;/p&gt;
 &lt;h3&gt;&lt;span
         
       
@@ -40,32 +67,6 @@
     
     
       <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>springboot启动流程</title>
-    <link href="https://www.techwei.cn/2021/09/23/springboot/springboot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
-    <id>https://www.techwei.cn/2021/09/23/springboot/springboot启动流程/</id>
-    <published>2021-09-23T07:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.053Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;springboot 启动原理&lt;br&gt;参考文档：&lt;a href=&quot;https://mp.weixin.qq.com/s/1yHtaoSqqIJItIXByvV5QA&quot; target=&quot;_blank&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="springboot" scheme="https://www.techwei.cn/categories/springboot/"/>
-    
-    
-      <category term="springboot" scheme="https://www.techwei.cn/tags/springboot/"/>
     
   </entry>
   
@@ -481,7 +482,7 @@
     <link href="https://www.techwei.cn/2021/07/29/interview/mysql/"/>
     <id>https://www.techwei.cn/2021/07/29/interview/mysql/</id>
     <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.045Z</updated>
+    <updated>2023-06-10T08:36:07.225Z</updated>
     
     <summary type="html">
     

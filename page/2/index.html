@@ -990,7 +990,7 @@ preferred leader选举
                 <span class="level-item has-text-grey">
                     
                     
-                    18 分钟 读完 (大约 2707 个字)
+                    19 分钟 读完 (大约 2794 个字)
                 </span>
                 
                 
@@ -1030,6 +1030,7 @@ preferred leader选举
 <li><a href="#fen-ku-fen-biao">- 分库分表</a></li>
 <li><a href="#mysql-de-le-guan-suo-bei-guan-suo-shi-xian">- mysql的乐观锁、悲观锁实现</a></li>
 <li><a href="#zhu-cong-yan-chi-zen-me-ban">- 主从延迟怎么办</a></li>
+<li><a href="#binlog-redolog-undolog">- binlog、redolog、undolog</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -1130,6 +1131,7 @@ preferred leader选举
 <li>聚合表, 如果是1:1的两张数据，可以先订阅更新到一张聚合表，再订阅聚合表的binlog</li>
 <li>订阅全部从库的binlog, todo</li>
 </ol>
+<h3><span id="binlog-redolog-undolog">- binlog、redolog、undolog</span><a href="#binlog-redolog-undolog" class="header-anchor">#</a></h3><p>binlog 一致性。用于主从复制和指定时间范围的数据恢复<br>redolog 保证持久性。log用于保证持久化，恢复在内存更新后，还没来得及刷到磁盘的数据<br>undolog 原子性。用于实现事务回滚和mvcc多版本并发控制</p>
 
         </div>
         
@@ -1863,10 +1865,10 @@ preferred leader选举
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
-                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-10T07:10:43.000Z">2023-06-10</time></div>
+                    <a href="/2023/06/10/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -1876,10 +1878,10 @@ preferred leader选举
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
-                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undolog、redolog、binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1942,7 +1944,7 @@ preferred leader选举
                     <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1953,7 +1955,7 @@ preferred leader选举
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -2547,10 +2549,10 @@ preferred leader选举
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
-                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undo-redo-binlog的用处</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-10T07:10:43.000Z">2023-06-10</time></div>
+                    <a href="/2023/06/10/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
                     </p>
                 </div>
             </div>
@@ -2560,10 +2562,10 @@ preferred leader选举
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T07:10:43.000Z">2021-09-23</time></div>
-                    <a href="/2021/09/23/springboot/springboot启动流程/" class="has-link-black-ter is-size-6">springboot启动流程</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-06-08T13:54:24.000Z">2023-06-08</time></div>
+                    <a href="/2023/06/08/mysql/undo/" class="has-link-black-ter is-size-6">undolog、redolog、binlog的用处</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/springboot/">springboot</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -2626,7 +2628,7 @@ preferred leader选举
                     <span class="level-item">六月 2023</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -2637,7 +2639,7 @@ preferred leader选举
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>

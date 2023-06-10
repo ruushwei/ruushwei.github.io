@@ -1,5 +1,5 @@
+https://www.techwei.cn/2023/06/10/springboot/springboot启动流程/
 https://www.techwei.cn/2023/06/08/mysql/undo/
-https://www.techwei.cn/2021/09/23/springboot/springboot启动流程/
 https://www.techwei.cn/2021/09/02/mysql/innodb锁/
 https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/
 https://www.techwei.cn/2021/08/23/netty/nettyrun/
