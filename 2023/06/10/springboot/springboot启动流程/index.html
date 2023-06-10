@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="一句话#todo 细分原理#应用启动，容器初始化#1、通过spi加载所有的springApplicationRunListener，在后续各个启动步骤中发消息2、创建环境Environment，加载属性文件配置、加载命令行参数等启动时所需的配置信息3、创建ApplicationContext,将环境Environment设置给context4、通过spi加载所有的applicationInitia">
+    <meta name="description" content="一句话#springboot在启动时除了spring context容器启动的流程，还加入了通过spi实现的根据依赖自动装配的机制。springboot容器启动的流程，先初始化事件监听器，加载环境信息，创建applicationContext容器，执行applicationInitializer的initialize方法，在容器refresh时，会通过spi机制获取到所有的autoConfigur">
 <meta name="keywords" content="springboot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="springboot启动原理">
 <meta property="og:url" content="https://www.techwei.cn/2023/06/10/springboot/springboot启动流程/index.html">
 <meta property="og:site_name" content="大菜猫">
-<meta property="og:description" content="一句话#todo 细分原理#应用启动，容器初始化#1、通过spi加载所有的springApplicationRunListener，在后续各个启动步骤中发消息2、创建环境Environment，加载属性文件配置、加载命令行参数等启动时所需的配置信息3、创建ApplicationContext,将环境Environment设置给context4、通过spi加载所有的applicationInitia">
+<meta property="og:description" content="一句话#springboot在启动时除了spring context容器启动的流程，还加入了通过spi实现的根据依赖自动装配的机制。springboot容器启动的流程，先初始化事件监听器，加载环境信息，创建applicationContext容器，执行applicationInitializer的initialize方法，在容器refresh时，会通过spi机制获取到所有的autoConfigur">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2023-06-10T09:51:33.163Z">
+<meta property="og:updated_time" content="2023-06-10T10:58:49.046Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="springboot启动原理">
-<meta name="twitter:description" content="一句话#todo 细分原理#应用启动，容器初始化#1、通过spi加载所有的springApplicationRunListener，在后续各个启动步骤中发消息2、创建环境Environment，加载属性文件配置、加载命令行参数等启动时所需的配置信息3、创建ApplicationContext,将环境Environment设置给context4、通过spi加载所有的applicationInitia">
+<meta name="twitter:description" content="一句话#springboot在启动时除了spring context容器启动的流程，还加入了通过spi实现的根据依赖自动装配的机制。springboot容器启动的流程，先初始化事件监听器，加载环境信息，创建applicationContext容器，执行applicationInitializer的initialize方法，在容器refresh时，会通过spi机制获取到所有的autoConfigur">
 <meta name="twitter:image" content="https://www.techwei.cn/images/og_image.png">
 
 
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 428 个字)
+                    4 分钟 读完 (大约 557 个字)
                 </span>
                 
                 
@@ -176,7 +176,7 @@
             
         </h1>
         <div class="content">
-            <h3><span id="yi-ju-hua">一句话</span><a href="#yi-ju-hua" class="header-anchor">#</a></h3><p>todo</p>
+            <h3><span id="yi-ju-hua">一句话</span><a href="#yi-ju-hua" class="header-anchor">#</a></h3><p>springboot在启动时除了spring context容器启动的流程，还加入了通过spi实现的根据依赖自动装配的机制。<br>springboot容器启动的流程，先初始化事件监听器，加载环境信息，创建applicationContext容器，执行applicationInitializer的initialize方法，在容器refresh时，会通过spi机制获取到所有的autoConfiguration类（解析spring.factotries文件）并加载配置类中相关bean注入context容器，完成自动装配。</p>
 <h3><span id="xi-fen-yuan-li">细分原理</span><a href="#xi-fen-yuan-li" class="header-anchor">#</a></h3><h4><span id="ying-yong-qi-dong-rong-qi-chu-shi-hua">应用启动，容器初始化</span><a href="#ying-yong-qi-dong-rong-qi-chu-shi-hua" class="header-anchor">#</a></h4><p>1、通过spi加载所有的springApplicationRunListener，在后续各个启动步骤中发消息<br>2、创建环境Environment，加载属性文件配置、加载命令行参数等启动时所需的配置信息<br>3、创建ApplicationContext,将环境Environment设置给context<br>4、通过spi加载所有的applicationInitializer并调用其initialize方法<br>5、【核心】将spi拿到的EnableAutoConfiguration配置类的所有bean加载到已创建好的ioc容器<br>6、调用applicationContext的refresh方法，完成ioc容器可用</p>
 <p>问题1：创建的环境Environment里都有什么？<br>加载属性文件配置、加载命令行参数等启动时所需的配置信息</p>
 <p>问题2：spi拿到全部EnableAutoConfiguration类的具体入口？<br>refreshContext方法，bean实例化之前，执行AutoConfigurationImportSelector的selectImports方法，返回要实例化的类信息列表。</p>
