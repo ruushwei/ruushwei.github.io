@@ -15,7 +15,7 @@
 <meta property="og:description" content="- redis支持的基础数据类型 - redis支持的对象及实现方式 - rediis 为什么快 - redis的过期删除策略 - 跳表 - redis的内存淘汰机制 - 如果redis有热点key怎么解决 - redis缓存击穿、缓存穿透、缓存雪崩怎么解决 - redis执行一条命令的过程 - select epoll - redis主从同步过程 - redis主从 故障转移 fail">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2022-07-10T03:07:31.045Z">
+<meta property="og:updated_time" content="2023-06-26T15:43:44.852Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis_2021">
 <meta name="twitter:description" content="- redis支持的基础数据类型 - redis支持的对象及实现方式 - rediis 为什么快 - redis的过期删除策略 - 跳表 - redis的内存淘汰机制 - 如果redis有热点key怎么解决 - redis缓存击穿、缓存穿透、缓存雪崩怎么解决 - redis执行一条命令的过程 - select epoll - redis主从同步过程 - redis主从 故障转移 fail">
@@ -158,7 +158,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    27 分钟 读完 (大约 4119 个字)
+                    30 分钟 读完 (大约 4439 个字)
                 </span>
                 
                 
@@ -285,7 +285,7 @@
 <li>首先slave向master发起sync同步命令，这一步在slave启动后触发，master被动的将新的salve加入到自己的主备复制集群。</li>
 <li>master在收到sync后开启BGSAVE命令，BGSAVE是Redis的一种全量模式的持久化机制</li>
 <li>BGSAVE完成后，master将快照信息发给salve。</li>
-<li>发送期间，master收到来自客户端新的写命令，除了正常的相应之外，都存入一份back-log队列</li>
+<li>发送期间，master收到来自客户端新的写命令，除了正常的响应之外，都存入一份back-log队列</li>
 <li>快照信息发送完成后，master继续发送backlog命令</li>
 <li>backlog发送完成后，后续的写操作同时发送给salve，保持实时的异步复制</li>
 </ol>
@@ -315,6 +315,9 @@
 <p>如果多个回合还没有选出leader sentinel，怎么办？<br>选举过程非常快，一般谁先判断出主观下线谁就是leader</p>
 <h3><span id="redis-gao-ke-yong">- redis高可用</span><a href="#redis-gao-ke-yong" class="header-anchor">#</a></h3><p>高可用（主从、哨兵、集群）</p>
 <h3><span id="rdb-he-aof">- RDB 和 AOF</span><a href="#rdb-he-aof" class="header-anchor">#</a></h3><p>RDB 将数据库的快照（snapshot）以二进制的方式保存到磁盘中。<br>AOF 则以协议文本的方式，将所有对数据库进行过写入的命令（及其参数）记录到 AOF 文件，以此达到记录数据库状态的目的。</p>
+<p>AOF参数设置，通过appendonly参数设置为yes开启AOF，同步策略参数默认是appendfsync everysec每秒将aof缓冲区的内容同步到磁盘的aof文件中。<br>也可以配置参数apendfsync为always，这样每次写入都会立即同步磁盘，但是性能影响大，我们使用的是默认的everysec每秒。</p>
+<p>RDB快照默认是开启的，默认每15分钟进行一次快照。快照的实现是通过fork父进程，生成一个子进程，父进程继续处理client请求，子进程把内存数据写到临时rdb文件，因为os的copy on write, 父子进程共享物理页面，父进程写的时候会为父进程创建副本去写，子进程的地址空间内数据是fork时刻的整个数据库的一个快照。当写入完毕后，用临时文件替换原文件，子进程退出。</p>
+<p>so，rdb快照生成是不影响master处理client请求的，是通过fork子进程的方式操作的，aof的重写也是用了这种fork子进程的方式，最后将临时文件替换原文件。</p>
 <h3><span id="aof-chong-xie-ji-zhi">- AOF重写机制</span><a href="#aof-chong-xie-ji-zhi" class="header-anchor">#</a></h3><p>what:  创建一个新的 AOF 文件来代替原有的 AOF 文件， 新 AOF 文件和原有 AOF 文件保存的数据库状态完全一样， 但新 AOF 文件的体积小于等于原有 AOF 文件的体积。<br>why: 有些被频繁操作的键， 对它们所调用的命令可能有成百上千、甚至上万条， 如果这样被频繁操作的键有很多的话， AOF 文件的体积就会急速膨胀， 对 Redis 、甚至整个系统的造成影响<br>how:<br>AOF 重写并不需要对原有的 AOF 文件进行任何写入和读取， 它针对的是数据库中键的当前值。</p>
 <p>重写使用子进程<br>子进程进行 AOF 重写期间，主进程可以继续处理命令请求。<br>子进程带有主进程的数据副本，使用子进程而不是线程，可以在避免锁的情况下，保证数据的安全性。</p>
 <p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/redis/aof%E9%87%8D%E5%86%99.svg" alt></p>
