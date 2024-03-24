@@ -306,61 +306,6 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 769 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/06/02/concurrentProgramming/volatile/">volatile可见性、内存屏障</a>
-            
-        </h1>
-        <div class="content">
-            <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>volatile关键字具有许多特性，其中最重要的特性就是保证了用volatile修饰的变量对所有线程的可见性。利用内存屏障使得读写、读读、写写 都不能同时发生, 且不能指令重排。</p>
-<h4 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h4><p>当一个线程修改了变量的值，新的值会立刻同步到主内存当中。而其他线程读取这个变量的时候，也会从主内存中拉取最新的变量值。</p>
-<p>得益于java语言的先行发生原则（happens-before）<br>对于一个volatile变量的写操作先行发生于后面对这个变量的读操作。</p>
-<h4 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h4><p>内存屏障（Memory Barrier）是一种CPU指令。<strong>禁止重排序，控制执行顺序，刷新缓存与获取最新主存数据。</strong></p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/06/02/concurrentProgramming/volatile/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-06-02T02:54:24.000Z">2019-06-02</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
                     9 分钟 读完 (大约 1325 个字)
                 </span>
                 
@@ -404,6 +349,61 @@
 
         </div>
         
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-06-02T02:54:24.000Z">2019-06-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/并发/">并发</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 769 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/06/02/concurrentProgramming/volatile/">volatile可见性、内存屏障</a>
+            
+        </h1>
+        <div class="content">
+            <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>volatile关键字具有许多特性，其中最重要的特性就是保证了用volatile修饰的变量对所有线程的可见性。利用内存屏障使得读写、读读、写写 都不能同时发生, 且不能指令重排。</p>
+<h4 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h4><p>当一个线程修改了变量的值，新的值会立刻同步到主内存当中。而其他线程读取这个变量的时候，也会从主内存中拉取最新的变量值。</p>
+<p>得益于java语言的先行发生原则（happens-before）<br>对于一个volatile变量的写操作先行发生于后面对这个变量的读操作。</p>
+<h4 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h4><p>内存屏障（Memory Barrier）是一种CPU指令。<strong>禁止重排序，控制执行顺序，刷新缓存与获取最新主存数据。</strong></p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/06/02/concurrentProgramming/volatile/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -594,58 +594,6 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 320 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/get/">Hashmap源码解析-get</a>
-            
-        </h1>
-        <div class="content">
-            <h4 id="get"><a href="#get" class="headerlink" title="get"></a>get</h4><p>查找过程和删除基本差不多， 找到返回节点，否则返回null</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/get/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
                     9 分钟 读完 (大约 1334 个字)
                 </span>
                 
@@ -698,7 +646,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 524 个字)
+                    1 分钟 读完 (大约 163 个字)
                 </span>
                 
                 
@@ -707,20 +655,70 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/remove/">Hashmap源码解析-remove</a>
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/&hashtable/">Hashmap源码解析-与hashtable区别</a>
             
         </h1>
         <div class="content">
-            <h4 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h4><p>1.找到待删除节点，也是分第一个节点就是，红黑树中找该节点，普通链表中找该节点</p>
-<p>2.删除节点，分红黑树删除，头节点删除，中间节点删除(包括尾)</p>
-<p>3.++modCount, –size</p>
+            <p>HashMap是非线程安全的，HashTable是线程安全的。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/remove/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/&hashtable/#more">阅读更多</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-05-26T02:54:24.000Z">2019-05-26</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/java/">java</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    2 分钟 读完 (大约 320 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/get/">Hashmap源码解析-get</a>
+            
+        </h1>
+        <div class="content">
+            <h4 id="get"><a href="#get" class="headerlink" title="get"></a>get</h4><p>查找过程和删除基本差不多， 找到返回节点，否则返回null</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/get/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -1214,9 +1212,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1227,9 +1225,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
@@ -1898,9 +1896,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1911,9 +1909,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>

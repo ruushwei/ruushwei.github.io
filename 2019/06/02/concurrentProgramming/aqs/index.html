@@ -8,7 +8,7 @@
 
 
     <meta name="description" content="谈谈你对AQS的理解#AQS是JUC(java.util.concurrent)中很多同步组件的构建基础，简单来讲，它内部实现主要是状态变量state和一个FIFO队列来完成，同步队列的头结点是当前获取到同步状态的结点，获取同步状态state失败的线程，会被构造成一个结点（或共享式或独占式）加入到同步队列尾部（采用自旋CAS来保证此操作的线程安全），随后线程会阻塞；释放时唤醒头结点的后继结点，使其">
-<meta name="keywords" content="java,并发">
+<meta name="keywords" content="并发,java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AQS原理解析">
 <meta property="og:url" content="https://www.techwei.cn/2019/06/02/concurrentProgramming/aqs/index.html">
@@ -247,16 +247,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/06/02/concurrentProgramming/volatile/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/06/13/dataStructure/tree/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">volatile可见性、内存屏障</span>
+                <span class="level-item">红黑树、AVL树、B树代价分析与比较</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/05/31/concurrenthashmap/concurrenthashmap/">
-                <span class="level-item">hashtable and concurrenthashmap1.7、1.8</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/02/concurrentProgramming/volatile/">
+                <span class="level-item">volatile可见性、内存屏障</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -714,9 +714,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -727,9 +727,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
@@ -1398,9 +1398,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1411,9 +1411,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>

@@ -100,32 +100,6 @@
   </entry>
   
   <entry>
-    <title>netty服务端启动原理</title>
-    <link href="https://www.techwei.cn/2021/08/23/netty/nettyrun/"/>
-    <id>https://www.techwei.cn/2021/08/23/netty/nettyrun/</id>
-    <published>2021-08-23T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.052Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;Netty 是一个事件驱动模式的高性能的 NIO 框架，对内封装了 Java NIO 的大量复杂且繁琐的实现细节，对外提供了高度抽象的组件和易用的 API，提供了针对市面上大部分通信协议的支持，是当下 Java
-        
-      
-    
-    </summary>
-    
-      <category term="netty" scheme="https://www.techwei.cn/categories/netty/"/>
-    
-    
-      <category term="netty" scheme="https://www.techwei.cn/tags/netty/"/>
-    
-  </entry>
-  
-  <entry>
     <title>分库分表组件原理</title>
     <link href="https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/"/>
     <id>https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/</id>
@@ -177,6 +151,32 @@
     
     
       <category term="design" scheme="https://www.techwei.cn/tags/design/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>netty服务端启动原理</title>
+    <link href="https://www.techwei.cn/2021/08/23/netty/nettyrun/"/>
+    <id>https://www.techwei.cn/2021/08/23/netty/nettyrun/</id>
+    <published>2021-08-23T03:10:43.000Z</published>
+    <updated>2022-07-10T03:07:31.052Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;Netty 是一个事件驱动模式的高性能的 NIO 框架，对内封装了 Java NIO 的大量复杂且繁琐的实现细节，对外提供了高度抽象的组件和易用的 API，提供了针对市面上大部分通信协议的支持，是当下 Java
+        
+      
+    
+    </summary>
+    
+      <category term="netty" scheme="https://www.techwei.cn/categories/netty/"/>
+    
+    
+      <category term="netty" scheme="https://www.techwei.cn/tags/netty/"/>
     
   </entry>
   
@@ -288,11 +288,11 @@
   </entry>
   
   <entry>
-    <title>mq</title>
+    <title>MQ</title>
     <link href="https://www.techwei.cn/2021/08/01/interview/mq/"/>
     <id>https://www.techwei.cn/2021/08/01/interview/mq/</id>
     <published>2021-08-01T03:10:43.000Z</published>
-    <updated>2024-03-24T16:38:24.313Z</updated>
+    <updated>2024-03-24T16:49:41.807Z</updated>
     
     <summary type="html">
     
@@ -422,11 +422,11 @@
   </entry>
   
   <entry>
-    <title>spring</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/spring/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/spring/</id>
+    <title>其他</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/other/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/other/</id>
     <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2023-06-26T15:50:05.142Z</updated>
+    <updated>2022-07-10T03:07:31.045Z</updated>
     
     <summary type="html">
     
@@ -439,8 +439,7 @@
 &lt;!-- toc --&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#tan-tan-dui-springioc-de-liao-jie&quot;&gt;- 谈谈对springIoc的了解&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
+&lt;li&gt;&lt;a href=&quot;#tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie&quot;&gt;-
         
       
     
@@ -450,11 +449,11 @@
   </entry>
   
   <entry>
-    <title>系统设计</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/design/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/design/</id>
+    <title>java并发</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/juc/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/juc/</id>
     <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.043Z</updated>
+    <updated>2022-07-10T03:07:31.044Z</updated>
     
     <summary type="html">
     
@@ -467,7 +466,7 @@
 &lt;!-- toc --&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#gao-bing-fa-xi-tong-ti-xing-neng&quot;&gt;- 高并发系统提性能&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#java-bing-fa-rong-qi-you-na-xie&quot;&gt;- Java并发容器有哪些&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a
         
       
@@ -534,9 +533,9 @@
   </entry>
   
   <entry>
-    <title>分布式事务</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/dt/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/dt/</id>
+    <title>java</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/java/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/java/</id>
     <published>2021-07-29T03:10:43.000Z</published>
     <updated>2022-07-10T03:07:31.043Z</updated>
     
@@ -546,7 +545,13 @@
       
         
         
-          &lt;h3&gt;&lt;span id=&quot;fen-bu-shi-shi-wu&quot;&gt;分布式事务&lt;/span&gt;&lt;a href=&quot;#fen-bu-shi-shi-wu&quot;
+          &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#chang-jian-java-ji-he-lei&quot;&gt;- 常见Java集合类&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
         
       
     

@@ -2,23 +2,23 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>mq - 大菜猫</title>
+<title>MQ - 大菜猫</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="- mq使用场景 - 如何保证消息顺序性 - 如何保证消息可靠性（不丢） - 如何保证高可用 - kafka服务端架构 - kafka 如何保证高性能 - rocketmq 如何保证高性能 - rocketmq &amp;amp; kafka        - mq使用场景# 异步 上游不需要同步拿到结果，执行过程又耗时 好处：异步可以让服务端的线程不同步阻塞，提高服务端的吞吐量   解耦 多个">
+    <meta name="description" content="- mq使用场景 - 如何保证消息顺序性 - 如何保证消息可靠性（不丢） - 如何保证高可用 - 如何保证高性能 - rocketmq &amp;amp; kafka        - mq使用场景# 异步 上游不需要同步拿到结果，执行过程又耗时 好处：异步可以让服务端的线程不同步阻塞，提高服务端的吞吐量   解耦 多个下游相同依赖 好处：不与依赖方耦合，不用额外开发   削峰 请求高峰期 好处">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mq">
+<meta property="og:title" content="MQ">
 <meta property="og:url" content="https://www.techwei.cn/2021/08/01/interview/mq/index.html">
 <meta property="og:site_name" content="大菜猫">
-<meta property="og:description" content="- mq使用场景 - 如何保证消息顺序性 - 如何保证消息可靠性（不丢） - 如何保证高可用 - kafka服务端架构 - kafka 如何保证高性能 - rocketmq 如何保证高性能 - rocketmq &amp;amp; kafka        - mq使用场景# 异步 上游不需要同步拿到结果，执行过程又耗时 好处：异步可以让服务端的线程不同步阻塞，提高服务端的吞吐量   解耦 多个">
+<meta property="og:description" content="- mq使用场景 - 如何保证消息顺序性 - 如何保证消息可靠性（不丢） - 如何保证高可用 - 如何保证高性能 - rocketmq &amp;amp; kafka        - mq使用场景# 异步 上游不需要同步拿到结果，执行过程又耗时 好处：异步可以让服务端的线程不同步阻塞，提高服务端的吞吐量   解耦 多个下游相同依赖 好处：不与依赖方耦合，不用额外开发   削峰 请求高峰期 好处">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.techwei.cn/images/og_image.png">
-<meta property="og:updated_time" content="2024-03-24T16:38:24.313Z">
+<meta property="og:updated_time" content="2024-03-24T16:49:41.807Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mq">
-<meta name="twitter:description" content="- mq使用场景 - 如何保证消息顺序性 - 如何保证消息可靠性（不丢） - 如何保证高可用 - kafka服务端架构 - kafka 如何保证高性能 - rocketmq 如何保证高性能 - rocketmq &amp;amp; kafka        - mq使用场景# 异步 上游不需要同步拿到结果，执行过程又耗时 好处：异步可以让服务端的线程不同步阻塞，提高服务端的吞吐量   解耦 多个">
+<meta name="twitter:title" content="MQ">
+<meta name="twitter:description" content="- mq使用场景 - 如何保证消息顺序性 - 如何保证消息可靠性（不丢） - 如何保证高可用 - 如何保证高性能 - rocketmq &amp;amp; kafka        - mq使用场景# 异步 上游不需要同步拿到结果，执行过程又耗时 好处：异步可以让服务端的线程不同步阻塞，提高服务端的吞吐量   解耦 多个下游相同依赖 好处：不与依赖方耦合，不用额外开发   削峰 请求高峰期 好处">
 <meta name="twitter:image" content="https://www.techwei.cn/images/og_image.png">
 
 
@@ -93,7 +93,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="mq" height="28">
+                <img src="/images/logo.svg" alt="MQ" height="28">
             
             </a>
         </div>
@@ -158,7 +158,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    11 分钟 读完 (大约 1692 个字)
+                    11 分钟 读完 (大约 1580 个字)
                 </span>
                 
                 
@@ -167,7 +167,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                mq
+                MQ
             
         </h1>
         <div class="content">
@@ -180,9 +180,7 @@
 <li><a href="#ru-he-bao-zheng-xiao-xi-shun-xu-xing">- 如何保证消息顺序性</a></li>
 <li><a href="#ru-he-bao-zheng-xiao-xi-ke-kao-xing-bu-diu">- 如何保证消息可靠性（不丢）</a></li>
 <li><a href="#ru-he-bao-zheng-gao-ke-yong">- 如何保证高可用</a></li>
-<li><a href="#kafka-fu-wu-duan-jia-gou">- kafka服务端架构</a></li>
-<li><a href="#kafka-ru-he-bao-zheng-gao-xing-neng">- kafka 如何保证高性能</a></li>
-<li><a href="#rocketmq-ru-he-bao-zheng-gao-xing-neng">- rocketmq 如何保证高性能</a><ul>
+<li><a href="#ru-he-bao-zheng-gao-xing-neng">- 如何保证高性能</a><ul>
 <li><a href="#rocketmq-kafka">- rocketmq &amp; kafka</a></li>
 </ul>
 </li>
@@ -238,15 +236,16 @@
 <li>故障切换与恢复，自动检测触发故障转移</li>
 </ul>
 <p>注：kafka副本机制。<br>Kafka在0.8版本之前是没有HA机制来确保高可用的，当某一个broker挂掉，partition就挂了。即存在单点故障。<br>0.8之后提供了副本机制，副本机制会将 一个broker下某个topic的一个partition放入到另外一个broker里，这个备份的分区和原分区都叫做副本（replica）。在所有的副本里，只能有一个leader，其余的副本都作为follower，同一时间内只有leader负责读写，follower不起任何作用。这样做的原因是为了确保消费者单调读 且 确保能立即读取写入的信息（Read-your-writes）。其他所有的follower会异步的拉去leader消息，拉的快的会进入ISR里，拉的慢得超过replica.lag.time.max.ms 配置的超时值的，会被踢进OSR里，这个过程是动态的，如果一个follower开始没跟上leader的消息写入速度，被踢出了ISR，等到跟上后又会重新进入ISR。当leader挂掉之后，为了保证高可用性，从ISR中获取一个副本，升格为leader。如果ISR全挂了，有两种策略，一是等待ISR第一个恢复的副本，二是开启unclean从OSR中选择一个副本作为leader。为保证高可用 可以选择第二种牺牲一致性的方式。</p>
-<h3><span id="kafka-fu-wu-duan-jia-gou">- kafka服务端架构</span><a href="#kafka-fu-wu-duan-jia-gou" class="header-anchor">#</a></h3><p>服务端是reactor模式，<strong>selector + threadPool</strong><br>acceptor里有个selector, 每个processor中有一个selector，都是NIO,IO多路复用<br>processor会通过注册/取消 OP_READ _ 事件，保证每个连接上只有一个请求和一个对应的响应，从而实现每个连接请求的顺序性。<br>kafka是自身实现的nio框架，rocketmq是使用的netty</p>
-<h3><span id="kafka-ru-he-bao-zheng-gao-xing-neng">- kafka 如何保证高性能</span><a href="#kafka-ru-he-bao-zheng-gao-xing-neng" class="header-anchor">#</a></h3><ul>
+<h3><span id="ru-he-bao-zheng-gao-xing-neng">- 如何保证高性能</span><a href="#ru-he-bao-zheng-gao-xing-neng" class="header-anchor">#</a></h3><p>kafka </p>
+<ul>
 <li>顺序读写。Kafka的message是不断追加到本地磁盘文件末尾的，而不是随机的写入，这使得Kafka写入吞吐量得到了显著提升 。</li>
 <li>页缓存。kafka重度依赖页缓存技术，kafka只是将数据写入页缓存（内存）中而不直接操作磁盘，由操作系统决定什么时候把页缓存中数据刷到磁盘上。同时写入页缓存的数据是按照磁盘顺序去写入的，因此刷到磁盘上的速度也较快。当读操作发生时，先从页缓存中查询是否有所需信息，若没有才会调度磁盘。</li>
 <li>零拷贝。这里的零拷贝并非指一次拷贝都没有，而是避免了在内核空间和用户空间之间的拷贝。页缓存 -&gt; socket缓冲区。</li>
 <li>分区分段 + 索引。通过这种分区分段的设计，Kafka的message消息实际上是分布式存储在一个一个小的segment中的，每次文件操作也是直接操作的segment。为了进一步的查询优化，Kafka又默认为分段后的数据文件建立了索引文件，就是文件系统上的.index文件。这种分区分段+索引的设计，不仅提升了数据读取的效率，同时也提高了数据操作的并行度。</li>
 <li>批量压缩。批量的消息可以通过压缩的形式传输并且在日志中也可以保持压缩格式，直到被消费者解压缩，减少网络IO.</li>
 </ul>
-<h3><span id="rocketmq-ru-he-bao-zheng-gao-xing-neng">- rocketmq 如何保证高性能</span><a href="#rocketmq-ru-he-bao-zheng-gao-xing-neng" class="header-anchor">#</a></h3><ul>
+<p>rocketmq</p>
+<ul>
 <li>顺序读写。</li>
 <li>可异步刷盘</li>
 <li>零拷贝。</li>
@@ -758,9 +757,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -771,9 +770,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
@@ -1442,9 +1441,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1455,9 +1454,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
@@ -2076,7 +2075,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="mq" height="28">
+                    <img src="/images/logo.svg" alt="MQ" height="28">
                 
                 </a>
                 <p class="is-size-7">

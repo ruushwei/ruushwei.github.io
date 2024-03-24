@@ -158,6 +158,65 @@
                 <span class="level-item has-text-grey">
                     
                     
+                    2 分钟 读完 (大约 234 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/09/09/arithmetic/dp/">动态规划算法</a>
+            
+        </h1>
+        <div class="content">
+            <div class="toc">
+
+<!-- toc -->
+
+<ul>
+<li><a href="#030-lian-xu-zi-shu-zu-de-zui-da-he">030-连续子数组的最大和</a></li>
+<li><a href="#62-bu-tong-lu-jing">62. 不同路径</a></li>
+</ul>
+<!-- tocstop -->
+
+</div>
+
+
+<p>动态规划</p>
+<h4><span id="030-lian-xu-zi-shu-zu-de-zui-da-he">030-连续子数组的最大和</span><a href="#030-lian-xu-zi-shu-zu-de-zui-da-he" class="header-anchor">#</a></h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">FindGreatestSumOfSubArray</span><span class="hljs-params">(<span class="hljs-keyword">int</span>[] array)</span> </span>&#123;</span><br><span class="line">	<span class="hljs-comment">//设置指针从0开始向右移动，如果当前指针 + 前面指针代表的和为sum，计算max</span></span><br><span class="line">	<span class="hljs-comment">//如果sum &gt; 0 移动 sum = sum</span></span><br><span class="line">	<span class="hljs-comment">//如果素sum &lt; 0 移动 sum归零 重写跳转指针</span></span><br><span class="line">	<span class="hljs-keyword">if</span>(array == <span class="hljs-keyword">null</span>)&#123;</span><br><span class="line">		<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;</span><br><span class="line">	<span class="hljs-keyword">int</span> max = Integer.MIN_VALUE;</span><br><span class="line">	<span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;</span><br><span class="line">	<span class="hljs-keyword">while</span>(i &lt; array.length)&#123;</span><br><span class="line">		sum = array[i] + sum;</span><br><span class="line">		max = max &gt; sum ? max : sum;</span><br><span class="line">		<span class="hljs-keyword">if</span>(sum &lt; <span class="hljs-number">0</span>)&#123;</span><br><span class="line">			sum = <span class="hljs-number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="hljs-keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="62-bu-tong-lu-jing">62. 不同路径</span><a href="#62-bu-tong-lu-jing" class="header-anchor">#</a></h4><p>一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">uniquePaths</span><span class="hljs-params">(<span class="hljs-keyword">int</span> m, <span class="hljs-keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">int</span>[][] res = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[m][n];</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (i == <span class="hljs-number">0</span>)</span><br><span class="line">                res[<span class="hljs-number">0</span>][j] = <span class="hljs-number">1</span>;</span><br><span class="line">            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (j == <span class="hljs-number">0</span>)</span><br><span class="line">                res[i][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;</span><br><span class="line">            <span class="hljs-keyword">else</span></span><br><span class="line">                res[i][j] = res[i - <span class="hljs-number">1</span>][j] + res[i][j - <span class="hljs-number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> res[m - <span class="hljs-number">1</span>][n - <span class="hljs-number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">uniquePaths</span><span class="hljs-params">(<span class="hljs-keyword">int</span> m, <span class="hljs-keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">int</span>[] dp = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n];</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        dp[i] = <span class="hljs-number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; m; i++) &#123;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            dp[j] = dp[j] + dp[j - <span class="hljs-number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> dp[n - <span class="hljs-number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-09-09T03:14:51.000Z">2019-09-09</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
                     5 分钟 读完 (大约 680 个字)
                 </span>
                 
@@ -204,65 +263,6 @@
 <p>说明：</p>
 <p>拆分时可以重复使用字典中的单词。<br>你可以假设字典中没有重复的单词。</p>
 <figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">wordBreak</span><span class="hljs-params">(String s, List&lt;String&gt; wordDict)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> helper(s, <span class="hljs-keyword">new</span> HashSet(wordDict), <span class="hljs-number">0</span>, <span class="hljs-keyword">new</span> Boolean[s.length()]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">helper</span><span class="hljs-params">(String s, Set&lt;String&gt; wordDict, <span class="hljs-keyword">int</span> start, Boolean[] menu)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (start == s.length()) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">if</span> (menu[start] != <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> menu[start];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> end = start + <span class="hljs-number">1</span>; end &lt;= s.length(); end++) &#123;</span><br><span class="line">        String sub = s.substring(start, end);</span><br><span class="line">        <span class="hljs-keyword">if</span> (wordDict.contains(sub) &amp;&amp; helper(s, wordDict, end, menu)) &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> menu[start] = <span class="hljs-keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> menu[start] = <span class="hljs-keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-09-09T03:14:51.000Z">2019-09-09</time>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2 分钟 读完 (大约 304 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/09/09/arithmetic/hashmap/">hashmap算法</a>
-            
-        </h1>
-        <div class="content">
-            <div class="toc">
-
-<!-- toc -->
-
-<ul>
-<li><a href="#034-di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu">034-第一个只出现一次的字符</a></li>
-<li><a href="#03-wu-chong-fu-zi-fu-de-zui-chang-zi-chuan">03-无重复字符的最长子串 *</a></li>
-<li><a href="#146-shi-xian-lru">146.实现lru</a></li>
-</ul>
-<!-- tocstop -->
-
-</div>
-
-
-<h4><span id="034-di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu">034-第一个只出现一次的字符</span><a href="#034-di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu" class="header-anchor">#</a></h4><p>1.使用hashmap<br>2.indexof lastindexof</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">FirstNotRepeatingChar</span><span class="hljs-params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; str.length(); i++) &#123;</span><br><span class="line">            <span class="hljs-keyword">char</span> t = str.charAt(i);</span><br><span class="line">            <span class="hljs-keyword">if</span> (str.indexOf(t) == i &amp;&amp; str.lastIndexOf(t) == i)&#123;</span><br><span class="line">                <span class="hljs-keyword">return</span> i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4><span id="03-wu-chong-fu-zi-fu-de-zui-chang-zi-chuan">03-无重复字符的最长子串 *</span><a href="#03-wu-chong-fu-zi-fu-de-zui-chang-zi-chuan" class="header-anchor">#</a></h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">lengthOfLongestSubstring</span><span class="hljs-params">(String s)</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">char</span>[] chars = s.toCharArray();</span><br><span class="line">    <span class="hljs-keyword">int</span> len = chars.length;</span><br><span class="line">    <span class="hljs-keyword">int</span> left =<span class="hljs-number">0</span>, right = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">int</span> max = <span class="hljs-number">0</span>;</span><br><span class="line">    Integer index;</span><br><span class="line">    Map&lt;Character, Integer&gt; indexMap = <span class="hljs-keyword">new</span> HashMap();</span><br><span class="line">    <span class="hljs-keyword">for</span> (;right &lt; len;right ++) &#123;</span><br><span class="line">        <span class="hljs-keyword">char</span> c = chars[right];</span><br><span class="line">        <span class="hljs-keyword">if</span> ((index = indexMap.get(c)) != <span class="hljs-keyword">null</span> &amp;&amp; index &gt;= left) &#123;</span><br><span class="line">            left = index + <span class="hljs-number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        indexMap.put(c, right);</span><br><span class="line">        max = Math.max(max, right - left + <span class="hljs-number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4><span id="146-shi-xian-lru">146.实现lru</span><a href="#146-shi-xian-lru" class="header-anchor">#</a></h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LRUCache</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DNode</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">int</span> key;</span><br><span class="line">        <span class="hljs-keyword">int</span> val;</span><br><span class="line">        DNode pre;</span><br><span class="line">        DNode next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">private</span> DNode head;</span><br><span class="line">    <span class="hljs-keyword">private</span> DNode tail;</span><br><span class="line">    <span class="hljs-keyword">private</span> HashMap&lt;Integer, DNode&gt; cache = <span class="hljs-keyword">new</span> HashMap&lt;Integer, DNode&gt;();</span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> capacity;</span><br><span class="line">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> size;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">LRUCache</span><span class="hljs-params">(<span class="hljs-keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.capacity = capacity;</span><br><span class="line">        <span class="hljs-keyword">this</span>.size = <span class="hljs-number">0</span>;</span><br><span class="line">        head = <span class="hljs-keyword">new</span> DNode();</span><br><span class="line">        tail = <span class="hljs-keyword">new</span> DNode();</span><br><span class="line">        head.next = tail;</span><br><span class="line">        tail.pre = head;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-comment">// cache</span></span><br><span class="line">        DNode node = cache.get(key);</span><br><span class="line">        <span class="hljs-keyword">if</span> (node == <span class="hljs-keyword">null</span>) <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;</span><br><span class="line">        <span class="hljs-comment">// 移到最前面</span></span><br><span class="line">        moveToHead(node);</span><br><span class="line">        <span class="hljs-keyword">return</span> node.val;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">put</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key, <span class="hljs-keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">        DNode node = cache.get(key);</span><br><span class="line">        <span class="hljs-keyword">if</span> (node != <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">            node.val = value;</span><br><span class="line">            moveToHead(node);</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            node = <span class="hljs-keyword">new</span> DNode();</span><br><span class="line">            node.key = key;</span><br><span class="line">            node.val = value;</span><br><span class="line">            cache.put(key, node);</span><br><span class="line">            addFirst(node);</span><br><span class="line">            size++;</span><br><span class="line"></span><br><span class="line">            <span class="hljs-keyword">if</span> (size &gt; capacity) &#123;</span><br><span class="line">                cache.remove(tail.pre.key);</span><br><span class="line">                removeNode(tail.pre);</span><br><span class="line">                size--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">moveToHead</span><span class="hljs-params">(DNode node)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-comment">// 删除节点</span></span><br><span class="line">        removeNode(node);</span><br><span class="line">        <span class="hljs-comment">// 放到首节点后面</span></span><br><span class="line">        addFirst(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">removeNode</span><span class="hljs-params">(DNode node)</span> </span>&#123;</span><br><span class="line">        DNode pre = node.pre;</span><br><span class="line">        DNode next = node.next;</span><br><span class="line">        pre.next = next;</span><br><span class="line">        next.pre = pre;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addFirst</span><span class="hljs-params">(DNode node)</span> </span>&#123;</span><br><span class="line">        DNode next = head.next;</span><br><span class="line">        node.next = next;</span><br><span class="line">        node.pre = head;</span><br><span class="line"></span><br><span class="line">        head.next = node;</span><br><span class="line">        next.pre = node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         </div>
         
         
@@ -474,14 +474,14 @@
                 <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                <a class="has-link-grey -link" href="/categories/redis/">redis</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1531 个字)
+                    几秒 读完 (大约 71 个字)
                 </span>
                 
                 
@@ -490,50 +490,16 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/07/09/mysql/隔离级别/">innodb事务隔离级别、MVCC</a>
+                <a class="has-link-black-ter" href="/2019/07/09/redis/与tair选择/">tair &amp; redis 的选择</a>
             
         </h1>
         <div class="content">
-            <h4><span id="ge-chi-ji-bie">隔离级别</span><a href="#ge-chi-ji-bie" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/isola.jpg" alt></p>
-<p>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据  </p>
-<p>提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)  </p>
-<p>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的，InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还存在幻象读  </p>
-<p>串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞</p>
-<h4><span id="mvcc">MVCC</span><a href="#mvcc" class="header-anchor">#</a></h4><p>InnoDB是一个多版本的存储引擎：为了支持事务的一些特性诸如并发和回滚，它保持着被修改行的旧版本信息。这些信息被存储在一个被叫做回滚段(rollback segment)的表空间中。InnoDB在回滚段中用这些信息来执行undo操作，以此支持事务回滚。它也用这些信息来构造行的更早的版本，以此支持一致性读（快照读）。</p>
-<p>在内部，InnoDB为数据库中存储的每一行添加三个隐藏字段。</p>
-<p>DB_TRX_ID：表明插入或者修改这一行的最后一个事务的事务标识符。如何查看行事务ID</p>
-<p>DB_ROLL_PTR：指向回滚段中的一个undo log记录，如果行被修改了，那么这个undo log记录包含的信息必须先于行修改被重新修改。</p>
-<p>DB_ROW_ID：单调递增的行ID。如果InnoDB自动生成了一个聚集索引，那么这个索引包含行ID值，否则DB_ROW_ID列不会出现在任何索引中。 </p>
-<h4><span id="suo-lei-xing">锁类型</span><a href="#suo-lei-xing" class="header-anchor">#</a></h4><p>共享锁（读锁，S锁）：若事务T对数据对象A加上S锁，则事务T可以读A但不能修改A，其他事务只能再对A加S锁，而不能加X锁，直到T释放S锁。  </p>
-<p>排他锁（写锁，X锁）：若事务T对数据对象A加上X锁，则只允许T读取和修改A，其他事务不能再对A加作何类型的锁，直到T释放A上的X锁。  </p>
-<p>意向共享锁（IS锁）：事务T在对表中数据对象加S锁前，首先需要对该表加IS（或更强的IX）锁。  </p>
-<p>意向排他锁（IX锁）：事务T在对表中的数据对象加X锁前，首先需要对该表加IX锁。</p>
-<h5><span id="yi-xiang-suo-bu-chong">意向锁补充</span><a href="#yi-xiang-suo-bu-chong" class="header-anchor">#</a></h5><ul>
-<li>InnoDB 支持多粒度锁，特定场景下，行级锁可以与表级锁共存。  </li>
-<li>意向锁之间互不排斥，但除了 IS 与 S 兼容外，意向锁会与 共享锁 / 排他锁 互斥。  </li>
-<li>IX，IS是表级锁，不会和行级的X，S锁发生冲突。只会和表级的X，S发生冲突。  </li>
-<li>意向锁在保证并发性的前提下，实现了行锁和表锁共存且满足事务隔离性的要求。  </li>
-</ul>
-<h4><span id="2pl-liang-jie-duan-suo">2pl 两阶段锁</span><a href="#2pl-liang-jie-duan-suo" class="header-anchor">#</a></h4><p>两段锁协议，先随便加，最后commit才能一起释放.<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2pl.jpg" alt></p>
-<h4><span id="gap-suo-you-he-yong">GAP锁有何用</span><a href="#gap-suo-you-he-yong" class="header-anchor">#</a></h4><p>其实这个多出来的GAP锁，就是RR隔离级别，相对于RC隔离级别，不会出现幻读的关键。</p>
-<p>确实，GAP锁锁住的位置，也不是记录本身，而是两条记录之间的GAP。</p>
-<p>所谓幻读，就是同一个事务，连续做两次当前读 (例如：select * from t1 where id = 10 for update;)，那么这两次当前读返回的是完全相同的记录 (记录数量一致，记录本身也一致)，第二次的当前读，不会比第一次返回更多的记录 (幻象)。  </p>
-<p>如何保证两次当前读返回一致的记录，那就需要在第一次当前读与第二次当前读之间，其他的事务不会插入新的满足条件的记录并提交。为了实现这个功能，GAP锁应运而生</p>
-<h4><span id="kuai-zhao-du-amp-dang-qian-du">快照读 &amp; 当前读</span><a href="#kuai-zhao-du-amp-dang-qian-du" class="header-anchor">#</a></h4><p>快照读：就是select</p>
-<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> ….;</span><br></pre></td></tr></table></figure>
-
-<p>当前读：特殊的读操作，插入/更新/删除操作，属于当前读，处理的都是当前的数据，需要加锁。  </p>
-<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">lock</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">share</span> <span class="hljs-keyword">mode</span>;</span><br><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">for</span> <span class="hljs-keyword">update</span>;</span><br><span class="line"><span class="hljs-keyword">insert</span>;</span><br><span class="line"><span class="hljs-keyword">update</span> ;</span><br><span class="line"><span class="hljs-keyword">delete</span>;</span><br></pre></td></tr></table></figure>
-
-<h4><span id="liao-tian-tao-lun">聊天讨论</span><a href="#liao-tian-tao-lun" class="header-anchor">#</a></h4><p>全快照、全当前，不幻读， 先快照，再当前，幻读</p>
-<p>「 球球: 其实产生幻读的原因，就是以为读走了mvcc的副本， 」</p>
-<hr>
-<p>读如果也加gap锁，就真的不会幻读了，但代价太大</p>
-<p>「 宏伟: 张三账户余额有10000元；要转账给李四9000元，转给王五5000元；这两次转账肯定有一次因余额不足转账失败；如果在 rr 下，可重复读， 两次update 张三都会成功？ 」</p>
-<hr>
-<p>这个如果两个事务并发，都先读的1w元快照读，然后第1个事务直接update张三减钱， commit， 第2个事务 接着update张三减钱，都会成功，除非<br>1 用数据库乐观锁<br>2 自己搞个分布式锁，将读写操作原子化<br>3 用kafka让同一用户操作串行化</p>
-<p>敏: 交易相关的就不要快照读了, 交易要算钱，select的时候就要锁，不然这条数据之后未必可用</p>
-<h4><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h4><p>RR级别下，通过MVCC, 解决了两个快照读的幻读问题，<br>通过next-key锁，解决了两个当前读的幻读问题，但是快照读后的当前读是会幻读的.</p>
+            <h4><span id="tair-amp-redis-de-xuan-ze">tair &amp; redis 的选择</span><a href="#tair-amp-redis-de-xuan-ze" class="header-anchor">#</a></h4><ol>
+<li>延迟敏感程度, 延迟敏感，说什么也得redis  </li>
+<li>数据量大的话，数据量超过100GB全内存太浪费资源，延迟没有那么敏感，使用tair  </li>
+<li>使用复杂数据结构 redis  </li>
+<li>容忍数据丢失</li>
+</ol>
 
         </div>
         
@@ -667,56 +633,6 @@
                 <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/redis/">redis</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    几秒 读完 (大约 71 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/07/09/redis/与tair选择/">tair &amp; redis 的选择</a>
-            
-        </h1>
-        <div class="content">
-            <h4><span id="tair-amp-redis-de-xuan-ze">tair &amp; redis 的选择</span><a href="#tair-amp-redis-de-xuan-ze" class="header-anchor">#</a></h4><ol>
-<li>延迟敏感程度, 延迟敏感，说什么也得redis  </li>
-<li>数据量大的话，数据量超过100GB全内存太浪费资源，延迟没有那么敏感，使用tair  </li>
-<li>使用复杂数据结构 redis  </li>
-<li>容忍数据丢失</li>
-</ol>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
-                
-                <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                 </div>
                 
@@ -774,6 +690,90 @@
 <p>这个handler被分成两类：ChannelOutboundHandler和ChannelInboundHandler。当服务器处理进来的请求时，则只会调用实现了ChannelInboundHandler的handler；当服务器返回信息给客户端时，则只会调用实现了ChannelOutboundHandler的handler</p>
 <h5><span id="encoders-amp-decoders">Encoders &amp; Decoders</span><a href="#encoders-amp-decoders" class="header-anchor">#</a></h5><p>我们在解析处理请求时通常需要对数据格式进行转换，比如把字节变成对象，或者把对象转换为字节。针对这种常见的场景，Netty提供了编码和解码的接口：MessageToByteEncoder和ByteToMessageEncoder。</p>
 <p>其实两个抽象类分别继承了ChannelInboundHandlerAdapter和ChannelOutboundHandlerAdapter，说白了，使用起来和普通的handler没什么区别。自己写的类只要重写decode()或者encode()方法对数据进行处理即可</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-07-09T02:54:24.000Z">2019-07-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 分钟 读完 (大约 1531 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/07/09/mysql/隔离级别/">innodb事务隔离级别、MVCC</a>
+            
+        </h1>
+        <div class="content">
+            <h4><span id="ge-chi-ji-bie">隔离级别</span><a href="#ge-chi-ji-bie" class="header-anchor">#</a></h4><p><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/isola.jpg" alt></p>
+<p>未提交读(Read Uncommitted)：允许脏读，也就是可能读取到其他会话中未提交事务修改的数据  </p>
+<p>提交读(Read Committed)：只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别 (不重复读)  </p>
+<p>可重复读(Repeated Read)：可重复读。在同一个事务内的查询都是事务开始时刻一致的，InnoDB默认级别。在SQL标准中，该隔离级别消除了不可重复读，但是还存在幻象读  </p>
+<p>串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞</p>
+<h4><span id="mvcc">MVCC</span><a href="#mvcc" class="header-anchor">#</a></h4><p>InnoDB是一个多版本的存储引擎：为了支持事务的一些特性诸如并发和回滚，它保持着被修改行的旧版本信息。这些信息被存储在一个被叫做回滚段(rollback segment)的表空间中。InnoDB在回滚段中用这些信息来执行undo操作，以此支持事务回滚。它也用这些信息来构造行的更早的版本，以此支持一致性读（快照读）。</p>
+<p>在内部，InnoDB为数据库中存储的每一行添加三个隐藏字段。</p>
+<p>DB_TRX_ID：表明插入或者修改这一行的最后一个事务的事务标识符。如何查看行事务ID</p>
+<p>DB_ROLL_PTR：指向回滚段中的一个undo log记录，如果行被修改了，那么这个undo log记录包含的信息必须先于行修改被重新修改。</p>
+<p>DB_ROW_ID：单调递增的行ID。如果InnoDB自动生成了一个聚集索引，那么这个索引包含行ID值，否则DB_ROW_ID列不会出现在任何索引中。 </p>
+<h4><span id="suo-lei-xing">锁类型</span><a href="#suo-lei-xing" class="header-anchor">#</a></h4><p>共享锁（读锁，S锁）：若事务T对数据对象A加上S锁，则事务T可以读A但不能修改A，其他事务只能再对A加S锁，而不能加X锁，直到T释放S锁。  </p>
+<p>排他锁（写锁，X锁）：若事务T对数据对象A加上X锁，则只允许T读取和修改A，其他事务不能再对A加作何类型的锁，直到T释放A上的X锁。  </p>
+<p>意向共享锁（IS锁）：事务T在对表中数据对象加S锁前，首先需要对该表加IS（或更强的IX）锁。  </p>
+<p>意向排他锁（IX锁）：事务T在对表中的数据对象加X锁前，首先需要对该表加IX锁。</p>
+<h5><span id="yi-xiang-suo-bu-chong">意向锁补充</span><a href="#yi-xiang-suo-bu-chong" class="header-anchor">#</a></h5><ul>
+<li>InnoDB 支持多粒度锁，特定场景下，行级锁可以与表级锁共存。  </li>
+<li>意向锁之间互不排斥，但除了 IS 与 S 兼容外，意向锁会与 共享锁 / 排他锁 互斥。  </li>
+<li>IX，IS是表级锁，不会和行级的X，S锁发生冲突。只会和表级的X，S发生冲突。  </li>
+<li>意向锁在保证并发性的前提下，实现了行锁和表锁共存且满足事务隔离性的要求。  </li>
+</ul>
+<h4><span id="2pl-liang-jie-duan-suo">2pl 两阶段锁</span><a href="#2pl-liang-jie-duan-suo" class="header-anchor">#</a></h4><p>两段锁协议，先随便加，最后commit才能一起释放.<br><img src="https://ipic-1252327316.cos.ap-beijing.myqcloud.com/image/2pl.jpg" alt></p>
+<h4><span id="gap-suo-you-he-yong">GAP锁有何用</span><a href="#gap-suo-you-he-yong" class="header-anchor">#</a></h4><p>其实这个多出来的GAP锁，就是RR隔离级别，相对于RC隔离级别，不会出现幻读的关键。</p>
+<p>确实，GAP锁锁住的位置，也不是记录本身，而是两条记录之间的GAP。</p>
+<p>所谓幻读，就是同一个事务，连续做两次当前读 (例如：select * from t1 where id = 10 for update;)，那么这两次当前读返回的是完全相同的记录 (记录数量一致，记录本身也一致)，第二次的当前读，不会比第一次返回更多的记录 (幻象)。  </p>
+<p>如何保证两次当前读返回一致的记录，那就需要在第一次当前读与第二次当前读之间，其他的事务不会插入新的满足条件的记录并提交。为了实现这个功能，GAP锁应运而生</p>
+<h4><span id="kuai-zhao-du-amp-dang-qian-du">快照读 &amp; 当前读</span><a href="#kuai-zhao-du-amp-dang-qian-du" class="header-anchor">#</a></h4><p>快照读：就是select</p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> ….;</span><br></pre></td></tr></table></figure>
+
+<p>当前读：特殊的读操作，插入/更新/删除操作，属于当前读，处理的都是当前的数据，需要加锁。  </p>
+<figure class="highlight sql hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">lock</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">share</span> <span class="hljs-keyword">mode</span>;</span><br><span class="line"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">where</span> ? <span class="hljs-keyword">for</span> <span class="hljs-keyword">update</span>;</span><br><span class="line"><span class="hljs-keyword">insert</span>;</span><br><span class="line"><span class="hljs-keyword">update</span> ;</span><br><span class="line"><span class="hljs-keyword">delete</span>;</span><br></pre></td></tr></table></figure>
+
+<h4><span id="liao-tian-tao-lun">聊天讨论</span><a href="#liao-tian-tao-lun" class="header-anchor">#</a></h4><p>全快照、全当前，不幻读， 先快照，再当前，幻读</p>
+<p>「 球球: 其实产生幻读的原因，就是以为读走了mvcc的副本， 」</p>
+<hr>
+<p>读如果也加gap锁，就真的不会幻读了，但代价太大</p>
+<p>「 宏伟: 张三账户余额有10000元；要转账给李四9000元，转给王五5000元；这两次转账肯定有一次因余额不足转账失败；如果在 rr 下，可重复读， 两次update 张三都会成功？ 」</p>
+<hr>
+<p>这个如果两个事务并发，都先读的1w元快照读，然后第1个事务直接update张三减钱， commit， 第2个事务 接着update张三减钱，都会成功，除非<br>1 用数据库乐观锁<br>2 自己搞个分布式锁，将读写操作原子化<br>3 用kafka让同一用户操作串行化</p>
+<p>敏: 交易相关的就不要快照读了, 交易要算钱，select的时候就要锁，不然这条数据之后未必可用</p>
+<h4><span id="zong-jie">总结</span><a href="#zong-jie" class="header-anchor">#</a></h4><p>RR级别下，通过MVCC, 解决了两个快照读的幻读问题，<br>通过next-key锁，解决了两个当前读的幻读问题，但是快照读后的当前读是会幻读的.</p>
 
         </div>
         
@@ -1267,9 +1267,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1280,9 +1280,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
@@ -1951,9 +1951,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
+                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
+                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
                     </p>
                 </div>
             </div>
@@ -1964,9 +1964,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
