@@ -100,32 +100,6 @@
   </entry>
   
   <entry>
-    <title>分库分表组件原理</title>
-    <link href="https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/"/>
-    <id>https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/</id>
-    <published>2021-08-23T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.051Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;参考文档：&lt;br&gt;&lt;a
-        
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
     <title>线上稳定性保障</title>
     <link href="https://www.techwei.cn/2021/08/23/design/stable/"/>
     <id>https://www.techwei.cn/2021/08/23/design/stable/</id>
@@ -177,6 +151,32 @@
     
     
       <category term="netty" scheme="https://www.techwei.cn/tags/netty/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>分库分表组件原理</title>
+    <link href="https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/"/>
+    <id>https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/</id>
+    <published>2021-08-23T03:10:43.000Z</published>
+    <updated>2022-07-10T03:07:31.051Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;参考文档：&lt;br&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
     
   </entry>
   
@@ -262,11 +262,11 @@
   </entry>
   
   <entry>
-    <title>分布式锁</title>
-    <link href="https://www.techwei.cn/2021/08/01/design/ds_lock/"/>
-    <id>https://www.techwei.cn/2021/08/01/design/ds_lock/</id>
+    <title>库存服务提性能</title>
+    <link href="https://www.techwei.cn/2021/08/01/design/stock/"/>
+    <id>https://www.techwei.cn/2021/08/01/design/stock/</id>
     <published>2021-08-01T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.041Z</updated>
+    <updated>2022-07-10T03:07:31.042Z</updated>
     
     <summary type="html">
     
@@ -274,7 +274,7 @@
       
         
         
-          &lt;p&gt;1、
+          &lt;h4&gt;&lt;span id=&quot;ti-xing-neng&quot;&gt;提性能&lt;/span&gt;&lt;a href=&quot;#ti-xing-neng&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h4&gt;&lt;h5&gt;&lt;span id=&quot;du-you-hua&quot;&gt;读优化&lt;/span&gt;&lt;a
         
       
     
@@ -292,7 +292,7 @@
     <link href="https://www.techwei.cn/2021/08/01/interview/mq/"/>
     <id>https://www.techwei.cn/2021/08/01/interview/mq/</id>
     <published>2021-08-01T03:10:43.000Z</published>
-    <updated>2024-03-24T16:49:41.807Z</updated>
+    <updated>2024-03-24T16:50:56.488Z</updated>
     
     <summary type="html">
     
@@ -316,11 +316,11 @@
   </entry>
   
   <entry>
-    <title>库存服务提性能</title>
-    <link href="https://www.techwei.cn/2021/08/01/design/stock/"/>
-    <id>https://www.techwei.cn/2021/08/01/design/stock/</id>
+    <title>分布式锁</title>
+    <link href="https://www.techwei.cn/2021/08/01/design/ds_lock/"/>
+    <id>https://www.techwei.cn/2021/08/01/design/ds_lock/</id>
     <published>2021-08-01T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.042Z</updated>
+    <updated>2022-07-10T03:07:31.041Z</updated>
     
     <summary type="html">
     
@@ -328,7 +328,7 @@
       
         
         
-          &lt;h4&gt;&lt;span id=&quot;ti-xing-neng&quot;&gt;提性能&lt;/span&gt;&lt;a href=&quot;#ti-xing-neng&quot; class=&quot;header-anchor&quot;&gt;#&lt;/a&gt;&lt;/h4&gt;&lt;h5&gt;&lt;span id=&quot;du-you-hua&quot;&gt;读优化&lt;/span&gt;&lt;a
+          &lt;p&gt;1、
         
       
     
@@ -422,11 +422,11 @@
   </entry>
   
   <entry>
-    <title>其他</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/other/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/other/</id>
+    <title>java</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/java/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/java/</id>
     <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.045Z</updated>
+    <updated>2022-07-10T03:07:31.043Z</updated>
     
     <summary type="html">
     
@@ -439,7 +439,86 @@
 &lt;!-- toc --&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie&quot;&gt;-
+&lt;li&gt;&lt;a href=&quot;#chang-jian-java-ji-he-lei&quot;&gt;- 常见Java集合类&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>分布式事务</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/dt/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/dt/</id>
+    <published>2021-07-29T03:10:43.000Z</published>
+    <updated>2022-07-10T03:07:31.043Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3&gt;&lt;span id=&quot;fen-bu-shi-shi-wu&quot;&gt;分布式事务&lt;/span&gt;&lt;a href=&quot;#fen-bu-shi-shi-wu&quot;
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>spring</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/spring/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/spring/</id>
+    <published>2021-07-29T03:10:43.000Z</published>
+    <updated>2023-06-26T15:50:05.142Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#tan-tan-dui-springioc-de-liao-jie&quot;&gt;- 谈谈对springIoc的了解&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>系统设计</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/design/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/design/</id>
+    <published>2021-07-29T03:10:43.000Z</published>
+    <updated>2022-07-10T03:07:31.043Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#gao-bing-fa-xi-tong-ti-xing-neng&quot;&gt;- 高并发系统提性能&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
         
       
     
@@ -467,90 +546,6 @@
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;#java-bing-fa-rong-qi-you-na-xie&quot;&gt;- Java并发容器有哪些&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-        
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>mysql</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/mysql/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/mysql/</id>
-    <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2023-06-10T08:36:07.225Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;div class=&quot;toc&quot;&gt;
-
-&lt;!-- toc --&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#shi-me-qing-kuang-xia-suo-yin-shi-xiao&quot;&gt;- 什么情况下索引失效&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-        
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>jvm</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/jvm/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/jvm/</id>
-    <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.044Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;div class=&quot;toc&quot;&gt;
-
-&lt;!-- toc --&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#java-nei-cun-qu-yu&quot;&gt;- Java内存区域&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-        
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>java</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/java/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/java/</id>
-    <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.043Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;div class=&quot;toc&quot;&gt;
-
-&lt;!-- toc --&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#chang-jian-java-ji-he-lei&quot;&gt;- 常见Java集合类&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a
         
       

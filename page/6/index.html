@@ -594,7 +594,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1334 个字)
+                    7 分钟 读完 (大约 1073 个字)
                 </span>
                 
                 
@@ -603,18 +603,38 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/put/">Hashmap源码解析-put</a>
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/构造函数/">Hashmap源码解析-构造函数</a>
             
         </h1>
         <div class="content">
-            <p>源码解析-put函数</p>
+            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
+<li><a href="../总结目录">总览&amp;目录</a></li>
+<li><a href="../链表节点NODE">链表节点NODE</a></li>
+<li><a href="../构造函数">构造函数</a></li>
+<li><a href="../扩容函数">扩容函数</a></li>
+<li><a href="../put">put</a></li>
+<li><a href="../remove">remove</a></li>
+<li><a href="../get">get</a></li>
+<li><a href="../遍历">遍历</a></li>
+<li><a href="../&hashtable">&amp;hashtable</a></li>
+</ol>
+<h4 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h4><p>构造函数:</p>
+<p>默认构造函数什么都不做，只是将加载因子设为默认加载因子。</p>
+<p>有初始值大小的构造函数，</p>
+<p>​    会将threshold设置为大于输入参数且最近的2的整数次幂的数,比如10，设置阈值16.</p>
+<p>​    即使有initialCapacity参数的构造，也是设置threshold，不会现在设置cap，如要设置cap就需要new资源了，而原理是在等真的插入的时候才去通过resize操作申请内存资源, 见resize.md,put.md</p>
+<p>重点:</p>
+<p>1.参数最大容量,默认的加载因子,加载因子,阈值</p>
+<p>2.哈希桶, Node&lt;K,V&gt;[] table, 是Node数组, 存放链表, 长度初始化时为0, 之后是2的N次方</p>
+<p>3.loadFactor和threshold的关系</p>
+<p>4.tableSizeFor函数的原理, 见下面解析</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/put/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/构造函数/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -646,7 +666,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 分钟 读完 (大约 163 个字)
+                    2 分钟 读完 (大约 239 个字)
                 </span>
                 
                 
@@ -655,18 +675,31 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/&hashtable/">Hashmap源码解析-与hashtable区别</a>
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/链表节点NODE/">Hashmap源码解析-链表节点NODE</a>
             
         </h1>
         <div class="content">
-            <p>HashMap是非线程安全的，HashTable是线程安全的。</p>
+            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
+<li><a href="../总结目录">总览&amp;目录</a></li>
+<li><a href="../链表节点NODE">链表节点NODE</a></li>
+<li><a href="../构造函数">构造函数</a></li>
+<li><a href="../扩容函数">扩容函数</a></li>
+<li><a href="../put">put</a></li>
+<li><a href="../remove">remove</a></li>
+<li><a href="../get">get</a></li>
+<li><a href="../遍历">遍历</a></li>
+<li><a href="../&hashtable">&amp;hashtable</a></li>
+</ol>
+<h4 id="链表节点NODE"><a href="#链表节点NODE" class="headerlink" title="链表节点NODE"></a>链表节点NODE</h4><p>重点:</p>
+<p>1.单链表</p>
+<p>2.hashCode()是将key的hashCode和value的hashCode异或得到</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/&hashtable/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/链表节点NODE/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -698,7 +731,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 分钟 读完 (大约 320 个字)
+                    3 分钟 读完 (大约 522 个字)
                 </span>
                 
                 
@@ -707,18 +740,31 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/26/hashmap/get/">Hashmap源码解析-get</a>
+                <a class="has-link-black-ter" href="/2019/05/26/hashmap/遍历/">Hashmap源码解析-遍历</a>
             
         </h1>
         <div class="content">
-            <h4 id="get"><a href="#get" class="headerlink" title="get"></a>get</h4><p>查找过程和删除基本差不多， 找到返回节点，否则返回null</p>
+            <h3 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h3><ol>
+<li><a href="../总结目录">总览&amp;目录</a></li>
+<li><a href="../链表节点NODE">链表节点NODE</a></li>
+<li><a href="../构造函数">构造函数</a></li>
+<li><a href="../扩容函数">扩容函数</a></li>
+<li><a href="../put">put</a></li>
+<li><a href="../remove">remove</a></li>
+<li><a href="../get">get</a></li>
+<li><a href="../遍历">遍历</a></li>
+<li><a href="../&hashtable">&amp;hashtable</a></li>
+</ol>
+<h4 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h4><p>1.Node implements Map.Entry</p>
+<p>2.EntryIterator extends HashIterator implements Iterator&lt;Map.Entry&lt;K,V&gt;&gt; </p>
+<p>3.迭代器HashIterator实现 expectedModCount = modCount 支持fastfail</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/get/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2019/05/26/hashmap/遍历/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -1212,9 +1258,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
@@ -1225,9 +1271,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
@@ -1896,9 +1942,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/mysql/dbfenbiao/" class="has-link-black-ter is-size-6">分库分表组件原理</a>
+                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/mysql/">mysql</a>
+                        <a class="has-link-grey -link" href="/categories/design/">design</a>
                     </p>
                 </div>
             </div>
@@ -1909,9 +1955,9 @@
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-08-23T03:10:43.000Z">2021-08-23</time></div>
-                    <a href="/2021/08/23/design/stable/" class="has-link-black-ter is-size-6">线上稳定性保障</a>
+                    <a href="/2021/08/23/netty/nettyrun/" class="has-link-black-ter is-size-6">netty服务端启动原理</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/design/">design</a>
+                        <a class="has-link-grey -link" href="/categories/netty/">netty</a>
                     </p>
                 </div>
             </div>
