@@ -100,32 +100,6 @@
   </entry>
   
   <entry>
-    <title>分库分表组件原理</title>
-    <link href="https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/"/>
-    <id>https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/</id>
-    <published>2021-08-23T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.051Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;参考文档：&lt;br&gt;&lt;a
-        
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
     <title>netty服务端启动原理</title>
     <link href="https://www.techwei.cn/2021/08/23/netty/nettyrun/"/>
     <id>https://www.techwei.cn/2021/08/23/netty/nettyrun/</id>
@@ -148,6 +122,32 @@
     
     
       <category term="netty" scheme="https://www.techwei.cn/tags/netty/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>分库分表组件原理</title>
+    <link href="https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/"/>
+    <id>https://www.techwei.cn/2021/08/23/mysql/dbfenbiao/</id>
+    <published>2021-08-23T03:10:43.000Z</published>
+    <updated>2022-07-10T03:07:31.051Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;参考文档：&lt;br&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="https://www.techwei.cn/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="https://www.techwei.cn/tags/mysql/"/>
     
   </entry>
   
@@ -288,6 +288,34 @@
   </entry>
   
   <entry>
+    <title>mq</title>
+    <link href="https://www.techwei.cn/2021/08/01/interview/mq/"/>
+    <id>https://www.techwei.cn/2021/08/01/interview/mq/</id>
+    <published>2021-08-01T03:10:43.000Z</published>
+    <updated>2024-03-24T16:38:24.313Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;div class=&quot;toc&quot;&gt;
+
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#mq-shi-yong-chang-jing&quot;&gt;- mq使用场景&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>库存服务提性能</title>
     <link href="https://www.techwei.cn/2021/08/01/design/stock/"/>
     <id>https://www.techwei.cn/2021/08/01/design/stock/</id>
@@ -310,34 +338,6 @@
     
     
       <category term="design" scheme="https://www.techwei.cn/tags/design/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>kafka</title>
-    <link href="https://www.techwei.cn/2021/08/01/interview/kafka/"/>
-    <id>https://www.techwei.cn/2021/08/01/interview/kafka/</id>
-    <published>2021-08-01T03:10:43.000Z</published>
-    <updated>2023-06-10T16:01:30.933Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;div class=&quot;toc&quot;&gt;
-
-&lt;!-- toc --&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#mq-shi-yong-chang-jing&quot;&gt;- mq使用场景&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
-        
-      
-    
-    </summary>
-    
     
   </entry>
   
@@ -422,11 +422,11 @@
   </entry>
   
   <entry>
-    <title>其他</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/other/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/other/</id>
+    <title>spring</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/spring/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/spring/</id>
     <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.045Z</updated>
+    <updated>2023-06-26T15:50:05.142Z</updated>
     
     <summary type="html">
     
@@ -439,7 +439,8 @@
 &lt;!-- toc --&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#tcp-ru-he-bao-zheng-ke-kao-chuan-shu-tcp-udp-qu-bie&quot;&gt;-
+&lt;li&gt;&lt;a href=&quot;#tan-tan-dui-springioc-de-liao-jie&quot;&gt;- 谈谈对springIoc的了解&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a
         
       
     
@@ -449,11 +450,11 @@
   </entry>
   
   <entry>
-    <title>java并发</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/juc/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/juc/</id>
+    <title>系统设计</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/design/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/design/</id>
     <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2022-07-10T03:07:31.044Z</updated>
+    <updated>2022-07-10T03:07:31.043Z</updated>
     
     <summary type="html">
     
@@ -466,7 +467,7 @@
 &lt;!-- toc --&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#java-bing-fa-rong-qi-you-na-xie&quot;&gt;- Java并发容器有哪些&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#gao-bing-fa-xi-tong-ti-xing-neng&quot;&gt;- 高并发系统提性能&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a
         
       
@@ -533,11 +534,11 @@
   </entry>
   
   <entry>
-    <title>spring</title>
-    <link href="https://www.techwei.cn/2021/07/29/interview/spring/"/>
-    <id>https://www.techwei.cn/2021/07/29/interview/spring/</id>
+    <title>分布式事务</title>
+    <link href="https://www.techwei.cn/2021/07/29/interview/dt/"/>
+    <id>https://www.techwei.cn/2021/07/29/interview/dt/</id>
     <published>2021-07-29T03:10:43.000Z</published>
-    <updated>2023-06-26T15:50:05.142Z</updated>
+    <updated>2022-07-10T03:07:31.043Z</updated>
     
     <summary type="html">
     
@@ -545,13 +546,7 @@
       
         
         
-          &lt;div class=&quot;toc&quot;&gt;
-
-&lt;!-- toc --&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;#tan-tan-dui-springioc-de-liao-jie&quot;&gt;- 谈谈对springIoc的了解&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a
+          &lt;h3&gt;&lt;span id=&quot;fen-bu-shi-shi-wu&quot;&gt;分布式事务&lt;/span&gt;&lt;a href=&quot;#fen-bu-shi-shi-wu&quot;
         
       
     
